@@ -1,3 +1,5 @@
+import { translate, type Locale } from './i18n.ts';
+
 export interface InquiryInput {
   name: string;
   contact: string;
@@ -39,7 +41,7 @@ export function getInquiryInterest(value: string | null): string {
   return INQUIRY_INTERESTS.find((interest) => interest === mapped) ?? '';
 }
 
-export function validateInquiry(input: InquiryInput): InquiryResult {
+export function validateInquiry(input: InquiryInput, locale: Locale = 'zh-CN'): InquiryResult {
   const name = input.name.trim();
   const contact = input.contact;
   const message = input.message.replace(/\r\n?/g, '\n').trim();
@@ -63,23 +65,24 @@ export function validateInquiry(input: InquiryInput): InquiryResult {
   if (input.privacy !== true) errors.privacy = '请阅读并同意本地需求整理的隐私说明。';
   if (input.website.trim()) errors.website = '无法整理这次填写，请清空表单后重新填写。';
 
-  if (Object.keys(errors).length) return { ok: false, errors };
+  if (Object.keys(errors).length) return { ok: false, errors: Object.fromEntries(Object.entries(errors).map(([field, message]) => [field, translate(message, locale)])) };
   return { ok: true, value: { name, contact, interest, message, privacy: true } };
 }
 
-export function buildInquirySummary(inquiry: InquiryData): string {
+export function buildInquirySummary(inquiry: InquiryData, locale: Locale = 'zh-CN'): string {
+  const tr = (text: string) => translate(text, locale);
   return [
-    '咨询需求',
-    '状态：需求已整理，尚未发送',
+    tr('咨询需求'),
+    tr('状态：需求已整理，尚未发送'),
     '',
-    `称呼：${inquiry.name}`,
-    `联系方式：${inquiry.contact}`,
-    `咨询意向：${inquiry.interest}`,
+    `${tr('称呼：')}${inquiry.name}`,
+    `${tr('联系方式：')}${inquiry.contact}`,
+    `${tr('咨询意向：')}${tr(inquiry.interest)}`,
     '',
-    '想了解的问题：',
+    tr('想了解的问题：'),
     inquiry.message,
     '',
-    '此摘要仅在本机整理，不代表预约或服务确认。',
-    '请在真实联系方式公布后，自行选择是否分享；分享前请核对并删除不必要的个人信息。',
+    tr('此摘要仅在本机整理，不代表预约或服务确认。'),
+    tr('请在真实联系方式公布后，自行选择是否分享；分享前请核对并删除不必要的个人信息。'),
   ].join('\n');
 }

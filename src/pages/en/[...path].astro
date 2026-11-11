@@ -1,0 +1,46 @@
+---
+import Home from '../index.astro';
+import Services from '../services/index.astro';
+import Service from '../services/[slug].astro';
+import Pricing from '../pricing.astro';
+import About from '../about.astro';
+import Locations from '../locations/index.astro';
+import Location from '../locations/[slug].astro';
+import Faq from '../faq.astro';
+import Articles from '../articles/index.astro';
+import Article from '../articles/[slug].astro';
+import Contact from '../contact.astro';
+import Privacy from '../privacy.astro';
+import Terms from '../terms.astro';
+import Reviews from '../[page].astro';
+import NotFound from '../404.astro';
+import { loadContent } from '../../lib/content.ts';
+import { sourceContentPaths } from '../../lib/seo.ts';
+
+export function getStaticPaths() {
+  const model = loadContent();
+  if (!model.site.languages?.includes('en')) return [];
+  return [...sourceContentPaths(model), '/404/'].map(path => {
+    const service = model.getServices().find(item => path === `/services/${item.slug}/`);
+    const location = model.getLocations().find(item => path === `/locations/${item.slug}/`);
+    const article = model.getArticles().find(item => path === `/articles/${item.slug}/`);
+    return {
+      params: { path: path === '/' ? undefined : path.slice(1, -1) },
+      props: { source: path, pageProps: service ? { service } : location ? { location } : article ? { article } : path === '/reviews/' ? { reviews: model.getReviews() } : {} },
+    };
+  });
+}
+const { source, pageProps } = Astro.props;
+const staticPages = {
+  '/': Home, '/services/': Services, '/pricing/': Pricing, '/about/': About,
+  '/locations/': Locations, '/faq/': Faq, '/articles/': Articles,
+  '/contact/': Contact, '/privacy/': Privacy, '/terms/': Terms,
+  '/404/': NotFound,
+};
+const StaticPage = staticPages[source as keyof typeof staticPages];
+---
+{pageProps.service ? <Service service={pageProps.service} /> :
+  pageProps.location ? <Location location={pageProps.location} /> :
+  pageProps.article ? <Article article={pageProps.article} /> :
+  pageProps.reviews ? <Reviews reviews={pageProps.reviews} /> :
+  <StaticPage />}

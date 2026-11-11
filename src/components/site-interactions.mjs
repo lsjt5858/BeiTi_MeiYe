@@ -1,3 +1,5 @@
+import { documentLocale, translate } from '../lib/i18n.ts';
+
 export function createCarouselState(length, reducedMotion = false) {
   if (!Number.isInteger(length) || length < 1) throw new RangeError("Invalid slide count");
   let index = 0;
@@ -51,14 +53,16 @@ export function analyticsEvent(href, referrer, event = "page_view", category = "
 }
 
 export function initializeSite() {
+  const locale = documentLocale(document);
+  const tr = (text) => translate(text, locale);
   const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const mobile = window.matchMedia("(max-width: 900px)");
+  const mobile = window.matchMedia("(max-width: 1200px)");
   const menu = document.querySelector("[data-mobile-menu]");
   if (menu) {
     const summary = menu.querySelector("summary");
     menu.addEventListener("toggle", () => {
       summary?.setAttribute("aria-expanded", String(menu.open));
-      summary?.setAttribute("aria-label", menu.open ? "关闭导航菜单" : "打开导航菜单");
+      summary?.setAttribute("aria-label", tr(menu.open ? "关闭导航菜单" : "打开导航菜单"));
     });
     menu.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && menu.open) {
@@ -102,10 +106,10 @@ export function initializeSite() {
       });
       if (count) count.textContent = String(state.index + 1).padStart(2, "0");
       if (caption) caption.textContent = slides[state.index].dataset.label;
-      if (status && announce) status.textContent = `第 ${state.index + 1} 张，共 ${slides.length} 张。${slides[state.index].dataset.label}`;
+      if (status && announce) status.textContent = tr(`第 ${state.index + 1} 张，共 ${slides.length} 张。${slides[state.index].dataset.label}`);
       if (pause) {
         pause.disabled = motion.matches;
-        pause.setAttribute("aria-label", motion.matches ? "已根据减少动态效果设置停止自动播放" : state.paused ? "开始自动播放" : "暂停自动播放");
+        pause.setAttribute("aria-label", tr(motion.matches ? "已根据减少动态效果设置停止自动播放" : state.paused ? "开始自动播放" : "暂停自动播放"));
         pause.setAttribute("aria-pressed", String(state.paused || motion.matches));
         pause.dataset.paused = String(state.paused || motion.matches);
       }
@@ -174,13 +178,13 @@ export function initializeSite() {
       }).catch(() => {}).finally(() => { window.clearTimeout(timeout); pending.delete(controller); });
     };
     toggle.disabled = !endpoint;
-    if (status) status.textContent = endpoint ? "默认关闭，仅本页生效；不收集咨询内容。" : "当前未启用分析，不发送访问数据。";
+    if (status) status.textContent = tr(endpoint ? "默认关闭，仅本页生效；不收集咨询内容。" : "当前未启用分析，不发送访问数据。");
     toggle.addEventListener("click", () => {
       if (!endpoint) return;
       consent = !consent;
       toggle.setAttribute("aria-pressed", String(consent));
-      toggle.textContent = consent ? "关闭访问分析" : "开启访问分析";
-      if (status) status.textContent = consent ? "本页已开启匿名分类统计，可随时关闭。" : "访问分析已关闭。";
+      toggle.textContent = tr(consent ? "关闭访问分析" : "开启访问分析");
+      if (status) status.textContent = tr(consent ? "本页已开启匿名分类统计，可随时关闭。" : "访问分析已关闭。");
       if (consent) send("page_view", "page");
       else pending.forEach((controller) => controller.abort());
     });

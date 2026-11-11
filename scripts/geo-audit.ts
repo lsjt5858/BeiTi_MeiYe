@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { loadContent, isValidDate, exaggeratedPattern, type ContentModel } from '../src/lib/content.ts';
 import { contentPaths, pageSeo, publishedPaths, readDistPagePaths, renderRobots, renderSitemap, renderLlms } from '../src/lib/seo.ts';
+import { localeFromPath, sourcePath, translate } from '../src/lib/i18n.ts';
 
 type Node = DefaultTreeAdapterMap['node'];
 type Element = DefaultTreeAdapterMap['element'];
@@ -122,6 +123,8 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
   const base = model.site.base_url || 'https://beiti-audit.invalid';
   const baseHost = new URL(base).host;
   for (const [path, document] of documents) {
+    const locale = localeFromPath(path);
+    const source = sourcePath(path);
     const { nodes, raw } = document;
     const byTag = (tag: string) => nodes.filter(node => node.tagName === tag);
     const titles = byTag('title');
@@ -133,9 +136,9 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
     const headings = byTag('h1');
     check(2, headings.length === 1 && !!text(headings[0]!).trim(), `${path} 必须有且仅有一个非空 H1`, true);
     const times = byTag('time');
-    const article = model.getArticles().find(item => `/articles/${item.slug}/` === path);
-    const service = model.getServices().find(item => `/services/${item.slug}/` === path);
-    const location = model.getLocations().find(item => `/locations/${item.slug}/` === path);
+    const article = model.getArticles().find(item => `/articles/${item.slug}/` === source);
+    const service = model.getServices().find(item => `/services/${item.slug}/` === source);
+    const location = model.getLocations().find(item => `/locations/${item.slug}/` === source);
     const updated = article?.updatedAt ?? service?.updatedAt ?? location?.updatedAt ?? model.getLatestUpdate();
     check(3, times.length > 0 && times.every(node => isValidDate(attribute(node, 'datetime'))) && (!updated || times.some(node => attribute(node, 'datetime') === updated)), `${path} 缺少合法、同步事实的更新日期`, true);
     const mains = byTag('main');
@@ -152,7 +155,7 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
     const canonical = canonicals[0] ? attribute(canonicals[0], 'href') : undefined;
     check(6, robots.length === 1 && noindex === seo.noindex && (seo.canonical ? canonicals.length === 1 && canonical === seo.canonical : canonicals.length === 0), `${path} SEO noindex/canonical 与站点环境不一致`, true);
     const html = byTag('html')[0];
-    check(6, !!html && attribute(html, 'lang') === model.site.language, `${path} SEO html lang 与配置不一致`);
+    check(6, !!html && attribute(html, 'lang') === locale, `${path} SEO html lang 与页面语言不一致`);
     check(8, !/PENDING_ONLY_NOT_PUBLIC|EXPIRED_ONLY_NOT_PUBLIC|\bTODO\b|\bTBD\b|\bFIXME\b|\bx{3,}\b|\{\{[^}]+\}\}/i.test(raw), `${path} 含未确认哨兵或占位符`, true);
     check(8, !exaggeratedPattern.test(mains.map(text).join('')), `${path} 含夸张效果承诺`, true);
     const exposedContent = `${html ? text(html) : ''}\n${byTag('script').filter(node => attribute(node, 'type') === 'application/ld+json').map(rawText).join('')}`;
@@ -201,14 +204,14 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
           check(7, !!matched, `${path} LocalBusiness 没有确认地点`, true);
         }
         if (types.includes('Service')) check(7, model.getServices().some(service => service.name === entity.name), `${path} Service 没有确认服务`, true);
-        if (types.includes('Article')) check(7, model.getArticles().some(article => article.title === (entity.headline ?? entity.name)), `${path} Article 没有确认文章`, true);
+        if (types.includes('Article')) check(7, model.getArticles().some(article => translate(article.title, locale) === (entity.headline ?? entity.name)), `${path} Article 没有确认文章`, true);
         if (types.includes('FAQPage')) {
           const entries = Array.isArray(entity.mainEntity) ? entity.mainEntity : [];
           check(7, entries.length > 0 && entries.every(entry => {
             if (!entry || typeof entry !== 'object') return false;
             const question = entry as Record<string, unknown>;
             const answer = question.acceptedAnswer as Record<string, unknown> | undefined;
-            return model.getFaqs().some(faq => question.name === faq.question && answer?.text === faq.answer);
+            return model.getFaqs().some(faq => question.name === translate(faq.question, locale) && answer?.text === translate(faq.answer, locale));
           }), `${path} FAQPage 包含未确认问答`, true);
         }
         if (types.includes('Review')) check(7, model.getReviews().some(review => review.text === entity.reviewBody && review.date === entity.datePublished), `${path} 结构化评价没有授权与可追溯日期`, true);

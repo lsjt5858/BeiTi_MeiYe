@@ -34,6 +34,9 @@ const jsonLd = faqs.length ? {
 </InnerPage>
 
 <script>
+  import { documentLocale, translate } from '../lib/i18n.ts';
+  const locale = documentLocale(document);
+  const tr = (text: string) => translate(text, locale);
   const search = document.querySelector<HTMLInputElement>('#faq-search');
   const category = document.querySelector<HTMLSelectElement>('#faq-category');
   const filters = document.querySelector<HTMLElement>('#faq-filters');
@@ -43,17 +46,17 @@ const jsonLd = faqs.length ? {
   if (search && filters && status && empty) {
     filters.hidden = false;
     const filter = () => {
-      const query = search.value.trim().toLocaleLowerCase('zh-CN');
+      const query = search.value.trim().toLocaleLowerCase(locale);
       const selected = category?.value || '';
       let count = 0;
       for (const item of items) {
-        const matches = (item.dataset.search || '').toLocaleLowerCase('zh-CN').includes(query)
+        const matches = (item.dataset.search || '').toLocaleLowerCase(locale).includes(query)
           && (!selected || item.dataset.category === selected);
         item.hidden = !matches;
         if (matches) count++;
       }
       empty.hidden = count > 0;
-      status.textContent = count ? `找到 ${count} 个问题` : '没有找到匹配的问题，请调整关键词或主题。';
+      status.textContent = tr(count ? `找到 ${count} 个问题` : '没有找到匹配的问题，请调整关键词或主题。');
     };
     search.addEventListener('input', filter);
     category?.addEventListener('change', filter);

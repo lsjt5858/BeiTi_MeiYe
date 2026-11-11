@@ -10,6 +10,7 @@ export interface SiteConfig {
   brand: string;
   base_url: string;
   language: string;
+  languages?: ('zh-CN' | 'en')[];
   environment: 'preview' | 'production';
   public_pages: string[];
   analytics_endpoint: string;
@@ -165,6 +166,7 @@ export function validateSite(input: unknown): SiteConfig {
   const value = object(input, 'client.json');
   const brand = requiredString(value.brand, 'brand');
   const language = requiredString(value.language, 'language');
+  if (value.languages !== undefined && (!Array.isArray(value.languages) || !value.languages.length || value.languages.some(item => !['zh-CN', 'en'].includes(item)) || !value.languages.includes(language))) throw new Error('languages 必须包含默认语言，且仅支持 zh-CN 与 en');
   if (!['preview', 'production'].includes(String(value.environment))) throw new Error('environment 只能是 preview 或 production');
   if (typeof value.base_url !== 'string') throw new Error('base_url 必须是字符串');
   if (!Array.isArray(value.public_pages) || value.public_pages.some(path => typeof path !== 'string')) throw new Error('public_pages 必须是路径数组');
@@ -174,7 +176,7 @@ export function validateSite(input: unknown): SiteConfig {
   const base_url = value.base_url ? validateBaseUrl(value.base_url) : '';
   if (value.environment === 'production' && !base_url) validateBaseUrl('');
   return {
-    brand, language, base_url, environment: value.environment as SiteConfig['environment'],
+    brand, language, ...(value.languages ? { languages: [...new Set(value.languages as ('zh-CN' | 'en')[])] } : {}), base_url, environment: value.environment as SiteConfig['environment'],
     public_pages: [...new Set(value.public_pages.map(normalizePath))],
     analytics_endpoint: value.analytics_endpoint,
   };

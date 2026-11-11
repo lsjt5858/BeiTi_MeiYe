@@ -1,6 +1,11 @@
 ---
 import { getReviews, site } from "../lib/content";
-const current = Astro.url.pathname;
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { localeFromPath, localizedPath, sourcePath, translate } from '../lib/i18n.ts';
+const locale = localeFromPath(Astro.url.pathname);
+const tr = (text: string) => translate(text, locale);
+const href = (path: string) => localizedPath(path, locale);
+const current = sourcePath(Astro.url.pathname);
 const links = [
   { href: "/", label: "首页" },
   { href: "/services/", label: "探索美业" },
@@ -13,26 +18,29 @@ const active = (href: string) => href === "/" ? current === "/" : current.starts
 ---
 <header class="site-header">
   <div class="header-inner container">
-    <a class="brand-lockup" href="/" aria-label={`${site.brand}，返回首页`}>
+    <a class="brand-lockup" href={href('/')} aria-label={tr(`${site.brand}，返回首页`)}>
       <svg class="brand-symbol" width="34" height="40" viewBox="0 0 34 40" fill="none" aria-hidden="true">
         <path d="M17 3C17 3 4 13 4 24a13 13 0 0 0 26 0C30 13 17 3 17 3Z" stroke="currentColor" stroke-width="1"/>
         <path d="M17 9v28M8 20c0 9 9 15 9 15s9-6 9-15M9 13l8 8 8-8" stroke="currentColor" stroke-width="1"/>
       </svg>
-      <span class="brand-type">{site.brand}<small>BEITI BEAUTY</small></span>
+      <span class="brand-type">{tr(site.brand)}<small>{locale === 'en' ? '贝缇美业' : 'BEITI BEAUTY'}</small></span>
     </a>
-    <nav class="desktop-navigation" aria-label="主导航">
-      {links.map((link) => <a href={link.href} aria-current={active(link.href) ? "page" : undefined}>{link.label}</a>)}
+    <nav class="desktop-navigation" aria-label={tr('主导航')}>
+      {links.map((link) => <a href={href(link.href)} aria-current={active(link.href) ? "page" : undefined}>{tr(link.label)}</a>)}
     </nav>
-    <a class="header-contact" href="/contact/" data-analytics-category="general">聊聊你的需求 <span aria-hidden="true">↗</span></a>
+    <div class="header-actions">
+      <a class="header-contact" href={href('/contact/')} data-analytics-category="general">{tr('聊聊你的需求')} <span aria-hidden="true">↗</span></a>
+      <LanguageSwitcher />
     <details class="mobile-menu" data-mobile-menu>
-      <summary aria-label="打开导航菜单" aria-expanded="false" aria-controls="mobile-navigation">
+      <summary aria-label={tr('打开导航菜单')} aria-expanded="false" aria-controls="mobile-navigation">
         <span class="menu-lines" aria-hidden="true"></span>
-        <span class="visually-hidden">导航菜单</span>
+        <span class="visually-hidden">{tr('导航菜单')}</span>
       </summary>
-      <nav id="mobile-navigation" aria-label="移动主导航">
-        {links.map((link, index) => <a href={link.href} aria-current={active(link.href) ? "page" : undefined}><small aria-hidden="true">0{index + 1}</small>{link.label}</a>)}
-        <a class="mobile-contact" href="/contact/" data-analytics-category="general">聊聊你的需求 <span aria-hidden="true">↗</span></a>
+      <nav id="mobile-navigation" aria-label={tr('移动主导航')}>
+        {links.map((link, index) => <a href={href(link.href)} aria-current={active(link.href) ? "page" : undefined}><small aria-hidden="true">0{index + 1}</small>{tr(link.label)}</a>)}
+        <a class="mobile-contact" href={href('/contact/')} data-analytics-category="general">{tr('聊聊你的需求')} <span aria-hidden="true">↗</span></a>
       </nav>
     </details>
+    </div>
   </div>
 </header>

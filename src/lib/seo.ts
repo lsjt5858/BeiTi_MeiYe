@@ -2,10 +2,11 @@ import { readdirSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadContent, normalizePath, type ContentModel } from './content.ts';
+import { sourcePath, localizedPath } from './i18n.ts';
 
 const staticPaths = ['/', '/services/', '/pricing/', '/about/', '/locations/', '/faq/', '/articles/', '/contact/', '/privacy/', '/terms/'];
 
-export function contentPaths(model: ContentModel): string[] {
+export function sourceContentPaths(model: ContentModel): string[] {
   return [
     ...staticPaths,
     ...model.getServices().map(item => `/services/${item.slug}/`),
@@ -14,14 +15,28 @@ export function contentPaths(model: ContentModel): string[] {
     ...(model.getReviews().length ? ['/reviews/'] : []),
   ];
 }
+export function contentPaths(model: ContentModel): string[] {
+  const paths = sourceContentPaths(model);
+  return model.site.languages?.includes('en') ? [...paths, ...paths.map(path => localizedPath(path, 'en'))] : paths;
+}
 
 export function pageSeo(model: ContentModel, path: string): { canonical?: string; noindex: boolean } {
   const normalized = normalizePath(path);
-  const noindex = model.site.environment !== 'production' || !model.site.public_pages.includes(normalized) || normalized === '/404/';
+  const noindex = model.site.environment !== 'production' || !model.site.public_pages.includes(sourcePath(normalized)) || sourcePath(normalized) === '/404/' || (normalized.startsWith('/en/') && !model.site.languages?.includes('en'));
   return {
     ...(model.site.base_url ? { canonical: `${model.site.base_url}${normalized}` } : {}),
     noindex,
   };
+}
+
+export function languageAlternates(model: ContentModel, path: string) {
+  const source = sourcePath(normalizePath(path));
+  if (pageSeo(model, path).noindex || !model.site.base_url || !contentPaths(model).includes(source)) return [];
+  return [
+    { language: 'zh-CN', href: `${model.site.base_url}${source}` },
+    ...(model.site.languages?.includes('en') ? [{ language: 'en', href: `${model.site.base_url}${localizedPath(source, 'en')}` }] : []),
+    { language: 'x-default', href: `${model.site.base_url}${source}` },
+  ];
 }
 
 /** 保持布局约定的三个参数；title/description 由布局负责输出和转义。 */
@@ -56,8 +71,9 @@ function xmlEscape(value: string): string {
 }
 export function publishedPaths(model: ContentModel, generatedPaths: string[]): string[] {
   if (model.site.environment !== 'production') return [];
-  const generated = new Set(generatedPaths.map(normalizePath).filter(path => path !== '/404/'));
-  return model.site.public_pages.filter(path => generated.has(path)).sort();
+  return [...new Set(generatedPaths.map(normalizePath))].filter(path =>
+    !pageSeo(model, path).noindex,
+  ).sort();
 }
 export function renderSitemap(model: ContentModel, generatedPaths: string[]): string {
   const updated = model.getLatestUpdate();
@@ -70,9 +86,10 @@ export function renderRobots(model: ContentModel, generatedPaths = contentPaths(
   if (model.site.environment !== 'production') return 'User-agent: *\nDisallow: /\n';
   const publicPaths = publishedPaths(model, generatedPaths);
   const privatePaths = generatedPaths.map(normalizePath).filter(path => !publicPaths.includes(path));
-  // 精确匹配 $，防止允许 /services/ 时顺带允许未公开的动态详情。
+  // 公开首页时同时允许 CSS、JS、图片和搜索文件，避免爬虫只能抓到裸 HTML。
+  // 其他已生成页面仍按公开清单限制；精确 Allow 可覆盖其未公开父目录。
   return [
-    'User-agent: *', 'Disallow: /',
+    'User-agent: *', publicPaths.includes('/') ? 'Allow: /' : 'Disallow: /',
     ...privatePaths.filter(path => path !== '/').map(path => `Disallow: ${path}`),
     ...publicPaths.map(path => `Allow: ${path}$`),
     `Sitemap: ${model.site.base_url}/sitemap.xml`, '',

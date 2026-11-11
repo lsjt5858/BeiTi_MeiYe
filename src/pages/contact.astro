@@ -78,6 +78,9 @@ const hasChannel = !!(phone || email);
 
 <script>
   import { buildInquirySummary, getInquiryInterest, normalizeInquiryPhone, validateInquiry, type InquiryField } from '../lib/contact.ts';
+  import { documentLocale, translate } from '../lib/i18n.ts';
+  const locale = documentLocale(document);
+  const tr = (text: string) => translate(text, locale);
   const form = document.querySelector<HTMLFormElement>('#contact-form');
   const fields = document.querySelector<HTMLFieldSetElement>('#contact-fields');
   const organize = document.querySelector<HTMLButtonElement>('#contact-organize');
@@ -125,7 +128,7 @@ const hasChannel = !!(phone || email);
       fallbackArea.hidden = true;
       result.hidden = true;
       copyStatus.textContent = '';
-      if (hadSummary) errorSummary.textContent = '您修改了填写，请重新整理；旧摘要已从页面移除。';
+      if (hadSummary) errorSummary.textContent = tr('您修改了填写，请重新整理；旧摘要已从页面移除。');
     };
     const normalizePhone = () => {
       const caret = contact.selectionStart ?? contact.value.length;
@@ -160,10 +163,10 @@ const hasChannel = !!(phone || email);
       const validation = validateInquiry({
         name: name.value, contact: contact.value, interest: interest.value, message: message.value,
         privacy: privacy.checked, website: website.value,
-      });
+      }, locale);
       if (!validation.ok) {
         const entries = Object.entries(validation.errors) as [InquiryField, string][];
-        errorSummary.textContent = `尚未整理，请检查以下 ${entries.length} 处填写。信息没有发送。`;
+        errorSummary.textContent = tr(`尚未整理，请检查以下 ${entries.length} 处填写。信息没有发送。`);
         for (const [field, text] of entries) {
           const item = document.createElement('li');
           if (field === 'website') {
@@ -184,7 +187,7 @@ const hasChannel = !!(phone || email);
         document.querySelector<HTMLElement>('#contact-errors')?.focus();
         return;
       }
-      summary = buildInquirySummary(validation.value);
+      summary = buildInquirySummary(validation.value, locale);
       output.textContent = summary;
       result.hidden = false;
       result.focus();
@@ -195,14 +198,14 @@ const hasChannel = !!(phone || email);
       invalidate();
       count.textContent = `${message.value.length} / 1200`;
       if (event.target === privacy && !privacy.checked) {
-        errorSummary.textContent = '未同意隐私说明时，不会整理摘要。信息没有发送。';
+        errorSummary.textContent = tr('未同意隐私说明时，不会整理摘要。信息没有发送。');
       }
     });
     form.addEventListener('reset', () => {
       clearErrors();
       invalidate();
       count.textContent = '0 / 1200';
-      errorSummary.textContent = '已清空本页填写与摘要；已复制或下载的内容不会自动删除。';
+      errorSummary.textContent = tr('已清空本页填写与摘要；已复制或下载的内容不会自动删除。');
     });
     copy.addEventListener('click', async () => {
       if (!summary) return;
@@ -213,12 +216,12 @@ const hasChannel = !!(phone || email);
         await navigator.clipboard.writeText(summary);
         if (currentRevision !== revision) return;
         fallbackArea.hidden = true;
-        copyStatus.textContent = '摘要已复制到剪贴板，尚未发送。请自行核对并选择是否分享。';
+        copyStatus.textContent = tr('摘要已复制到剪贴板，尚未发送。请自行核对并选择是否分享。');
       } catch {
         if (currentRevision !== revision) return;
         fallback.value = summary;
         fallbackArea.hidden = false;
-        copyStatus.textContent = '自动复制未完成，尚未发送。请手动复制下方已选中的文本，或使用“下载文本”。';
+        copyStatus.textContent = tr('自动复制未完成，尚未发送。请手动复制下方已选中的文本，或使用“下载文本”。');
         fallback.focus();
         fallback.select();
       } finally {
@@ -236,9 +239,9 @@ const hasChannel = !!(phone || email);
         document.body.append(link);
         link.click();
         link.remove();
-        copyStatus.textContent = '已请求浏览器下载文本，尚未发送。请确认本地文件是否保存，并妥善保管。';
+        copyStatus.textContent = tr('已请求浏览器下载文本，尚未发送。请确认本地文件是否保存，并妥善保管。');
       } catch {
-        copyStatus.textContent = '浏览器未能创建下载，请使用复制摘要或手动复制。信息没有发送。';
+        copyStatus.textContent = tr('浏览器未能创建下载，请使用复制摘要或手动复制。信息没有发送。');
         fallback.value = summary;
         fallbackArea.hidden = false;
       } finally {

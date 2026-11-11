@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 import { stringify } from 'yaml';
 import { loadContent } from '../src/lib/content.ts';
-import { contentPaths } from '../src/lib/seo.ts';
+import { sourceContentPaths } from '../src/lib/seo.ts';
 import { auditDist } from '../scripts/geo-audit.ts';
 
 const workspace = fileURLToPath(new URL('..', import.meta.url));
@@ -21,14 +21,17 @@ function createFixture(production: boolean) {
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(target, value);
   };
-  for (const file of ['package.json', 'astro.config.mjs', 'tsconfig.json', 'src/env.d.ts', 'src/lib/content.ts', 'src/lib/seo.ts', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts', 'src/pages/llms.txt.ts']) {
+  for (const file of ['package.json', 'astro.config.mjs', 'tsconfig.json', 'src/env.d.ts', 'src/lib/content.ts', 'src/lib/seo.ts', 'src/lib/i18n.ts', 'src/lib/translations.ts', 'src/lib/en-copy.ts', 'src/pages/robots.txt.ts', 'src/pages/sitemap.xml.ts', 'src/pages/llms.txt.ts']) {
     mkdirSync(dirname(join(root, file)), { recursive: true });
     copyFileSync(join(workspace, file), join(root, file));
   }
   symlinkSync(join(workspace, 'node_modules'), join(root, 'node_modules'), 'dir');
   put('client.json', JSON.stringify({
     ...baseModel.site,
-    ...(production ? { environment: 'production', base_url: 'https://www.douyin.com', public_pages: ['/', '/faq/', '/services/fixture-service/', '/missing/', '/services/pending-service/'] } : {}),
+    languages: ['zh-CN'],
+    ...(production
+      ? { environment: 'production', base_url: 'https://www.douyin.com', public_pages: ['/', '/faq/', '/services/fixture-service/', '/missing/', '/services/pending-service/'] }
+      : { environment: 'preview', base_url: '', public_pages: [] }),
   }));
   const facts = [...baseModel.facts];
   if (production) facts.push(
@@ -41,7 +44,7 @@ function createFixture(production: boolean) {
   if (production) put('drafts/fixture.md', `---\nslug: fixture-article\ntitle: 如何阅读测试说明？\ndescription: 独立构建测试说明。\nquestion: 如何阅读测试说明？\nfact_refs: [brand, fixture.service]\nstatus: confirmed\nupdated_at: '2026-11-11'\n---\n先阅读说明，再查看已确认事实。`);
   const html = `<html lang="zh-CN"><head><title>{title}</title><meta name="description" content="独立构建测试说明。" /><meta name="robots" content={seo.noindex ? 'noindex, nofollow' : 'index, follow'} />{seo.canonical && <link rel="canonical" href={seo.canonical} />}<script type="application/ld+json" set:html={serializeJsonLd(organizationJsonLd())} /></head><body><a href="#main">跳到正文</a><nav aria-label="主导航"><a href="/">首页</a><a href="/faq/">常见问题</a></nav><main id="main"><h1>{title}</h1><p>这里是独立构建测试使用的页面，仅用于验证静态生成、事实门控、生产环境与预览环境的搜索规则。咨询摘要只在本地整理，不自动发送，不代表预约成功；业务事实只在确认后提供公开说明。</p><time datetime="2026-11-11">2026-11-11</time></main><footer><a href="/privacy/">隐私说明</a></footer></body></html>`;
   const frontmatter = (imports: string, paths = '') => `---\nimport { getPageSeo, serializeJsonLd, organizationJsonLd } from ${JSON.stringify(imports)};\n${paths}\nconst title = Astro.params.slug || Astro.url.pathname;\nconst seo = getPageSeo(Astro.url.pathname);\n---\n${html}`;
-  for (const path of [...contentPaths(baseModel), '/404/']) put(`src/pages/${path === '/' ? 'index' : path.slice(1, -1)}.astro`, frontmatter('../lib/seo.ts'));
+  for (const path of [...sourceContentPaths(baseModel), '/404/']) put(`src/pages/${path === '/' ? 'index' : path.slice(1, -1)}.astro`, frontmatter('../lib/seo.ts'));
   for (const [route, getter] of [['services', 'getServices'], ['locations', 'getLocations'], ['articles', 'getArticles']]) {
     put(`src/pages/${route}/[slug].astro`, frontmatter('../../lib/seo.ts', `import { ${getter} } from '../../lib/content.ts';\nexport function getStaticPaths() { return ${getter}().map(item => ({params: {slug: item.slug}})); }`));
   }

@@ -264,8 +264,8 @@ test('根目录种子只公开品牌与网站操作 FAQ，至少两个合法 pen
   assert.ok(content, 'content.ts 加载器尚未实现');
   const model = content.loadContent(new URL('..', import.meta.url));
   assert.equal(model.site.brand, '贝缇美业');
-  assert.equal(model.site.environment, 'preview');
-  assert.equal(model.site.base_url, '');
+  assert.equal(model.site.environment, 'production');
+  assert.equal(model.site.base_url, 'https://www.beitimeiye.com');
   assert.deepEqual(model.getServices(), []);
   assert.deepEqual(model.getLocations(), []);
   assert.deepEqual(model.getReviews(), []);

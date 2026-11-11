@@ -1,8 +1,20 @@
 {
   "brand": "贝缇美业",
-  "base_url": "",
+  "base_url": "https://www.beitimeiye.com",
   "language": "zh-CN",
-  "environment": "preview",
-  "public_pages": [],
+  "languages": ["zh-CN", "en"],
+  "environment": "production",
+  "public_pages": [
+    "/",
+    "/services/",
+    "/pricing/",
+    "/about/",
+    "/locations/",
+    "/faq/",
+    "/articles/",
+    "/contact/",
+    "/privacy/",
+    "/terms/"
+  ],
   "analytics_endpoint": ""
 }

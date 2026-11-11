@@ -295,6 +295,27 @@ updated_at: '2026-11-11'
 ```json
 {
   "brand": "贝缇美业",
+  "base_url": "https://www.beitimeiye.com",
+  "language": "zh-CN",
+  "languages": ["zh-CN", "en"],
+  "environment": "production",
+  "public_pages": [
+    "/", "/services/", "/pricing/", "/about/", "/locations/",
+    "/faq/", "/articles/", "/contact/", "/privacy/", "/terms/"
+  ],
+  "analytics_endpoint": ""
+}
+```
+
+正式配置开放全部 10 个现有固定页面，以已可匿名访问的品牌域名 `https://www.beitimeiye.com` 作为 canonical 和 sitemap 的统一来源。公开页面输出 `index, follow`，并允许搜索结果展示完整文字摘要、大图与视频预览；是否收录、展示或被 AI 引用由对应平台决定。
+
+`robots.txt` 使用 `User-agent: *` 与 `Allow: /`，通用规则适用于遵守 robots 的搜索及 AI 爬虫，同时允许抓取 CSS、JS、图片、`sitemap.xml` 和 `llms.txt`。未指定公开的已生成页面仍单独禁止抓取；404 不进入 sitemap，未确认业务事实与草稿继续不发布。正式 sitemap 列出 10 个固定页面及其英文版本，共 20 个实际生成页面的 HTTPS URL 和更新时间，`llms.txt` 提供同一公开页面清单。开发服务器也会显示正式配置下的 sitemap，最终构建再根据真实 HTML 产物校正清单。
+
+若需要把整个站点改回未公开预览，使用以下配置：
+
+```json
+{
+  "brand": "贝缇美业",
   "base_url": "",
   "language": "zh-CN",
   "environment": "preview",
@@ -307,11 +328,19 @@ updated_at: '2026-11-11'
 
 生产配置必须先由客户确认实际 HTTPS 公共域名及归属，再设置 `base_url` 和 `environment: "production"`。域名校验拒绝 HTTP、localhost、IP、example/test 等占位域名，以及路径、查询、凭据、非标准端口；它只验证格式，不证明域名归属，也不部署网站。`brand` 与已确认的 `brand` 事实应保持一致。
 
-`public_pages` 是明确的页面路径列表，例如 `["/", "/faq/"]` 只是路径格式示例，不是公开授权。路径不能含查询、片段或穿越；目录路径会规范化为尾斜杠形式。生产 sitemap/llms 只取“指定公开路径 ∩ 实际生成路径”；写入 `/reviews/` 或不存在的详情不会使其生成。未指定页面仍可能存在于 `dist`，但保持 noindex；robots 按精确路径允许抓取，不能用这些规则替代访问控制。404 不进入公开清单。
+`public_pages` 是明确的页面路径列表，例如 `["/", "/faq/"]` 表示只公开首页与 FAQ；当前授权范围为上述 10 个现有固定页面。路径不能含查询、片段或穿越；目录路径会规范化为尾斜杠形式。生产 sitemap/llms 只取“指定公开路径 ∩ 实际生成路径”；写入 `/reviews/` 或不存在的详情不会使其生成。未指定页面仍可能存在于 `dist`，但保持 noindex；robots 在允许通用资源的同时禁止未公开的已生成页面，必要时用精确 Allow 覆盖未公开父目录，不能用这些规则替代访问控制。404 不进入公开清单。新增确认后的服务、地点或文章详情时，需将对应路径加入 `public_pages` 才会进入公开清单。
 
-生产前重新 test/check/build，并逐项核对 `dist` 的 HTML、canonical、JSON-LD、robots、sitemap、llms 和图片。构建会把确认后的内容写进静态 HTML；运行时改 YAML 不会更新已部署文件。这里不包含生产域名、部署、真实交易或预约确认。
+生产前重新 test/check/build，并逐项核对 `dist` 的 HTML、canonical、JSON-LD、robots、sitemap、llms 和图片。构建会把确认后的内容写进静态 HTML；运行时改 YAML 不会更新已部署文件。修改配置后需要重新部署才会对线上生效；带 Vercel 登录保护的预览地址不作为收录入口，正式域名必须允许匿名访问，且不能附加 `X-Robots-Tag: noindex`。这里不包含自动部署、真实交易或预约确认。
 
 分析默认为关闭。只有生产模式、有效 HTTPS `analytics_endpoint` 且用户在当前页面明确开启时才发送 `page_view`/`intent_click`/`inquiry_prepared` 分类事件；`inquiry_prepared` 仅表示校验成功并已显示本地咨询摘要，不代表真实发送、收件或预约成功，触发事件不携带表单字段。发送内容包括事件、类别、当前路径、来源 origin 与来源类别，不包括查询字符串、完整来源 URL、姓名、联系方式或留言；同意不跨页面持久化。采集接入仍需单独核实服务端处理与隐私政策，不是匿名性保证。
+
+### 中英文页面与语言切换
+
+`language: "zh-CN"` 是默认语言；`languages: ["zh-CN", "en"]` 开启中英文。中文页面保留原地址，英文页面使用 `/en/` 前缀，例如 `/faq/` 与 `/en/faq/`。右上角语言菜单在桌面、平板、手机均可使用，支持键盘和 Escape 关闭，切换后停留在相同页面。咨询页只保留白名单意向参数，不会把姓名、手机号或留言写进切换链接；页面切换不会保存表单，切换前可自行复制咨询内容。
+
+现有固定页面、导航、页脚、FAQ、表单校验与本地摘要均提供英文。翻译字典位于 `src/lib/translations.ts`（基础文案由 `en-copy.ts` 提供），在服务端渲染为 HTML；不调用外部翻译服务，也不依赖浏览器翻译。表单选项值与 11 位数字手机号码校验规则保持一致，用户输入原样保留。新发布的业务内容如无对应英文翻译，会保留原文，需维护者补充核实过的翻译。
+
+公开页面的中英文版本各有 canonical，并通过 `hreflang="zh-CN"`、`hreflang="en"` 与 `x-default` 关联。英文版本继承中文原页面的公开状态，`public_pages` 无需重复添加 `/en/` 路径；未确认详情不会因语言切换而生成。sitemap/llms 仅列实际生成且指定公开的版本。移除 `languages` 或改为 `["zh-CN"]` 会关闭英文路由和菜单。
 
 ### 咨询当前边界
 

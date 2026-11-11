@@ -32,6 +32,8 @@ function createFixture(faqs) {
     "src/components/SiteHeader.astro", "src/components/SiteFooter.astro",
     "src/components/site-interactions.mjs", "src/components/brand-media.mjs",
     "src/styles/global.css", "src/lib/content.ts", "src/lib/seo.ts",
+    "src/lib/i18n.ts", "src/lib/translations.ts", "src/lib/en-copy.ts",
+    "src/lib/localized-html.ts", "src/components/LanguageSwitcher.astro",
   ]) {
     mkdirSync(dirname(join(root, file)), { recursive: true });
     copyFileSync(join(workspace, file), join(root, file));
