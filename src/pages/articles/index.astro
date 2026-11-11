@@ -1,0 +1,11 @@
+---
+import InnerPage from '../_shared/InnerPage.astro';
+import { getArticles } from '../../lib/content.ts';
+import { safeSlug } from '../_shared/values.ts';
+const articles = getArticles();
+---
+<InnerPage title="有问题，就慢慢读。" eyebrow="Journal / 文章与解答" description={articles.length ? '这里的文章围绕具体问题展开，仅发布状态已确认、事实引用有效的内容。您可以先读结论，再查看相关说明与服务边界。' : '目前还没有可公开的已确认文章。您可以先阅读网站操作问答，或整理希望进一步了解的问题；待核实内容不会提前发布。'} breadcrumbs={[{ label: '文章与解答' }]}>
+  <section class="editorial-section">{articles.length ? <><h2>从问题找到答案</h2><ol class="editorial-list">
+    {articles.map((article, index) => <li class="editorial-row"><div><span class="row-number">{String(index + 1).padStart(2, '0')}</span><p class="meta"><time datetime={article.updatedAt || article.updated_at}>{(article.updatedAt || article.updated_at).slice(0, 10)}</time></p><h3><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>{article.title}</a></h3></div><div><p>{article.description}</p><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>阅读解答 <span aria-hidden="true">→</span></a></div></li>)}
+  </ol></> : <div class="empty-editorial empty-state"><p class="eyebrow">Questions worth keeping</p><h2>先保留好问题，<br />不急着给出结论。</h2><p>价格、项目与案例需要有确认依据。文章会在内容和引用核实后公开，您不必用未经证实的说法做决定。</p><div class="page-actions"><a class="button" href="/faq/">先看常见问题</a><a class="text-link" href="/contact/">记录我想了解的事</a></div></div>}</section>
+</InnerPage>

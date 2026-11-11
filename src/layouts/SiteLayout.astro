@@ -1,0 +1,75 @@
+---
+import { site } from "../lib/content";
+import { getPageSeo, organizationJsonLd, serializeJsonLd } from "../lib/seo";
+import { brandMedia } from "../components/brand-media.mjs";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/global.css";
+interface Props {
+  title: string;
+  description?: string;
+  breadcrumbs?: { label: string; href?: string }[];
+  jsonLd?: any;
+  home?: boolean;
+}
+const {
+  title,
+  description = "贝缇美业，让美，成为日常。探索品牌理念、查看已确认信息，整理适合自己的美业咨询需求。",
+  breadcrumbs = [],
+  jsonLd,
+  home = false,
+} = Astro.props;
+const pageTitle = title.includes(site.brand) ? title : `${title} | ${site.brand}`;
+const { canonical, noindex } = getPageSeo(Astro.url.pathname, pageTitle, description);
+const ogImage = site.base_url && brandMedia[0].frozen ? new URL(brandMedia[0].src, site.base_url).href : undefined;
+const organization = organizationJsonLd();
+const structured = [
+  ...(Object.keys(organization).length ? [organization] : []),
+  ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : []),
+];
+---
+<!doctype html>
+<html lang={site.language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#15211d" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.brand} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="zh_CN" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImage && <>
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="2560" />
+      <meta property="og:image:height" content="1440" />
+      <meta property="og:image:alt" content={brandMedia[0].alt} />
+    </>}
+    <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+    <script type="application/ld+json" set:html={serializeJsonLd(structured)}></script>
+    <slot name="head" />
+  </head>
+  <body class:list={[{ "is-home": home }]}>
+    <a class="skip-link" href="#main-content">跳至主要内容</a>
+    <SiteHeader />
+    <main id="main-content" tabindex="-1">
+      {breadcrumbs.length > 0 && <nav class="breadcrumbs container" aria-label="面包屑"><ol>
+        {breadcrumbs.map((crumb, index) => <li>
+          {crumb.href && index < breadcrumbs.length - 1 ? <a href={crumb.href}>{crumb.label}</a> : <span aria-current="page">{crumb.label}</span>}
+        </li>)}
+      </ol></nav>}
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import { initializeSite } from "../components/site-interactions.mjs";
+      initializeSite();
+    </script>
+  </body>
+</html>

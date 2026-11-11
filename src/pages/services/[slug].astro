@@ -1,0 +1,55 @@
+---
+import InnerPage from '../_shared/InnerPage.astro';
+import { site, getServices, getFaqs, getArticles } from '../../lib/content.ts';
+import { safeSlug, textItems, formatValue } from '../_shared/values.ts';
+export function getStaticPaths() {
+  return getServices().map((service) => ({ params: { slug: safeSlug(service.slug) }, props: { service } }));
+}
+type Service = ReturnType<typeof getServices>[number];
+interface Props { service: Service }
+const { service } = Astro.props;
+const relatedFaqs = getFaqs().filter((faq) => [service.id, service.slug, service.name].includes(faq.category));
+const faqs = relatedFaqs.length ? relatedFaqs : getFaqs().slice(0, 3);
+const articles = getArticles().filter((article) => article.fact_refs.includes(service.id));
+const description = service.summary || `关于${service.name}，这里只展示已确认信息；缺少的条件与费用需要进一步确认。`;
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'Service', name: service.name,
+  ...(service.summary ? { description: service.summary } : {}),
+  provider: { '@type': 'Organization', name: site.brand },
+};
+const blocks = [
+  { title: '适用对象', value: service.audience, fallback: '适用条件尚未公开确认，请先说明您的需求并进一步询问。' },
+  { title: '不适用情况', value: service.notFor, fallback: '不适用条件尚未公开确认；信息缺失不代表没有限制。' },
+  { title: '限制与注意事项', value: service.limits, fallback: '具体限制尚未公开确认，请在选择前核实。' },
+];
+---
+<InnerPage title={service.name} eyebrow="Service / 了解边界" description={description} updatedAt={service.updatedAt} jsonLd={jsonLd} breadcrumbs={[{ label: '服务信息', href: '/services/' }, { label: service.name }]}>
+  <section class="editorial-section">
+    <h2>这项服务适合我吗？</h2>
+    <p class="intro-copy">请把已确认的适用条件与您的实际需求一起考虑。未公开的内容不能作为承诺；咨询与服务确认是两个不同步骤。</p>
+    {blocks.map((block) => <div class="editorial-row">
+      <h3>{block.title}</h3>
+      {textItems(block.value).length ? <ul class="fact-list">{textItems(block.value).map((item) => <li>{item}</li>)}</ul> : <p>{block.fallback}</p>}
+    </div>)}
+  </section>
+  <section class="editorial-section">
+    <h2>时间与计费</h2>
+    <dl class="fact-grid">
+      <div><dt>时长 / 安排</dt><dd>{formatValue(service.duration) || '尚未公开确认'}</dd></div>
+      <div><dt>价格</dt><dd>{formatValue(service.price) || '尚未公开确认'}</dd></div>
+      <div><dt>计费单位</dt><dd>{formatValue(service.unit) || '尚未公开确认'}</dd></div>
+      <div><dt>价格生效日期</dt><dd>{service.effectiveDate ? <time datetime={service.effectiveDate}>{service.effectiveDate}</time> : '尚未确认'}</dd></div>
+      {service.updatedAt && <div><dt>信息更新日期</dt><dd><time datetime={service.updatedAt}>{service.updatedAt.slice(0, 10)}</time>（非价格生效日期）</dd></div>}
+    </dl>
+    <div class="editorial-row"><h3>包含项目</h3>{textItems(service.includes).length ? <ul class="fact-list">{textItems(service.includes).map((item) => <li>{item}</li>)}</ul> : <p>包含项目尚未公开确认，请在接受报价前核实。</p>}</div>
+    <div class="editorial-row"><h3>不包含项目</h3>{textItems(service.excludes).length ? <ul class="fact-list">{textItems(service.excludes).map((item) => <li>{item}</li>)}</ul> : <p>不包含项目尚未公开确认，不应理解为没有额外费用。</p>}</div>
+    <a class="text-link" href="/pricing/">查看全部已确认价格信息</a>
+  </section>
+  {faqs.length > 0 && <section class="editorial-section">
+    <h2>{relatedFaqs.length ? '相关问答' : '网站与咨询操作问答'}</h2>
+    {faqs.map((faq) => <div class="editorial-row"><h3>{faq.question}</h3><p>{faq.answer}</p></div>)}
+    <a class="text-link" href="/faq/">查看全部常见问题</a>
+  </section>}
+  {articles.length > 0 && <section class="editorial-section"><h2>进一步阅读</h2><ul class="editorial-list">{articles.map((article) => <li class="editorial-row"><h3><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>{article.title}</a></h3><p>{article.description}</p></li>)}</ul></section>}
+  <section class="editorial-section"><h2>还有哪些信息需要确认？</h2><p class="intro-copy">把关于「{service.name}」的疑问写进咨询留言。此步骤仅整理需求，不发送，也不创建预约。</p><div class="page-actions"><a class="button" href="/contact/">整理咨询需求</a><a class="text-link" href="/services/">返回服务信息</a></div></section>
+</InnerPage>

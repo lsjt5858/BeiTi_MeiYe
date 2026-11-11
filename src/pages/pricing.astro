@@ -1,0 +1,27 @@
+---
+import InnerPage from './_shared/InnerPage.astro';
+import { getServices } from '../lib/content.ts';
+import { safeSlug, formatValue } from './_shared/values.ts';
+const pricedServices = getServices().filter((service) => formatValue(service.price));
+const description = pricedServices.length
+  ? '您可以在这里查看已确认的价格与计费单位。包含范围和限制请与对应服务详情一起阅读；更新时间不等于价格生效日期。'
+  : '目前还没有可公开的已确认价格。这里不提供估算报价；请先整理项目范围、包含内容与计费单位等需要确认的问题。';
+---
+<InnerPage title="让费用，清楚一点。" eyebrow="Pricing / 价格信息" description={description} breadcrumbs={[{ label: '价格信息' }]}>
+  <section class="editorial-section">
+    {pricedServices.length ? <>
+      <h2>已确认价格</h2>
+      <div class="table-scroll" role="region" aria-label="已确认价格对照表" tabindex="0">
+        <table class="fact-table"><caption class="small-note">金额按确认数据原样展示，不推断币种、优惠或额外费用。</caption><thead><tr><th scope="col">项目</th><th scope="col">价格</th><th scope="col">计费单位</th><th scope="col">价格生效日期</th><th scope="col">信息更新</th></tr></thead><tbody>
+          {pricedServices.map((service) => <tr><th scope="row"><a class="text-link" href={`/services/${safeSlug(service.slug)}/`}>{service.name}</a></th><td>{formatValue(service.price)}</td><td>{formatValue(service.unit) || '尚未公开确认'}</td><td>{service.effectiveDate ? <time datetime={service.effectiveDate}>{service.effectiveDate}</time> : '尚未确认'}</td><td>{service.updatedAt ? <time datetime={service.updatedAt}>{service.updatedAt.slice(0, 10)}</time> : '尚未公开确认'}</td></tr>)}
+        </tbody></table>
+      </div>
+      <p class="small-note">每项费用的包含 / 不包含项目、适用条件，请在对应服务详情查看。未标明生效日期的项目仍需进一步核实；内容更新时间不代替价格生效日期。</p>
+    </> : <div class="empty-editorial empty-state"><p class="eyebrow">Clarity before cost</p><h2>先问清范围，<br />再谈具体费用。</h2><p>没有确认价格，不意味着免费，也不意味着存在统一套餐。您可以把预算作为沟通背景，但不要据此推断服务报价。</p><a class="button" href="/contact/">整理费用相关问题</a></div>}
+  </section>
+  <section class="editorial-section"><h2>一份清楚的报价，需要回答什么？</h2><ol class="editorial-list">
+    <li class="editorial-row"><div><span class="row-number">01</span><h3>按什么单位计费？</h3></div><p>请确认按次、时长或其他单位计费，避免把不同范围的数字直接比较。本站不替未公开项目设定计费方式。</p></li>
+    <li class="editorial-row"><div><span class="row-number">02</span><h3>哪些包含，哪些另计？</h3></div><p>询问项目范围、材料或其他可能影响费用的条件，以正式沟通确认的信息为准。</p></li>
+    <li class="editorial-row"><div><span class="row-number">03</span><h3>何时生效，如何变更？</h3></div><p>确认报价适用时间与变更规则。页面“内容更新”只说明信息维护日期，不代替交易约定。</p></li>
+  </ol><div class="page-actions"><a class="text-link" href="/services/">了解服务边界</a><a class="text-link" href="/faq/">查看咨询流程问答</a></div></section>
+</InnerPage>

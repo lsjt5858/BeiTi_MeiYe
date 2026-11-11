@@ -1,0 +1,99 @@
+---
+import InnerPage from './_shared/InnerPage.astro';
+import { getFaqs } from '../lib/content.ts';
+const faqs = getFaqs();
+const categories = [...new Set(faqs.map((faq) => faq.category).filter(Boolean))];
+const jsonLd = faqs.length ? {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question', name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+} : undefined;
+---
+<InnerPage title="您的问题，值得说清楚。" eyebrow="FAQ / 常见问题" description="这里回答网站使用与咨询流程中已经确认的问题。整理需求不等于发送，更不代表预约；具体服务、价格和地点以各自已确认的信息为准。" jsonLd={jsonLd} breadcrumbs={[{ label: '常见问题' }]}>
+  <section class="editorial-section" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">从一个具体问题开始</h2>
+    {faqs.length ? <>
+      <div id="faq-filters" class="faq-filters" hidden>
+        <div><label for="faq-search">搜索问题与回答</label><input id="faq-search" type="search" placeholder="例如：需求是否已经发送？" maxlength="100" aria-controls="faq-list" autocomplete="off" /></div>
+        {categories.length > 1 && <div><label for="faq-category">按主题筛选</label><select id="faq-category" aria-controls="faq-list"><option value="">全部主题</option>{categories.map((category) => <option value={category}>{category}</option>)}</select></div>}
+      </div>
+      <p id="faq-status" class="small-note" role="status" aria-live="polite" aria-atomic="true">{faqs.length} 个已确认问题</p>
+      <div id="faq-list" class="faq-list">
+        {faqs.map((faq, index) => <details id={`faq-${index + 1}`} class="faq-item" data-faq-item data-category={faq.category} data-search={`${faq.question} ${faq.answer} ${faq.category}`}>
+          <summary><span class="faq-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span><span>{faq.question}</span><span class="faq-toggle" aria-hidden="true">+</span></summary>
+          <div class="faq-answer"><p>{faq.answer}</p><div class="faq-answer-footer"><a class="text-link" href={`#faq-${index + 1}`} aria-label={`直达问题 ${index + 1}：${faq.question}`}>问题直达链接</a>{faq.updatedAt && <span class="meta">更新：<time datetime={faq.updatedAt}>{faq.updatedAt.slice(0, 10)}</time></span>}</div></div>
+        </details>)}
+      </div>
+      <div id="faq-empty" class="empty-editorial" hidden><h3>没有找到匹配的问题。</h3><p>试试更短的关键词，或切回“全部主题”。您也可以把尚未解决的问题写进咨询需求。</p><button id="faq-clear" class="button-secondary" type="button">清除筛选</button></div>
+      <noscript><p class="small-note">搜索筛选需要 JavaScript。您仍可直接展开所有问题，或使用浏览器的“页面内查找”。</p></noscript>
+    </> : <div class="empty-editorial empty-state"><h3>暂时没有可公开的问答。</h3><p>不以未确认回答代替真实信息。您可以先记录具体问题，待正式渠道开放后再沟通。</p></div>}
+  </section>
+  <section class="editorial-section"><h2>没找到您想问的？</h2><p class="intro-copy">一个具体的问题，是更清楚沟通的开始。写下想了解的条件、费用或流程，不需要现在做决定。</p><div class="page-actions"><a class="button" href="/contact/">整理我的问题</a><a class="text-link" href="/services/">查看服务信息</a></div></section>
+</InnerPage>
+
+<script>
+  const search = document.querySelector<HTMLInputElement>('#faq-search');
+  const category = document.querySelector<HTMLSelectElement>('#faq-category');
+  const filters = document.querySelector<HTMLElement>('#faq-filters');
+  const status = document.querySelector<HTMLElement>('#faq-status');
+  const empty = document.querySelector<HTMLElement>('#faq-empty');
+  const items = [...document.querySelectorAll<HTMLDetailsElement>('[data-faq-item]')];
+  if (search && filters && status && empty) {
+    filters.hidden = false;
+    const filter = () => {
+      const query = search.value.trim().toLocaleLowerCase('zh-CN');
+      const selected = category?.value || '';
+      let count = 0;
+      for (const item of items) {
+        const matches = (item.dataset.search || '').toLocaleLowerCase('zh-CN').includes(query)
+          && (!selected || item.dataset.category === selected);
+        item.hidden = !matches;
+        if (matches) count++;
+      }
+      empty.hidden = count > 0;
+      status.textContent = count ? `找到 ${count} 个问题` : '没有找到匹配的问题，请调整关键词或主题。';
+    };
+    search.addEventListener('input', filter);
+    category?.addEventListener('change', filter);
+    document.querySelector('#faq-clear')?.addEventListener('click', () => {
+      search.value = '';
+      if (category) category.value = '';
+      filter();
+      search.focus();
+    });
+    const openAnchor = () => {
+      const target = document.getElementById(location.hash.slice(1));
+      if (target instanceof HTMLDetailsElement && target.matches('[data-faq-item]')) {
+        search.value = '';
+        if (category) category.value = '';
+        filter();
+        target.open = true;
+      }
+    };
+    openAnchor();
+    window.addEventListener('hashchange', openAnchor);
+  }
+</script>
+
+<style>
+  [hidden] { display: none !important; }
+  .faq-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, .4fr); gap: 1.5rem; margin-block: 2rem; max-width: 64rem; }
+  label { display: block; margin-bottom: .6rem; font-size: .9rem; }
+  input, select { width: 100%; min-height: 3.3rem; border: 1px solid var(--line, #c2b8a7); background: transparent; padding: .8rem 1rem; color: inherit; font: inherit; border-radius: 0; }
+  input:focus-visible, select:focus-visible { outline: 2px solid var(--ink, #232620); outline-offset: 3px; }
+  .faq-list { margin-top: 2rem; }
+  .faq-item { border-top: 1px solid var(--line, #d9d1c4); scroll-margin-top: 8rem; }
+  .faq-item:last-child { border-bottom: 1px solid var(--line, #d9d1c4); }
+  summary { display: flex; align-items: center; gap: 1.5rem; min-height: 5rem; padding-block: 1.5rem; cursor: pointer; list-style: none; font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.6; }
+  summary::-webkit-details-marker { display: none; }
+  summary:focus-visible { outline: 2px solid var(--ink, #232620); outline-offset: 4px; }
+  .faq-number { color: var(--muted, #686258); font-size: .8rem; letter-spacing: .1em; align-self: flex-start; margin-top: .3rem; }
+  .faq-toggle { margin-left: auto; font-size: 1.6rem; font-weight: 300; }
+  details[open] .faq-toggle { transform: rotate(45deg); }
+  .faq-answer { padding: 0 3rem 2rem; max-width: 52rem; }
+  .faq-answer p { line-height: 1.95; white-space: pre-line; margin-top: 0; }
+  .faq-answer-footer { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: center; }
+  @media (max-width: 640px) { .faq-filters { grid-template-columns: 1fr; } summary { gap: 1rem; } .faq-answer { padding-inline: 2.2rem 0; } }
+</style>

@@ -1,0 +1,18 @@
+---
+import InnerPage from './_shared/InnerPage.astro';
+import { getReviews } from '../lib/content.ts';
+import { safeHttpUrl } from './_shared/values.ts';
+export function getStaticPaths() {
+  const reviews = getReviews();
+  return reviews.length ? [{ params: { page: 'reviews' }, props: { reviews } }] : [];
+}
+interface Props { reviews: ReturnType<typeof getReviews> }
+const { reviews } = Astro.props;
+---
+<InnerPage title="真实表达，保留来源。" eyebrow="Reviews / 授权评价" description="这里仅展示已确认、具有授权、来源与日期的评价。个人感受不代表所有人的体验，也不是效果保证。" breadcrumbs={[{ label: '授权评价' }]}>
+  <section class="editorial-section"><h2>已获授权的评价</h2><ol class="editorial-list">{reviews.map((review, index) => <li class="editorial-row">
+    <div><span class="row-number">{String(index + 1).padStart(2, '0')}</span><h3>{('name' in review && typeof review.name === 'string' ? review.name : review.author) || '未公开姓名的评价者'}</h3><p class="meta"><time datetime={review.date}>{review.date.slice(0, 10)}</time></p></div>
+    <div><blockquote class="quote-text">{review.text}</blockquote><p class="small-note">来源：{safeHttpUrl(review.source) ? <a class="text-link" href={safeHttpUrl(review.source)} target="_blank" rel="noopener noreferrer">查看原始来源（新窗口）</a> : review.source}</p></div>
+  </li>)}</ol></section>
+  <section class="editorial-section"><h2>了解边界，再做选择。</h2><p class="intro-copy">评价提供个人视角，具体项目的适用条件与限制仍需查看已确认服务信息。</p><div class="page-actions"><a class="button" href="/services/">查看服务信息</a><a class="text-link" href="/contact/">整理咨询问题</a></div></section>
+</InnerPage>

@@ -1,0 +1,72 @@
+facts:
+  - id: brand
+    type: brand
+    status: confirmed
+    value: 贝缇美业
+    updated_at: '2026-11-11'
+
+  # 仅确认当前网站功能，不确认企业已经开展的业务。
+  - id: faq-consult
+    type: faq
+    status: confirmed
+    value:
+      question: 如何整理咨询需求？
+      answer: 在咨询页填写需求并同意隐私说明后，可以生成本地摘要，复制或下载。摘要不会自动发送，也不代表预约成功。
+      category: 网站使用
+    updated_at: '2026-11-11'
+  - id: faq-pricing
+    type: faq
+    status: confirmed
+    value:
+      question: 网站没有价格时，如何查看说明？
+      answer: 价格页仅展示已确认的价格信息。如果当前没有价格，请保留咨询方向与希望了解的问题，不要把页面中的意向分类当成已开设服务或报价。
+      category: 信息查看
+    updated_at: '2026-11-11'
+  - id: faq-privacy
+    type: faq
+    status: confirmed
+    value:
+      question: 咨询摘要会自动发送或保存吗？
+      answer: 当前咨询工具只在本地整理摘要，不自动发送，也不将表单内容持久化。复制或下载后，请自行妥善保管其中的联系方式。
+      category: 隐私与使用
+    updated_at: '2026-11-11'
+
+  # 显著哨兵便于审计验证；不得把这些值写入 HTML、JSON-LD 或 sitemap。
+  - id: service.pending
+    type: service
+    status: pending
+    value:
+      slug: pending-service
+      name: PENDING_ONLY_NOT_PUBLIC_SERVICE
+      summary: PENDING_ONLY_NOT_PUBLIC_SUMMARY
+      price: PENDING_ONLY_NOT_PUBLIC_PRICE
+    updated_at: '2026-11-11'
+  - id: location.pending
+    type: location
+    status: pending
+    value:
+      slug: pending-location
+      name: PENDING_ONLY_NOT_PUBLIC_LOCATION
+      address: PENDING_ONLY_NOT_PUBLIC_ADDRESS
+      hours: PENDING_ONLY_NOT_PUBLIC_HOURS
+    updated_at: '2026-11-11'
+  - id: review.pending
+    type: review
+    status: pending
+    value:
+      author: PENDING_ONLY_NOT_PUBLIC_AUTHOR
+      text: PENDING_ONLY_NOT_PUBLIC_REVIEW
+      authorized: false
+      source: PENDING_ONLY_NOT_PUBLIC_SOURCE
+      date: '2026-11-11'
+    updated_at: '2026-11-11'
+  - id: contact.phone
+    type: contact
+    status: pending
+    value: PENDING_ONLY_NOT_PUBLIC_PHONE
+    updated_at: '2026-11-11'
+  - id: contact.email
+    type: contact
+    status: pending
+    value: PENDING_ONLY_NOT_PUBLIC_EMAIL
+    updated_at: '2026-11-11'

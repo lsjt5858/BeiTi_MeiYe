@@ -100,3 +100,237 @@ client.json     ──►  品牌名称、基础 URL (base_url)、语言、站�
 ## 构建与部署特性
 
 1. **构建前检查**：识别并标记占位符、未确认的事实、重复的草稿以及夸张表述。
+
+## 本地开发与内容维护
+
+本节说明当前实现；前文保留为网站功能目标，不代表全部业务数据已经确认，也不代表网站已部署或接入预约系统。
+
+### 安装与运行
+
+项目根目录为 `/Users/bytedance/zimeiti/BeiTi_MeiYe`。使用 Astro 7.4.10 静态生成、TypeScript 与少量原生浏览器 JavaScript。`package.json` 要求 Node.js `>=22.23.4`、npm `>=9.6.5`；本轮使用 Node.js `v26.5.0`、npm `11.17.0`。请先选择满足要求的 Node.js，再在项目根目录执行一次安装：
+
+```sh
+npm_config_cache=/tmp/beiti-npm-cache npm ci
+```
+
+安装使用 `package-lock.json` 锁定依赖；当前依赖已安装，不需要在运行中的开发服务器旁重复安装。所有下列 npm 命令都将缓存限定在临时目录，不修改全局 npm 配置。
+
+本地开发：
+
+```sh
+npm_config_cache=/tmp/beiti-npm-cache npm run dev -- --host 0.0.0.0 --ignore-lock
+```
+
+默认访问 `http://localhost:4321/`，实际端口以终端输出为准。`0.0.0.0` 允许局域网访问，请仅在可信网络使用；只需本机访问时可把 host 改为 `127.0.0.1`。Astro 7 在 Agent 环境可能自动转入后台；此处 `--ignore-lock` 保持前台进程供 TRAE 跟踪，也会跳过实例锁，因此**已有服务器时不要再次启动**。结束自己启动的前台进程可使用终端 Ctrl+C。
+
+TRAE Run 按钮配置保存在 `.trae/environments/run.json`，默认动作 `beiti-web`（贝缇美业）使用上述精确命令并打开本地预览。该命令已有当前请求的 HTTP 200、正确页面标题与品牌 H1 证据；保存配置不另起服务器。开发工具栏通过 `astro.config.mjs` 的 `devToolbar.enabled: false` 关闭，配置热重载由 Astro 管理。
+
+构建、检查和测试：
+
+```sh
+npm_config_cache=/tmp/beiti-npm-cache npm test
+npm_config_cache=/tmp/beiti-npm-cache npm run check
+npm_config_cache=/tmp/beiti-npm-cache npm run build
+```
+
+- `npm test` 使用 Node 原生测试运行器，覆盖事实门控、草稿引用、SEO、真实临时目录构建、静态审计、咨询校验与首页方向映射、关于页确认资料/非法形状/安全渲染、轮播状态和分析边界；关于页测试复制真实应用源码到 `/private/tmp` 构建，不用镜像模板，不把测试确认数据写入根事实卡片。它不替代浏览器视觉与交互验收。
+- `npm run check` 先执行内容检查，再执行 `astro check` 的 Astro/TypeScript 诊断。
+- `npm run build` 顺序执行内容检查、Astro 静态构建、真实 `dist` 的 `geo-audit`。审计逐项检查页面/内部链接、标题描述、H1、日期、语义入口、静态正文、SEO、已确认 JSON-LD、事实泄漏与搜索文件；总分须 `>=80`，关键失败即使达到分数也会非零退出。
+- 可单独运行 `npm_config_cache=/tmp/beiti-npm-cache npm run content-check` 或 `npm_config_cache=/tmp/beiti-npm-cache npm run geo-audit`；后者要求已有当前构建产物。
+- 当前 pending 哨兵与草稿会产生“未公开”检查提示，这是保留样例的预期结果，不能通过改为 confirmed 来消除提示。
+
+Astro 与 Vite 的可写缓存分别保存在项目自己的 `.astro/cache/` 和 `.astro/vite/`，均不提交。临时构建即使复用已安装的依赖，也使用自己的缓存目录，避免并行测试和本地预览相互覆盖缓存。
+
+构建产物位于 `dist/`。需要另行检查构建后的页面时，在没有占用相应端口的实例情况下执行：
+
+```sh
+npm_config_cache=/tmp/beiti-npm-cache npm run preview -- --host 127.0.0.1 --port 4322 --ignore-lock
+```
+
+构建预览访问 `http://localhost:4322/`（以实际输出为准）。这条预览命令的参数已通过 Astro CLI help 核对，但本轮没有启动额外预览进程。静态构建成功不代表部署成功；当前没有执行任何生产部署。
+
+### 目录与真实入口
+
+```text
+client.json                 品牌、语言、预览/生产模式、公开路径与可选分析配置
+fact-card.yaml              唯一业务事实来源：facts 数组
+drafts/*.md                 带 YAML frontmatter 的文章草稿
+src/lib/content.ts          事实/草稿加载、确认过滤、字段和引用校验
+src/lib/seo.ts              canonical、JSON-LD、搜索文件和公开路径规则
+src/lib/contact.ts          咨询白名单、字段校验、纯文本摘要
+src/pages/                  首页、常规内页、动态服务/地点/文章/评价及 SEO 文件
+src/pages/_shared/          共用内页布局、安全值处理、about.ts 资料类型过滤
+src/layouts/                全站 HTML head、导航与页脚集成
+src/components/             公共组件、品牌图片元数据与交互脚本
+src/styles/global.css       公共视觉与响应式样式
+public/images/              冻结摄影 JPEG 和 SOURCES.md 来源说明
+scripts/content-check.ts    构建前内容检查
+scripts/geo-audit.ts        只读构建产物的静态审计
+tests/                      数据、构建、审计与咨询回归测试
+.trae/environments/run.json TRAE Run 动作
+dist/                       静态产物（忽略，不提交）
+```
+
+当前固定页面为 `/`、`/services/`、`/pricing/`、`/about/`、`/locations/`、`/faq/`、`/articles/`、`/contact/`、`/privacy/`、`/terms/`，另有 `404.html` 与 `robots.txt`、`sitemap.xml`、`llms.txt`。服务、地点、文章详情按可公开内容生成；没有授权评价时不生成 `/reviews/`，也不展示评价导航。未生成路径的 HTTP 404 还取决于所用静态托管的正确配置。
+
+### 事实维护：先核实，再发布
+
+`fact-card.yaml` 顶层必须为 `facts` 数组。每项必需 `id`、`type`、`status`、`value`、`updated_at`，可选 `expires_at`；日期必须是有效的 `YYYY-MM-DD`。只公开 `confirmed` 且没有过期的记录，`expires_at` 当天仍有效。`unknown`、`pending`、`conflict`、`expired` 均不公开。
+
+以下是**待核实样例**，不是报价或已开设服务；如需试用，可追加到事实数组，必须保持 `pending`，不要替换现有记录：
+
+```yaml
+  - id: sample.service
+    type: service
+    status: pending
+    value:
+      slug: sample-service
+      name: 示例服务（未核实，不公开）
+      summary: PENDING_ONLY_NOT_PUBLIC_SAMPLE_SUMMARY
+      audience: [样例适用条件]
+      notFor: [样例不适用条件]
+      limits: [样例限制]
+      duration: PENDING_ONLY_NOT_PUBLIC_SAMPLE_DURATION
+      price: PENDING_ONLY_NOT_PUBLIC_SAMPLE_PRICE
+      unit: PENDING_ONLY_NOT_PUBLIC_SAMPLE_UNIT
+      effectiveDate: '2026-11-11'
+      includes: [样例包含项目]
+      excludes: [样例不包含项目]
+    updated_at: '2026-11-11'
+```
+
+字段来自现有源码，不使用 `effective_date`、`not_for` 等未接通名称：
+
+- `service.value`：必需 `slug`、`name`；可选 `summary`、`audience`、`notFor`、`limits`、`duration`、`price`（字符串或数字，0 不被当作缺失）、`unit`、`effectiveDate`、`includes`、`excludes`。列表字段接受字符串或字符串数组；价格页与服务详情使用同一 `effectiveDate`，缺失时显示尚未确认，绝不拿 `updated_at` 冒充价格生效日期。
+- `location.value`：必需 `slug`、`name`；可选 `address`、`hours`、`transport`、`booking`、`mapUrl`。地图链接仅允许明确的 HTTP(S)，页面拒绝带凭据链接，不自动推断坐标或门店信息。
+- `faq.value`：必需 `question`、`answer`；可选 `category`，缺省为“网站使用”。首页和 FAQ 页读取同一确认数据；FAQ 的 JSON-LD 使用同一问题和答案，搜索只是本地筛选。
+- `review.value`：需 `text`、明确 `authorized: true`、非空 `source`、有效且非未来的 `date`；可选 `author`、`rating`（1–5）。状态 confirmed 不能代替授权，缺少授权/来源/日期仍不公开。不要编造评价或汇总评分。
+- 联系渠道按固定事实 ID 读取：`contact.phone`、`contact.email`，`type: contact`，`value` 为字符串。只显示已确认且格式有效的电话/邮箱，不从示例或咨询输入提取联系方式。
+
+ID 必须唯一；service/location 同类 `slug` 不得重复，只使用小写英文字母、数字与连字符。如果填写 `value.id`，它必须与顶层事实 ID 一致；渲染时 `updatedAt` 来自顶层 `updated_at`。关于页已接入下述实体、团队、资质与登记资料模板；当前根事实卡片没有这些已确认资料，因此仍显示自然空态。
+
+确认业务信息需要客户核实内容、适用条件、有效期与公开授权后再修改状态，不是技术检查替客户确认。确认内容中的占位符、缺失引用、重复 slug、非法日期及被规则识别的夸张承诺会阻止构建；自动检查不是业务真实性认证。维护后重新执行 test/check/build 并查看真实页面，不要仅改数据而沿用旧 `dist`。开发服务器的数据模块有缓存，事实修改后如页面未更新，应通过自己管理的开发会话重新加载数据，再以新构建为准。
+
+### 关于页资料 schema
+
+`src/pages/about.astro` 经 `src/pages/_shared/about.ts` 的 typed helper，仅读取 `getFact('organization')`、`getFact('team')`、`getFact('qualifications')`、`getFact('registration')` 返回的已确认、未过期值，不绕过事实门控。固定 ID 与 `value` 形状约定如下：
+
+| 事实 ID / 推荐 type | value 形状 | 必需字段 | 可选字段 |
+| --- | --- | --- | --- |
+| `organization` / `organization` | 对象 | `name`（非空字符串） | `legalName`、`description`、`website` |
+| `team` / `team` | 对象数组 | 每位成员的 `name`（非空字符串） | `role`、`bio`、`status`、`expires_at` |
+| `qualifications` / `qualifications` | 对象数组 | 每项的 `name`（非空字符串） | `issuer`、`date`、`sourceUrl`、`status`、`expires_at` |
+| `registration` / `registration` | 对象 | `number`（非空字符串） | `label`、`authority`、`sourceUrl` |
+
+文本字段只接受字符串，空白、对象/数组等非法形状不被转换成业务文字；无有效必需字段的对象或成员忽略。成员未填写 `status` 时继承外层确认资格；显式填写时只能为 `confirmed`，pending/unknown/conflict/expired 或非法状态均隐藏。成员 `expires_at` 必须是有效日期且未过期，当天仍有效；无效日期也隐藏。实体和登记对象若包含 `status`/`expires_at`，同样只允许进一步限制外层确认资格。
+
+资质的可选 `date` 必须为有效 `YYYY-MM-DD`，填了无效日期会忽略该项；未填不推断日期。`website`/`sourceUrl` 只允许完整 HTTP(S)，拒绝 javascript/data、协议相对、带凭据或控制字符的 URL；非法链接不生成 DOM 链接，仍可保留合法文本资料。姓名、角色、介绍、资质与编号均使用 Astro 普通文本表达式转义，不使用原始 HTML 或 `set:html`；不支持以生成图充当真实员工照片。
+
+以下四条仅说明结构，**全部保持 pending**，不是已经核实的实体、团队、证书或注册号。如确需新增，追加到现有 `facts` 数组；不要重复已有 ID，不要直接确认示例：
+
+```yaml
+  - id: organization
+    type: organization
+    status: pending
+    value:
+      name: PENDING_ONLY_NOT_PUBLIC_ORGANIZATION
+      legalName: PENDING_ONLY_NOT_PUBLIC_LEGAL_NAME
+      description: PENDING_ONLY_NOT_PUBLIC_ORGANIZATION_DESCRIPTION
+    updated_at: '2026-11-11'
+  - id: team
+    type: team
+    status: pending
+    value:
+      - name: PENDING_ONLY_NOT_PUBLIC_TEAM_MEMBER
+        role: PENDING_ONLY_NOT_PUBLIC_ROLE
+        bio: PENDING_ONLY_NOT_PUBLIC_BIO
+        status: pending
+    updated_at: '2026-11-11'
+  - id: qualifications
+    type: qualifications
+    status: pending
+    value:
+      - name: PENDING_ONLY_NOT_PUBLIC_QUALIFICATION
+        issuer: PENDING_ONLY_NOT_PUBLIC_ISSUER
+        date: '2026-11-11'
+        status: pending
+    updated_at: '2026-11-11'
+  - id: registration
+    type: registration
+    status: pending
+    value:
+      number: PENDING_ONLY_NOT_PUBLIC_REGISTRATION
+      label: 登记编号
+      authority: PENDING_ONLY_NOT_PUBLIC_AUTHORITY
+    updated_at: '2026-11-11'
+```
+
+没有有效资料时继续说明尚无可公开信息；有资料时按确认值生成实体介绍、简洁团队文本行、资质来源与登记信息，不再永久显示“没有团队/资质”。不存在有效 `registration.number` 时不生成编号栏，也不推断编号。这些资料目前仅用于关于页可见内容，不自动扩展 Organization JSON-LD 的企业字段。
+
+### 草稿维护
+
+文章必须位于 `drafts/` 的 `.md` 文件，并有完整 YAML frontmatter。以下同样仅是 `pending` 样例，文件名可以不同，但 `slug` 必须全局唯一；`brand` 为现有事实 ID：
+
+```markdown
+---
+slug: sample-guide
+title: 如何记录希望了解的问题？
+description: 待核实的文章样例，不公开。
+question: 如何记录希望了解的问题？
+fact_refs: [brand]
+status: pending
+updated_at: '2026-11-11'
+---
+先记录问题，再核对已确认信息。这是未发布的维护样例。
+```
+
+必需字段为 `slug`、`title`、`description`、`question`、`fact_refs`（事实 ID 数组）、`status`、`updated_at`；可选 `expires_at`。所有草稿的引用必须存在，即使 pending 的缺失引用也会让检查失败。只有草稿本身 confirmed、未过期且全部引用事实可公开时才生成详情；文章更新时间取草稿日期和引用事实日期的最新值。
+
+文章正文由作者在首段直接回答 `question`，不能认为模板会自动生成答案。原始 Markdown HTML 会转义，危险协议链接/图片会过滤；不要依赖内嵌脚本。相关服务和地点链接通过 `fact_refs` 匹配同一事实 ID。现有三个草稿仍是 pending，没有公开文章详情。
+
+### 预览、生产确认与 public_pages
+
+当前 `client.json` 的真实配置为：
+
+```json
+{
+  "brand": "贝缇美业",
+  "base_url": "",
+  "language": "zh-CN",
+  "environment": "preview",
+  "public_pages": [],
+  "analytics_endpoint": ""
+}
+```
+
+预览模式下，全站 `noindex, nofollow`，`robots.txt` 禁止抓取，`sitemap.xml` 没有 URL 条目，`llms.txt` 说明尚无公开清单；缺少实际域名时省略 canonical、OG URL 和绝对 OG 图片 URL。不使用虚构域名。标题、描述、语言、品牌 Organization 和确认 FAQ 数据仍直接输出到 HTML。
+
+生产配置必须先由客户确认实际 HTTPS 公共域名及归属，再设置 `base_url` 和 `environment: "production"`。域名校验拒绝 HTTP、localhost、IP、example/test 等占位域名，以及路径、查询、凭据、非标准端口；它只验证格式，不证明域名归属，也不部署网站。`brand` 与已确认的 `brand` 事实应保持一致。
+
+`public_pages` 是明确的页面路径列表，例如 `["/", "/faq/"]` 只是路径格式示例，不是公开授权。路径不能含查询、片段或穿越；目录路径会规范化为尾斜杠形式。生产 sitemap/llms 只取“指定公开路径 ∩ 实际生成路径”；写入 `/reviews/` 或不存在的详情不会使其生成。未指定页面仍可能存在于 `dist`，但保持 noindex；robots 按精确路径允许抓取，不能用这些规则替代访问控制。404 不进入公开清单。
+
+生产前重新 test/check/build，并逐项核对 `dist` 的 HTML、canonical、JSON-LD、robots、sitemap、llms 和图片。构建会把确认后的内容写进静态 HTML；运行时改 YAML 不会更新已部署文件。这里不包含生产域名、部署、真实交易或预约确认。
+
+分析默认为关闭。只有生产模式、有效 HTTPS `analytics_endpoint` 且用户在当前页面明确开启时才发送 `page_view`/`intent_click`/`inquiry_prepared` 分类事件；`inquiry_prepared` 仅表示校验成功并已显示本地咨询摘要，不代表真实发送、收件或预约成功，触发事件不携带表单字段。发送内容包括事件、类别、当前路径、来源 origin 与来源类别，不包括查询字符串、完整来源 URL、姓名、联系方式或留言；同意不跨页面持久化。采集接入仍需单独核实服务端处理与隐私政策，不是匿名性保证。
+
+### 咨询当前边界
+
+首页方向是咨询意向，不是服务目录。URL 参数采用精确白名单映射：`makeup → 美妆造型`、`skin → 护理咨询`、`nails → 美甲美睫`、`learning → 课程了解`；既有中文“美妆造型 / 护理咨询 / 课程了解 / 其他咨询”保持兼容。其他查询值不会反映为 HTML 或自动填入姓名、联系方式、留言。
+
+表单校验称呼、电话/邮箱、意向、留言、隐私同意及蜜罐，仅生成纯文本摘要，使用 `textContent` 显示。摘要始终提示“需求已整理，尚未发送”；没有收件方收到咨询，不创建预约、不付款、不产生预约成功凭证。当前电话/邮箱仍是 pending，所以正式预约暂未开放。
+
+个人填写不发送到服务器，也不写入 localStorage/cookie 等持久存储；修改、清空、撤销隐私同意会移除页面旧摘要。复制由用户选择后写入系统剪贴板，下载保存本地文本，两者含个人信息，清空本页不能撤回这些副本。自动复制不可用时提供手动复制区。禁用 JavaScript 时表单保持禁用，正文与手动记录说明仍可阅读，防止意外 POST。
+
+### 图片来源与使用边界
+
+首页与品牌区块只引用三个本地冻结 JPEG：
+
+- `public/images/beiti-hero-generated.jpg`：美容人像主视觉。
+- `public/images/beiti-detail-generated.jpg`：美甲、丝缎与花的细节摄影。
+- `public/images/beiti-ritual-generated.jpg`：护理静物与暖光意境。
+
+三张实际文件均为 `2560 × 1440` JPEG，已逐张检查摄影内容；不是空图或灰色鉴权提示图。来源为宿主合法鉴权的原生 `GenerateImage` 调用 `https://copilot-cn.bytedance.net/api/ide/v1/text_to_image`。中文提示词、`landscape_16_9` 尺寸和由 `encodeURIComponent(prompt)` 生成的准确 URL 保存在 `src/components/brand-media.mjs`，生成记录说明见 `public/images/SOURCES.md`。
+
+网页使用 `frozen: true` 的本地源，不在访问时重试外部生成；未经鉴权访问生成 URL 可能返回灰图，不能把 HTTP 200 当成真实生成成功。旧 `beiti-portrait.jpg`、`beiti-detail.jpg`、`beiti-ritual.jpg` 分别保留为三张真图的字节相同副本，网页不引用这些旧路径。
+
+生成影像仅用于品牌美学表达，非真实门店、员工、客户成果、在售产品或资质证明。OG 图片复用第一张冻结图，实际域名存在时生成绝对 URL，尺寸/alt 来自对应元数据；本地预览没有实际域名时不输出绝对 OG 图片 URL。替换素材时请同步文件、尺寸、alt、元数据与来源说明，勿以生成图充当确认业务事实。

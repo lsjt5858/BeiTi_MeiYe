@@ -1,0 +1,12 @@
+---
+import InnerPage from '../_shared/InnerPage.astro';
+import { getLocations } from '../../lib/content.ts';
+import { safeSlug, formatValue } from '../_shared/values.ts';
+const locations = getLocations();
+---
+<InnerPage title="先确认，再出发。" eyebrow="Locations / 地点信息" description={locations.length ? '这里只展示已确认的地点。出发前请阅读地址、到访规则和开放时间；查看页面或地图并不代表已经预约。' : '目前没有可公开的已确认地点或到访时间。请不要根据品牌影像推断门店地址；正式到访安排仍需另行确认。'} breadcrumbs={[{ label: '地点信息' }]}>
+  <section class="editorial-section">{locations.length ? <><h2>已确认地点</h2><ol class="editorial-list">
+    {locations.map((location, index) => <li class="editorial-row"><div><span class="row-number">{String(index + 1).padStart(2, '0')}</span><h3><a class="text-link" href={`/locations/${safeSlug(location.slug)}/`}>{location.name}</a></h3></div><div><p>{formatValue(location.address) || '地址尚未公开确认，请先查看地点说明。'}</p>{formatValue(location.hours) && <p class="meta">开放时间：{formatValue(location.hours)}</p>}<a class="text-link" href={`/locations/${safeSlug(location.slug)}/`}>查看到访信息 <span aria-hidden="true">→</span></a></div></li>)}
+  </ol></> : <div class="empty-editorial empty-state"><p class="eyebrow">Before your visit</p><h2>一次安心到访，<br />从信息确认开始。</h2><p>地址、开放时间、交通方式与预约规则将在确认后公开。现在您可以先写下希望到访的时间段，以及需要了解的事项。</p><a class="button" href="/contact/">整理到访相关问题</a></div>}</section>
+  <section class="editorial-section"><h2>出发前的确认清单</h2><div class="editorial-row"><h3>地点与交通</h3><p>核对具体地址与入口；地图仅作导航参考。本站不嵌入第三方地图，也不请求您的定位权限。</p></div><div class="editorial-row"><h3>时间与到访规则</h3><p>确认开放时间、是否需要事先沟通，以及安排发生变化时如何处理。本地需求整理不是预约凭证。</p></div><a class="text-link" href="/faq/">了解咨询与预约的区别</a></section>
+</InnerPage>

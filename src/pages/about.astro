@@ -1,0 +1,50 @@
+---
+import InnerPage from './_shared/InnerPage.astro';
+import { site } from '../lib/content.ts';
+import { getAboutDetails } from './_shared/about.ts';
+const { organization, team, qualifications, registration } = getAboutDetails();
+const hasDetails = !!organization || team.length > 0 || qualifications.length > 0 || !!registration;
+---
+<InnerPage title="美的选择，始于理解。" eyebrow="About / 关于贝缇" description={`${site.brand}在这个网站上坚持一件事：先把信息说清楚，再让您做选择。此页介绍品牌表达与信息原则，不把理念写成资质或效果承诺。`} breadcrumbs={[{ label: '关于贝缇' }]}>
+  <section class="editorial-section">
+    <p class="eyebrow">{site.brand}</p>
+    <h2>保留自己的节奏，<br />找到清楚的答案。</h2>
+    <p class="intro-copy">我们希望，美的沟通不必从仓促的决定开始。您可以先提出问题、了解边界、确认费用，再选择是否继续；也可以暂时不做决定。</p>
+    <p class="small-note">以上是品牌理念，不是已确认的服务项目、团队履历或效果保证。</p>
+  </section>
+  <section class="editorial-section"><h2>我们如何呈现信息</h2><ol class="editorial-list">
+    <li class="editorial-row"><div><span class="row-number">01</span><h3>事实先于修饰</h3></div><p>服务、价格、地点与联系方式只在确认后公开。暂时没有信息时，我们说明边界，而不填入猜测。</p></li>
+    <li class="editorial-row"><div><span class="row-number">02</span><h3>让问题有具体回答</h3></div><p>服务详情区分适用、不适用与限制；价格区分金额、计费单位与包含范围。缺少的信息仍需要进一步核实。</p></li>
+    <li class="editorial-row"><div><span class="row-number">03</span><h3>把决定留给您</h3></div><p>本地咨询整理不发送个人信息，不完成交易，也不创建预约。您始终可以修改、清空或选择不分享。</p></li>
+  </ol></section>
+  {organization && <section class="editorial-section" aria-labelledby="organization-heading">
+    <h2 id="organization-heading">已确认实体信息</h2>
+    <h3>{organization.name}</h3>
+    {organization.description && <p class="intro-copy">{organization.description}</p>}
+    {organization.legalName && <dl class="fact-grid"><div><dt>登记名称</dt><dd>{organization.legalName}</dd></div></dl>}
+    {organization.website && <a class="text-link" href={organization.website} target="_blank" rel="noopener noreferrer">查看实体网站（新窗口）</a>}
+  </section>}
+  {hasDetails ? <>
+    <section class="editorial-section" aria-labelledby="team-heading">
+      <h2 id="team-heading">关于团队</h2>
+      {team.length > 0 ? <ul class="editorial-list">{team.map((member) => <li class="editorial-row">
+        <div><h3>{member.name}</h3>{member.role && <p class="small-note">{member.role}</p>}</div>
+        {member.bio && <p>{member.bio}</p>}
+      </li>)}</ul> : <p class="intro-copy">目前没有可公开的已确认团队介绍，不展示未经核实的人员身份与履历。</p>}
+    </section>
+    <section class="editorial-section" aria-labelledby="qualifications-heading">
+      <h2 id="qualifications-heading">资质与登记信息</h2>
+      {qualifications.length > 0 ? <ul class="editorial-list">{qualifications.map((qualification) => <li class="editorial-row">
+        <h3>{qualification.name}</h3>
+        <div>{qualification.issuer && <p>颁发机构：{qualification.issuer}</p>}{qualification.date && <p class="meta">资料日期：<time datetime={qualification.date}>{qualification.date}</time></p>}{qualification.sourceUrl && <a class="text-link" href={qualification.sourceUrl} target="_blank" rel="noopener noreferrer">核对资质来源（新窗口）</a>}</div>
+      </li>)}</ul> : <p class="intro-copy">目前没有可公开的已确认资质信息，不以品牌理念代替证书或资格。</p>}
+      {registration && <div class="editorial-row">
+        <h3>已确认登记信息</h3>
+        <div><dl class="fact-grid"><div><dt>{registration.label || '登记编号'}</dt><dd>{registration.number}</dd></div>{registration.authority && <div><dt>登记机构</dt><dd>{registration.authority}</dd></div>}</dl>
+          {registration.sourceUrl && <a class="text-link" href={registration.sourceUrl} target="_blank" rel="noopener noreferrer">核对登记来源（新窗口）</a>}
+        </div>
+      </div>}
+    </section>
+  </> : <section class="editorial-section"><h2>关于团队与资质</h2><p class="intro-copy">目前没有可公开的已确认团队介绍、人员资质或注册信息。因此，这里不展示未经核实的身份、证书与履历。</p></section>}
+  <section class="editorial-section"><h2>还有哪些事，您想了解？</h2><div class="page-actions"><a class="button" href="/contact/">把想了解的事写下来</a><a class="text-link" href="/terms/">阅读网站使用说明</a></div></section>
+</InnerPage>

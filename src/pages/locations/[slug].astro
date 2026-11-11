@@ -1,0 +1,28 @@
+---
+import InnerPage from '../_shared/InnerPage.astro';
+import { getLocations, getArticles } from '../../lib/content.ts';
+import { safeSlug, safeHttpUrl, formatValue } from '../_shared/values.ts';
+export function getStaticPaths() {
+  return getLocations().map((location) => ({ params: { slug: safeSlug(location.slug) }, props: { location } }));
+}
+type Location = ReturnType<typeof getLocations>[number];
+interface Props { location: Location }
+const { location } = Astro.props;
+const mapUrl = safeHttpUrl(location.mapUrl);
+const address = formatValue(location.address);
+const jsonLd = address ? {
+  '@context': 'https://schema.org', '@type': 'LocalBusiness', name: location.name,
+  address, ...(mapUrl ? { hasMap: mapUrl } : {}),
+} : undefined;
+const articles = getArticles().filter((article) => article.fact_refs.includes(location.id));
+---
+<InnerPage title={location.name} eyebrow="Location / 到访说明" description={address ? `「${location.name}」已确认地址为${address}。请继续核对开放时间和到访规则；地图导航不代表预约确认。` : `「${location.name}」的具体地址尚未公开确认。请在地址与时间确认前不要出发。`} updatedAt={location.updatedAt} jsonLd={jsonLd} breadcrumbs={[{ label: '地点信息', href: '/locations/' }, { label: location.name }]}>
+  <section class="editorial-section"><h2>到访前，请核对这些信息。</h2><dl class="fact-grid">
+    <div><dt>地址</dt><dd>{address || '尚未公开确认'}</dd></div>
+    <div><dt>开放时间</dt><dd>{formatValue(location.hours) || '尚未公开确认，请勿据此推断营业安排'}</dd></div>
+    <div><dt>交通方式</dt><dd>{formatValue(location.transport) || '尚未公开确认'}</dd></div>
+    <div><dt>预约 / 到访规则</dt><dd>{formatValue(location.booking) || '尚未公开确认；本地咨询摘要不是预约凭证'}</dd></div>
+  </dl>{mapUrl ? <div class="page-actions"><a class="button-secondary" href={mapUrl} target="_blank" rel="noopener noreferrer">打开地图导航（新窗口）</a><p class="small-note">将进入第三方网站，请留意对方的隐私说明。</p></div> : <p class="small-note">暂未提供可用的地图链接。本站不请求定位权限。</p>}</section>
+  {articles.length > 0 && <section class="editorial-section"><h2>相关信息</h2><ul class="editorial-list">{articles.map((article) => <li class="editorial-row"><h3><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>{article.title}</a></h3><p>{article.description}</p></li>)}</ul></section>}
+  <section class="editorial-section"><h2>计划到访，但还有疑问？</h2><p class="intro-copy">把关于「{location.name}」的时间、交通或安排问题写下来。在正式沟通确认前，不建议把页面信息当作到访承诺。</p><div class="page-actions"><a class="button" href="/contact/">整理到访问题</a><a class="text-link" href="/locations/">返回地点信息</a></div></section>
+</InnerPage>
