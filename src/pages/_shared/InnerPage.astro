@@ -33,7 +33,7 @@ const { title, description, eyebrow, breadcrumbs, jsonLd, updatedAt = getLatestU
   .page-body :global(.editorial-row) { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); column-gap: clamp(2rem, 5vw, 6rem); border-top: 1px solid var(--line, #d9d1c4); padding-block: 2rem; }
   .page-body :global(.editorial-row h3) { margin-top: 0; }
   .page-body :global(.editorial-row p) { max-width: 44rem; line-height: 1.9; }
-  .page-body :global(.row-number) { display: block; font-size: .78rem; letter-spacing: .12em; margin-bottom: 1.1rem; color: var(--muted, #686258); }
+  .page-body :global(.row-number) { display: block; font-size: calc(.78rem + 2px); letter-spacing: .12em; margin-bottom: 1.1rem; color: var(--muted, #686258); }
   .page-body :global(.empty-editorial) { padding-block: clamp(2rem, 5vw, 4rem); max-width: 46rem; }
   .page-body :global(.empty-editorial p) { line-height: 1.9; margin-bottom: 2rem; }
   .page-body :global(.fact-table) { width: 100%; border-collapse: collapse; text-align: left; line-height: 1.8; }
@@ -41,11 +41,11 @@ const { title, description, eyebrow, breadcrumbs, jsonLd, updatedAt = getLatestU
   .page-body :global(.fact-table th) { font-weight: 500; }
   .page-body :global(.table-scroll) { overflow-x: auto; }
   .page-body :global(.fact-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 4rem; }
-  .page-body :global(.fact-grid dt) { color: var(--muted, #686258); font-size: .9rem; margin-bottom: .6rem; }
+  .page-body :global(.fact-grid dt) { color: var(--muted, #686258); font-size: calc(.9rem + 2px); margin-bottom: .6rem; }
   .page-body :global(.fact-grid dd) { margin: 0; line-height: 1.9; overflow-wrap: anywhere; }
   .page-body :global(.fact-list) { padding-left: 1.3rem; line-height: 2; }
   .page-body :global(.page-actions) { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 2rem; }
-  .page-body :global(.small-note) { color: var(--muted, #686258); font-size: .9rem; line-height: 1.8; }
+  .page-body :global(.small-note) { color: var(--muted, #686258); font-size: calc(.9rem + 2px); line-height: 1.8; }
   .page-body :global(.quote-text) { margin: 0 0 1rem; font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.9; }
   .page-body :global(a) { overflow-wrap: anywhere; }
   @media (max-width: 640px) {

@@ -25,8 +25,13 @@ const INQUIRY_INTEREST_CODES = [
   ['nails', '美甲美睫'],
   ['learning', '课程了解'],
 ] as const;
-export const INQUIRY_LIMITS = { name: 40, contact: 80, message: 1200 } as const;
+export const INQUIRY_LIMITS = { name: 40, contact: 11, message: 1200 } as const;
+export const INQUIRY_PHONE_PATTERN = /^[0-9]{11}$/;
 export const INQUIRY_EMAIL_PATTERN = /^[a-zA-Z0-9_%+-]+(?:\.[a-zA-Z0-9_%+-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}$/;
+
+export function normalizeInquiryPhone(value: string): string {
+  return value.replace(/[^0-9]/g, '').slice(0, INQUIRY_LIMITS.contact);
+}
 
 export function getInquiryInterest(value: string | null): string {
   // Exact code lookup also preserves existing Chinese values; never reflect raw query data.
@@ -36,7 +41,7 @@ export function getInquiryInterest(value: string | null): string {
 
 export function validateInquiry(input: InquiryInput): InquiryResult {
   const name = input.name.trim();
-  const contact = input.contact.trim();
+  const contact = input.contact;
   const message = input.message.replace(/\r\n?/g, '\n').trim();
   const interest = getInquiryInterest(input.interest);
   const errors: InquiryErrors = {};
@@ -46,15 +51,8 @@ export function validateInquiry(input: InquiryInput): InquiryResult {
   else if (input.name.length > INQUIRY_LIMITS.name) errors.name = '称呼请控制在 40 个字符以内。';
   else if (singleLineControls.test(input.name)) errors.name = '称呼请使用单行文字，不要包含控制字符。';
 
-  if (!contact) errors.contact = '请填写手机、固定电话或邮箱。';
-  else if (input.contact.length > INQUIRY_LIMITS.contact) errors.contact = '联系方式请控制在 80 个字符以内。';
-  else {
-    const digits = contact.replace(/\D/g, '').length;
-    const phone = /^\+?[\d ()-]+$/.test(contact) && digits >= 7 && digits <= 15;
-    if (singleLineControls.test(input.contact) || (!INQUIRY_EMAIL_PATTERN.test(contact) && !phone)) {
-      errors.contact = '请检查联系方式：填写完整邮箱，或含 7–15 位数字的电话号码。';
-    }
-  }
+  if (!contact.trim()) errors.contact = '请填写 11 位手机号码。';
+  else if (!INQUIRY_PHONE_PATTERN.test(contact)) errors.contact = '手机号码必须为 11 位数字，不含空格、符号或其他文字。';
 
   if (!interest) errors.interest = '请选择一个咨询意向；它不代表服务已开设。';
   if (!message) errors.message = '请简要描述您想了解的问题。';

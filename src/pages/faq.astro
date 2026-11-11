@@ -80,7 +80,7 @@ const jsonLd = faqs.length ? {
 <style>
   [hidden] { display: none !important; }
   .faq-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, .4fr); gap: 1.5rem; margin-block: 2rem; max-width: 64rem; }
-  label { display: block; margin-bottom: .6rem; font-size: .9rem; }
+  label { display: block; margin-bottom: .6rem; font-size: calc(.9rem + 2px); }
   input, select { width: 100%; min-height: 3.3rem; border: 1px solid var(--line, #c2b8a7); background: transparent; padding: .8rem 1rem; color: inherit; font: inherit; border-radius: 0; }
   input:focus-visible, select:focus-visible { outline: 2px solid var(--ink, #232620); outline-offset: 3px; }
   .faq-list { margin-top: 2rem; }
@@ -89,7 +89,7 @@ const jsonLd = faqs.length ? {
   summary { display: flex; align-items: center; gap: 1.5rem; min-height: 5rem; padding-block: 1.5rem; cursor: pointer; list-style: none; font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.6; }
   summary::-webkit-details-marker { display: none; }
   summary:focus-visible { outline: 2px solid var(--ink, #232620); outline-offset: 4px; }
-  .faq-number { color: var(--muted, #686258); font-size: .8rem; letter-spacing: .1em; align-self: flex-start; margin-top: .3rem; }
+  .faq-number { color: var(--muted, #686258); font-size: calc(.8rem + 2px); letter-spacing: .1em; align-self: flex-start; margin-top: .3rem; }
   .faq-toggle { margin-left: auto; font-size: 1.6rem; font-weight: 300; }
   details[open] .faq-toggle { transform: rotate(45deg); }
   .faq-answer { padding: 0 3rem 2rem; max-width: 52rem; }

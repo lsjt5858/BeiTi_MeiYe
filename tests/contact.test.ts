@@ -11,7 +11,7 @@ import {
 
 const valid: InquiryInput = {
   name: ' 林女士 ',
-  contact: ' lin@example.com ',
+  contact: '13800138000',
   interest: '美妆造型',
   message: ' 想先了解适用条件。\r\n请说明费用包含什么。 ',
   privacy: true,
@@ -25,7 +25,7 @@ test('accepts a valid inquiry and normalizes without mutating input', () => {
   if (!result.ok) assert.fail('expected a valid inquiry');
   assert.deepEqual(result.value, {
     name: '林女士',
-    contact: 'lin@example.com',
+    contact: '13800138000',
     interest: '美妆造型',
     message: '想先了解适用条件。\n请说明费用包含什么。',
     privacy: true,
@@ -42,34 +42,33 @@ test('reports all empty required fields, including privacy consent', () => {
   assert.deepEqual(Object.keys(result.errors).sort(), ['contact', 'interest', 'message', 'name', 'privacy']);
 });
 
-test('accepts mobile, international and fixed-line phone formats', () => {
-  for (const contact of ['13800138000', '+86 138 0013 8000', '(010) 1234-5678', '+1 (415) 555-2671']) {
+test('accepts exactly eleven ASCII digits for the inquiry phone', () => {
+  for (const contact of ['13800138000', '13912345678', '01234567890']) {
     assert.equal(validateInquiry({ ...valid, contact }).ok, true, contact);
   }
 });
 
 test('rejects malformed, short, overly long and multiline contact values', () => {
-  for (const contact of ['abc', 'abc@', '@example.com', 'a@b', '123', '+1234567890123456', 'a@example.com\nBcc:x@example.com', 'hello 13800138000', 'https://example.com']) {
+  for (const contact of ['abc', '123', '1380013800', '138001380000', '1'.repeat(80), '+8613800138000', '138 0013 8000', '(010) 1234-5678', '+1 (415) 555-2671', 'a@example.com', 'hello13800138000', '13800138000\n', ' 13800138000', '13800138000 ', '１３８００１３８０００']) {
     const result = validateInquiry({ ...valid, contact });
     assert.equal(result.ok, false, contact);
     if (!result.ok) assert.ok(result.errors.contact, contact);
   }
 });
 
-test('rejects invalid email labels and local dot placement', () => {
-  for (const contact of ['a@example..com', 'a@example-.com', '.a@example.com', 'a..b@example.com']) {
+test('rejects email and non-digit input even if it contains eleven digits', () => {
+  for (const contact of ['a@example..com', 'lin.hello+consult@example.com', '13800138000@example.com', '1380013800a', '138-00138000', '13800138000\u0000']) {
     const result = validateInquiry({ ...valid, contact });
     assert.equal(result.ok, false, contact);
     if (!result.ok) assert.ok(result.errors.contact, contact);
   }
-  assert.equal(validateInquiry({ ...valid, contact: 'lin.hello+consult@example.com' }).ok, true);
 });
 
 test('enforces inclusive length limits for names, contact and messages', () => {
   assert.equal(validateInquiry({ ...valid, name: '林'.repeat(40), message: '好'.repeat(1200) }).ok, true);
   for (const [field, value] of [
     ['name', '林'.repeat(41)],
-    ['contact', `${'a'.repeat(69)}@example.com`],
+    ['contact', '138001380000'],
     ['message', '好'.repeat(1201)],
   ] as const) {
     const result = validateInquiry({ ...valid, [field]: value });
@@ -152,7 +151,7 @@ test('summary states local-only status and contains normalized plain text', () =
   const summary = buildInquirySummary(result.value);
   assert.match(summary, /需求已整理，尚未发送/);
   assert.match(summary, /称呼：林女士/);
-  assert.match(summary, /联系方式：lin@example.com/);
+  assert.match(summary, /联系方式：13800138000/);
   assert.match(summary, /咨询意向：美妆造型/);
   assert.match(summary, /请说明费用包含什么。/);
   assert.match(summary, /不代表预约/);

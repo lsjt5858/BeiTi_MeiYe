@@ -26,9 +26,9 @@ const hasChannel = !!(phone || email);
               <p id="name-help" class="field-help">可以用昵称，最多 40 个字符。</p><p id="name-error" class="field-error"></p>
             </div>
             <div class="form-field">
-              <label for="contact-contact">联系方式 <span class="field-required">必填</span></label>
-              <input id="contact-contact" name="contact" type="text" required maxlength={INQUIRY_LIMITS.contact} autocomplete="off" aria-describedby="contact-help contact-error" />
-              <p id="contact-help" class="field-help">手机、固定电话或完整邮箱，最多 80 个字符。</p><p id="contact-error" class="field-error"></p>
+              <label for="contact-contact">手机号码 <span class="field-required">必填</span></label>
+              <input id="contact-contact" name="contact" type="tel" inputmode="numeric" pattern="[0-9]{11}" required minlength={INQUIRY_LIMITS.contact} maxlength={INQUIRY_LIMITS.contact} autocomplete="off" aria-describedby="contact-help contact-error" />
+              <p id="contact-help" class="field-help">仅限 11 位数字；输入或粘贴均不接受其他字符。</p><p id="contact-error" class="field-error"></p>
             </div>
           </div>
           <div class="form-field">
@@ -77,7 +77,7 @@ const hasChannel = !!(phone || email);
 </InnerPage>
 
 <script>
-  import { buildInquirySummary, getInquiryInterest, validateInquiry, type InquiryField } from '../lib/contact.ts';
+  import { buildInquirySummary, getInquiryInterest, normalizeInquiryPhone, validateInquiry, type InquiryField } from '../lib/contact.ts';
   const form = document.querySelector<HTMLFormElement>('#contact-form');
   const fields = document.querySelector<HTMLFieldSetElement>('#contact-fields');
   const organize = document.querySelector<HTMLButtonElement>('#contact-organize');
@@ -127,6 +127,31 @@ const hasChannel = !!(phone || email);
       copyStatus.textContent = '';
       if (hadSummary) errorSummary.textContent = '您修改了填写，请重新整理；旧摘要已从页面移除。';
     };
+    const normalizePhone = () => {
+      const caret = contact.selectionStart ?? contact.value.length;
+      const position = normalizeInquiryPhone(contact.value.slice(0, caret)).length;
+      const value = normalizeInquiryPhone(contact.value);
+      if (value !== contact.value) {
+        contact.value = value;
+        contact.setSelectionRange(position, position);
+      }
+    };
+    contact.addEventListener('input', (event) => {
+      if (!(event as InputEvent).isComposing) normalizePhone();
+    });
+    contact.addEventListener('compositionend', normalizePhone);
+    contact.addEventListener('paste', (event) => {
+      if (!event.clipboardData) return;
+      event.preventDefault();
+      const inserted = normalizeInquiryPhone(event.clipboardData.getData('text'));
+      const start = contact.selectionStart ?? contact.value.length;
+      const end = contact.selectionEnd ?? start;
+      // Normalize the full pasted text before applying the native eleven-character limit.
+      contact.value = normalizeInquiryPhone(contact.value.slice(0, start) + inserted + contact.value.slice(end));
+      const position = Math.min(start + inserted.length, contact.value.length);
+      contact.setSelectionRange(position, position);
+      contact.dispatchEvent(new Event('input', { bubbles: true }));
+    });
     form.addEventListener('submit', (event) => {
       // Attach before enabling fields: no-JS or a failed initialization cannot submit personal data.
       event.preventDefault();
@@ -244,19 +269,19 @@ const hasChannel = !!(phone || email);
   .field-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
   .form-field { margin-bottom: 1.8rem; }
   label { display: block; line-height: 1.8; margin-bottom: .7rem; }
-  .field-required { margin-left: .5rem; font-size: .75rem; color: var(--muted, #686258); }
+  .field-required { margin-left: .5rem; font-size: calc(.75rem + 2px); color: var(--muted, #686258); }
   input:not([type=checkbox]), select, textarea { width: 100%; min-height: 3.3rem; padding: .8rem 1rem; color: inherit; font: inherit; line-height: 1.7; border: 1px solid var(--line, #b9ae9a); background: transparent; border-radius: 0; }
   textarea { resize: vertical; }
   input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--ink, #232620); outline-offset: 3px; }
   [aria-invalid=true] { border-color: #8d352c !important; }
-  .field-help { color: var(--muted, #686258); font-size: .8rem; line-height: 1.8; margin: .5rem 0 0; }
-  .field-error { color: #8d352c; font-size: .9rem; line-height: 1.7; margin: .5rem 0 0; }
+  .field-help { color: var(--muted, #686258); font-size: calc(.8rem + 2px); line-height: 1.8; margin: .5rem 0 0; }
+  .field-error { color: #8d352c; font-size: calc(.9rem + 2px); line-height: 1.7; margin: .5rem 0 0; }
   .field-error:empty { display: none; }
   .message-help-row { display: flex; gap: 1rem; justify-content: space-between; align-items: baseline; }
   #message-count { flex-shrink: 0; }
   .consent-field { display: flex; align-items: flex-start; gap: .9rem; }
   .consent-field input { margin: .4rem 0 0; flex-shrink: 0; width: 1.2rem; height: 1.2rem; accent-color: var(--ink, #232620); }
-  .consent-field label { font-size: .9rem; min-height: 44px; cursor: pointer; }
+  .consent-field label { font-size: calc(.9rem + 2px); min-height: 44px; cursor: pointer; }
   .error-summary { color: #8d352c; line-height: 1.8; }
   .error-summary:not(:has(p:empty)) { margin-block: 1.5rem; padding-block: 1rem; border-block: 1px solid #8d352c; }
   .error-summary p:empty { margin: 0; }
