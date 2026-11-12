@@ -84,10 +84,10 @@ const jsonLd = faqs.length ? {
   [hidden] { display: none !important; }
   .faq-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, .4fr); gap: 1.5rem; margin-block: 2rem; max-width: 64rem; }
   label { display: block; margin-bottom: .6rem; font-size: calc(.9rem + 2px); }
-  input, select { width: 100%; min-height: 3.3rem; border: 1px solid var(--line, #c2b8a7); background: transparent; padding: .8rem 1rem; color: inherit; font: inherit; border-radius: 0; }
+  input, select { width: 100%; min-height: 3.3rem; border: 1px solid var(--line, #c2b8a7); background: rgb(255 255 255 / 55%); padding: .8rem 1rem; color: inherit; font: inherit; border-radius: var(--field-radius); }
   input:focus-visible, select:focus-visible { outline: 2px solid var(--ink, #232620); outline-offset: 3px; }
   .faq-list { margin-top: 2rem; }
-  .faq-item { border-top: 1px solid var(--line, #d9d1c4); scroll-margin-top: 8rem; }
+  .faq-item { border-top: 1px solid var(--line, #d9d1c4); }
   .faq-item:last-child { border-bottom: 1px solid var(--line, #d9d1c4); }
   summary { display: flex; align-items: center; gap: 1.5rem; min-height: 5rem; padding-block: 1.5rem; cursor: pointer; list-style: none; font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.6; }
   summary::-webkit-details-marker { display: none; }
