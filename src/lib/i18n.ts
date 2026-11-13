@@ -1,8 +1,9 @@
 import { english } from './translations.ts';
+import { visualPaths } from './visual-routes.ts';
 
 export const locales = ['zh-CN', 'en'] as const;
 export type Locale = typeof locales[number];
-export const basePages = ['/', '/services/', '/pricing/', '/about/', '/locations/', '/faq/', '/articles/', '/contact/', '/privacy/', '/terms/'];
+export const basePages = ['/', '/services/', '/pricing/', '/about/', '/locations/', '/faq/', '/articles/', '/contact/', '/privacy/', '/terms/', ...visualPaths];
 
 export function localeFromPath(path: string): Locale {
   return /^\/en(?:\/|$)/.test(path) ? 'en' : 'zh-CN';
@@ -17,7 +18,7 @@ export function localizedPath(href: string, locale: Locale): string {
   if (!href.startsWith('/') || href.startsWith('//')) return href;
   const match = /^([^?#]*)(.*)$/.exec(href)!;
   const path = sourcePath(match[1]);
-  if (!(path === '/' || /^\/(?:services|pricing|about|locations|faq|articles|contact|privacy|terms|reviews|404)(?:\/|$)/.test(path))) return href;
+  if (!(path === '/' || /^\/(?:services|training|gallery|pricing|about|locations|faq|articles|contact|privacy|terms|reviews|404)(?:\/|$)/.test(path))) return href;
   return `${locale === 'en' ? '/en' : ''}${path}${match[2]}`;
 }
 const phrases = Object.keys(english).sort((a, b) => b.length - a.length);

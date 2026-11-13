@@ -2,9 +2,10 @@ import { readdirSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadContent, normalizePath, type ContentModel } from './content.ts';
-import { sourcePath, localizedPath } from './i18n.ts';
+import { sourcePath, localizedPath, basePages } from './i18n.ts';
+import { visualContentPaths, visualUpdatedAt } from './visual-routes.ts';
 
-const staticPaths = ['/', '/services/', '/pricing/', '/about/', '/locations/', '/faq/', '/articles/', '/contact/', '/privacy/', '/terms/'];
+const staticPaths = basePages;
 
 export function sourceContentPaths(model: ContentModel): string[] {
   return [
@@ -78,7 +79,7 @@ export function publishedPaths(model: ContentModel, generatedPaths: string[]): s
 export function renderSitemap(model: ContentModel, generatedPaths: string[]): string {
   const updated = model.getLatestUpdate();
   const entries = publishedPaths(model, generatedPaths).map(path =>
-    `  <url><loc>${xmlEscape(`${model.site.base_url}${path}`)}</loc>${updated ? `<lastmod>${updated}</lastmod>` : ''}</url>`,
+    `  <url><loc>${xmlEscape(`${model.site.base_url}${path}`)}</loc>${visualContentPaths.includes(sourcePath(path)) ? `<lastmod>${visualUpdatedAt}</lastmod>` : updated ? `<lastmod>${updated}</lastmod>` : ''}</url>`,
   );
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`;
 }

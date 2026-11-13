@@ -14,7 +14,7 @@ const links = [
   { href: "/faq/", label: "常见问题" },
 ];
 if (getReviews().length) links.push({ href: "/reviews/", label: "评价" });
-const active = (href: string) => href === "/" ? current === "/" : current.startsWith(href);
+const active = (href: string) => href === "/" ? current === "/" : current.startsWith(href) || (href === '/services/' && /^\/(?:training|gallery)\//.test(current));
 ---
 <header class="site-header">
   <div class="header-inner container">
@@ -37,7 +37,9 @@ const active = (href: string) => href === "/" ? current === "/" : current.starts
         <span class="visually-hidden">{tr('导航菜单')}</span>
       </summary>
       <nav id="mobile-navigation" aria-label={tr('移动主导航')}>
-        {links.map((link, index) => <a href={href(link.href)} aria-current={active(link.href) ? "page" : undefined}><small aria-hidden="true">0{index + 1}</small>{tr(link.label)}</a>)}
+        {links.map((link, index) => <Fragment><a href={href(link.href)} aria-current={active(link.href) ? "page" : undefined}><small aria-hidden="true">0{index + 1}</small>{tr(link.label)}</a>
+          {link.href === '/services/' && <><a class="mobile-explore-sub" href={href('/training/')}>{tr('美业培训')} ↗</a><a class="mobile-explore-sub" href={href('/gallery/')}>{tr('美学图鉴')} ↗</a></>}
+        </Fragment>)}
         <a class="mobile-contact" href={href('/contact/')} data-analytics-category="general">{tr('聊聊你的需求')} <span aria-hidden="true">↗</span></a>
       </nav>
     </details>

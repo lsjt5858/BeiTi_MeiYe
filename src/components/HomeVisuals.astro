@@ -1,0 +1,38 @@
+---
+import { localeFromPath, localizedPath } from '../lib/i18n.ts';
+import { conceptNotice, copy, imageById, visualSeries } from '../lib/visual-catalog.ts';
+import VisualPhoto from './VisualPhoto.astro';
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const href = (path: string) => localizedPath(path, locale);
+const featureImages = [
+  { image: imageById('04-01'), href: '/gallery/nails/' },
+  { image: imageById('03-06'), href: '/gallery/lashes/' },
+  { image: imageById('05-02'), href: '/gallery/japanese-nails/' },
+];
+const training = visualSeries.filter(item => item.section === 'training');
+---
+<section class="section home-visual-section" data-home-visual="gallery">
+  <div class="container">
+    <div class="section-heading" data-reveal><div><p class="eyebrow">BEITI / VISUAL COLLECTION</p><h2>{en ? 'Beauty lives' : '美，藏在'}<br />{en ? 'in the details.' : '细节里。'}</h2></div><div><p>{en ? 'Colour, texture and light. Discover the details you love.' : '配色、材质与光影，找到你偏爱的细节。'}</p><a class="text-link" href={href('/gallery/')}>{en ? 'Explore the visual collection' : '浏览美学图鉴'} ↗</a></div></div>
+    <div class="home-visual-mosaic">
+      {featureImages.map(({ image, href: link }, index) => <figure data-reveal class:list={[{ 'home-visual-large': index === 0 }]}>
+        <a href={href(link)}><VisualPhoto image={image} sizes={index === 0 ? '(max-width: 700px) 100vw, 60vw' : '(max-width: 700px) 100vw, 35vw'} /></a>
+        <figcaption><span>{copy(image.title, locale)}</span><a href={href(link)} aria-label={copy(image.title, locale)}><span aria-hidden="true">↗</span></a></figcaption>
+      </figure>)}
+    </div>
+    <p class="visual-notice">{copy(conceptNotice, locale)}</p>
+  </div>
+</section>
+<section class="section home-learning-section" data-home-visual="training">
+  <div class="container">
+    <div class="section-heading" data-reveal><div><p class="eyebrow">BEITI / BEAUTY LEARNING</p><h2>{en ? 'From inspiration' : '把热爱，'}<br />{en ? 'to a considered craft.' : '练成技艺。'}</h2></div><div><p>{en ? 'Explore nail training, lash training and salon management.' : '从美甲、美睫，到店务运营，探索学习方向。'}</p><a class="text-link" href={href('/training/')}>{en ? 'All learning directions' : '全部学习方向'} ↗</a></div></div>
+    <div class="home-learning-features">
+      {training.map((series, index) => <article class="home-learning-feature" data-reveal>
+        <a class="home-learning-photo" href={href(series.path)} aria-label={copy(series.title, locale)}><VisualPhoto image={imageById(index === 0 ? '01-01' : series.cover)} /></a>
+        <div><p class="eyebrow">0{index + 1} / {en ? 'LEARNING' : '学习方向'}</p><h3><a href={href(series.path)}>{copy(series.title, locale)}</a></h3><p>{copy(series.subtitle, locale)}</p><a class="text-link" href={href(series.path)}>{en ? 'Explore this direction' : '了解学习方向'} ↗</a></div>
+      </article>)}
+    </div>
+    <p class="visual-notice">{en ? 'Concept imagery. Dates, fees and locations still need confirmation; these are not available classes or customer results.' : '概念影像；课期、费用与地点尚待确认，不代表已开班或真实客户成果。'}</p>
+  </div>
+</section>

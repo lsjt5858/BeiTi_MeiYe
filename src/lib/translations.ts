@@ -1,6 +1,8 @@
 import { englishCopy } from './en-copy.ts';
 // Interface copy. Business facts stay in fact-card.yaml; never translate visitor input.
 export const english: Record<string, string> = {
+  '美业培训': 'Beauty training',
+  '美学图鉴': 'Visual collection',
   ...englishCopy,
   '贝缇美业': 'Beiti Beauty',
   '跳至主要内容': 'Skip to main content',

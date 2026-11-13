@@ -1,0 +1,1025 @@
+{
+  "createdAt": "2026-11-13",
+  "generator": "GenerateImage",
+  "endpoint": "https://copilot-cn.bytedance.net/api/ide/v1/text_to_image",
+  "image_size": "landscape_16_9",
+  "notice": "AI-generated concept imagery. Not actual courses, people, premises or customer results.",
+  "series": [
+    {
+      "slug": "nail-training",
+      "section": "training",
+      "path": "/training/nails/",
+      "title": {
+        "zh": "美甲培训",
+        "en": "Nail training"
+      }
+    },
+    {
+      "slug": "lash-training",
+      "section": "training",
+      "path": "/training/lashes/",
+      "title": {
+        "zh": "美睫培训",
+        "en": "Lash training"
+      }
+    },
+    {
+      "slug": "lashes",
+      "section": "gallery",
+      "path": "/gallery/lashes/",
+      "title": {
+        "zh": "美睫细节",
+        "en": "Lash details"
+      }
+    },
+    {
+      "slug": "nails",
+      "section": "gallery",
+      "path": "/gallery/nails/",
+      "title": {
+        "zh": "美甲细节",
+        "en": "Nail details"
+      }
+    },
+    {
+      "slug": "japanese-nails",
+      "section": "gallery",
+      "path": "/gallery/japanese-nails/",
+      "title": {
+        "zh": "日式美甲",
+        "en": "Japanese nail art"
+      }
+    },
+    {
+      "slug": "salon-management",
+      "section": "training",
+      "path": "/training/salon-management/",
+      "title": {
+        "zh": "店务运营培训",
+        "en": "Salon management"
+      }
+    }
+  ],
+  "images": [
+    {
+      "id": "01-01",
+      "series": "nail-training",
+      "title": {
+        "zh": "导师示范",
+        "en": "Mentor demonstration"
+      },
+      "src": "/images/training/nails/01.jpg",
+      "thumbnail": "/images/training/nails/01-960.webp",
+      "large": "/images/training/nails/01-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "4020c2e54b90ce22351344de2fd1f72e594c62db72dfb699b16e73e09479a06d",
+      "sourceFile": "01-美甲培训/01-导师示范.jpg"
+    },
+    {
+      "id": "01-02",
+      "series": "nail-training",
+      "title": {
+        "zh": "基础修型练习",
+        "en": "Shape and refine"
+      },
+      "src": "/images/training/nails/02.jpg",
+      "thumbnail": "/images/training/nails/02-960.webp",
+      "large": "/images/training/nails/02-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "9a7559d03106cdc855e98128a23d73a88e78a0d17153756d9733d7e82da74ed5",
+      "sourceFile": "01-美甲培训/02-基础修型练习.jpg"
+    },
+    {
+      "id": "01-03",
+      "series": "nail-training",
+      "title": {
+        "zh": "细线描绘课",
+        "en": "Fine-line practice"
+      },
+      "src": "/images/training/nails/03.jpg",
+      "thumbnail": "/images/training/nails/03-960.webp",
+      "large": "/images/training/nails/03-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "1b535aa9a7bd29922af7dc59ca60004035b0cbd7d0e97510d215f640221342fa",
+      "sourceFile": "01-美甲培训/03-细线描绘课.jpg"
+    },
+    {
+      "id": "01-04",
+      "series": "nail-training",
+      "title": {
+        "zh": "色彩调配课堂",
+        "en": "Colour mixing"
+      },
+      "src": "/images/training/nails/04.jpg",
+      "thumbnail": "/images/training/nails/04-960.webp",
+      "large": "/images/training/nails/04-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "fa74922b3897e1309742c64b37e2e3364faf0e1c798a99b795ba79153f8a13d9",
+      "sourceFile": "01-美甲培训/04-色彩调配课堂.jpg"
+    },
+    {
+      "id": "01-05",
+      "series": "nail-training",
+      "title": {
+        "zh": "法式边缘指导",
+        "en": "French-tip guidance"
+      },
+      "src": "/images/training/nails/05.jpg",
+      "thumbnail": "/images/training/nails/05-960.webp",
+      "large": "/images/training/nails/05-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "7093030a0eceaa8b908dfc5ee2abd69358a05a0be26a5459b881cf509c7b5650",
+      "sourceFile": "01-美甲培训/05-法式边缘指导.jpg"
+    },
+    {
+      "id": "01-06",
+      "series": "nail-training",
+      "title": {
+        "zh": "款式色卡讲解",
+        "en": "Colour palette discussion"
+      },
+      "src": "/images/training/nails/06.jpg",
+      "thumbnail": "/images/training/nails/06-960.webp",
+      "large": "/images/training/nails/06-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "ac71f29b5d6a5201cab1898eebe49bc3e9fcd3b6cc4a1d393b6acee88d866c34",
+      "sourceFile": "01-美甲培训/06-款式色卡讲解.jpg"
+    },
+    {
+      "id": "01-07",
+      "series": "nail-training",
+      "title": {
+        "zh": "小花绘制练习",
+        "en": "Floral detail practice"
+      },
+      "src": "/images/training/nails/07.jpg",
+      "thumbnail": "/images/training/nails/07-960.webp",
+      "large": "/images/training/nails/07-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "51c474a687d28688fa4e867cda6323b4d4d4f7addff213d94994accba036119b",
+      "sourceFile": "01-美甲培训/07-小花绘制练习.jpg"
+    },
+    {
+      "id": "01-08",
+      "series": "nail-training",
+      "title": {
+        "zh": "小班练习空间",
+        "en": "Small-group learning"
+      },
+      "src": "/images/training/nails/08.jpg",
+      "thumbnail": "/images/training/nails/08-960.webp",
+      "large": "/images/training/nails/08-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "17571ee87214f38b2d335683c41731bc54a2f6478d24405fcd7c8f678b6ce0fb",
+      "sourceFile": "01-美甲培训/08-小班练习空间.jpg"
+    },
+    {
+      "id": "01-09",
+      "series": "nail-training",
+      "title": {
+        "zh": "课堂作品点评",
+        "en": "Practice-piece review"
+      },
+      "src": "/images/training/nails/09.jpg",
+      "thumbnail": "/images/training/nails/09-960.webp",
+      "large": "/images/training/nails/09-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "4ca1ae97117e1535e188c768a39cad2f6ceff5db4b04cdca043a8e3cf872b795",
+      "sourceFile": "01-美甲培训/09-课堂作品点评.jpg"
+    },
+    {
+      "id": "01-10",
+      "series": "nail-training",
+      "title": {
+        "zh": "练习工具静物",
+        "en": "A considered toolkit"
+      },
+      "src": "/images/training/nails/10.jpg",
+      "thumbnail": "/images/training/nails/10-960.webp",
+      "large": "/images/training/nails/10-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "cd1d7723de95bc8dc3f1e71d46ffdd37af489fca4589f099fbdef8a0e32f1eb5",
+      "sourceFile": "01-美甲培训/10-练习工具静物.jpg"
+    },
+    {
+      "id": "02-01",
+      "series": "lash-training",
+      "title": {
+        "zh": "模拟实操示范",
+        "en": "Practice demonstration"
+      },
+      "src": "/images/training/lashes/01.jpg",
+      "thumbnail": "/images/training/lashes/01-960.webp",
+      "large": "/images/training/lashes/01-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "b7af3e10d6bba8d7b1151712efdb6e4d0d437ec6d359a46a6379809575c6e010",
+      "sourceFile": "02-美睫培训/01-模拟实操示范.jpg"
+    },
+    {
+      "id": "02-02",
+      "series": "lash-training",
+      "title": {
+        "zh": "双镊分离练习",
+        "en": "Isolation with tweezers"
+      },
+      "src": "/images/training/lashes/02.jpg",
+      "thumbnail": "/images/training/lashes/02-960.webp",
+      "large": "/images/training/lashes/02-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "39ebabfd199097344ffad1bafacebb5166eeabe92d4dd474a82c7c91e5f4cf3b",
+      "sourceFile": "02-美睫培训/02-双镊分离练习.jpg"
+    },
+    {
+      "id": "02-03",
+      "series": "lash-training",
+      "title": {
+        "zh": "毛束开花练习",
+        "en": "Lash fan practice"
+      },
+      "src": "/images/training/lashes/03.jpg",
+      "thumbnail": "/images/training/lashes/03-960.webp",
+      "large": "/images/training/lashes/03-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "1a7803d0c48758c0d02a92848b5e6e92da570965b97fab16502ea72f79f1da3a",
+      "sourceFile": "02-美睫培训/03-毛束开花练习.jpg"
+    },
+    {
+      "id": "02-04",
+      "series": "lash-training",
+      "title": {
+        "zh": "弧度材质讲解",
+        "en": "Understanding curls"
+      },
+      "src": "/images/training/lashes/04.jpg",
+      "thumbnail": "/images/training/lashes/04-960.webp",
+      "large": "/images/training/lashes/04-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "5dfd55c1ff5f6683201bc9219995c955cadbf23a2dcb6e1fff2c12b4d4f703b3",
+      "sourceFile": "02-美睫培训/04-弧度材质讲解.jpg"
+    },
+    {
+      "id": "02-05",
+      "series": "lash-training",
+      "title": {
+        "zh": "眼型设计讨论",
+        "en": "Eye-shape discussion"
+      },
+      "src": "/images/training/lashes/05.jpg",
+      "thumbnail": "/images/training/lashes/05-960.webp",
+      "large": "/images/training/lashes/05-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "e2f621434fc50fe0e0f114506f883feb00d9c25f97bffd5b4b1502509c7eae8a",
+      "sourceFile": "02-美睫培训/05-眼型设计讨论.jpg"
+    },
+    {
+      "id": "02-06",
+      "series": "lash-training",
+      "title": {
+        "zh": "一对一练习指导",
+        "en": "Individual practice"
+      },
+      "src": "/images/training/lashes/06.jpg",
+      "thumbnail": "/images/training/lashes/06-960.webp",
+      "large": "/images/training/lashes/06-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "a264eacc2a3e5683bbce0072b86104d43aa05b872655b138266564ca3af3259a",
+      "sourceFile": "02-美睫培训/06-一对一练习指导.jpg"
+    },
+    {
+      "id": "02-07",
+      "series": "lash-training",
+      "title": {
+        "zh": "睫毛样本排列",
+        "en": "Lash sample arrangement"
+      },
+      "src": "/images/training/lashes/07.jpg",
+      "thumbnail": "/images/training/lashes/07-960.webp",
+      "large": "/images/training/lashes/07-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "18a9d43e6a255e83c6d28278da15b9eecb3738b4d47e40e021ec8e2e2106cefc",
+      "sourceFile": "02-美睫培训/07-睫毛样本排列.jpg"
+    },
+    {
+      "id": "02-08",
+      "series": "lash-training",
+      "title": {
+        "zh": "镜下细节观察",
+        "en": "Observing the details"
+      },
+      "src": "/images/training/lashes/08.jpg",
+      "thumbnail": "/images/training/lashes/08-960.webp",
+      "large": "/images/training/lashes/08-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "0cacdb391647663197eb085b63651db9e9105b35cab276f391c478f440c1fcbf",
+      "sourceFile": "02-美睫培训/08-镜下细节观察.jpg"
+    },
+    {
+      "id": "02-09",
+      "series": "lash-training",
+      "title": {
+        "zh": "小班案例讨论",
+        "en": "Small-group discussion"
+      },
+      "src": "/images/training/lashes/09.jpg",
+      "thumbnail": "/images/training/lashes/09-960.webp",
+      "large": "/images/training/lashes/09-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "04f015dc2fcf919236c7d7371456e188f9c6439070c32f88eeeca4e7e1f4ca53",
+      "sourceFile": "02-美睫培训/09-小班案例讨论.jpg"
+    },
+    {
+      "id": "02-10",
+      "series": "lash-training",
+      "title": {
+        "zh": "专业练习工位",
+        "en": "A prepared workspace"
+      },
+      "src": "/images/training/lashes/10.jpg",
+      "thumbnail": "/images/training/lashes/10-960.webp",
+      "large": "/images/training/lashes/10-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "ee53a3ba78cef1059bb887a05731a1e553ec7c8162cefd15c0051c719d574abb",
+      "sourceFile": "02-美睫培训/10-专业练习工位.jpg"
+    },
+    {
+      "id": "03-01",
+      "series": "lashes",
+      "title": {
+        "zh": "自然羽感侧眸",
+        "en": "Natural feathered lashes"
+      },
+      "src": "/images/gallery/lashes/01.jpg",
+      "thumbnail": "/images/gallery/lashes/01-960.webp",
+      "large": "/images/gallery/lashes/01-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "f2aa3846cefeab418fa5a1319b63c4b4bc737f92405859ee604deb42b71636a2",
+      "sourceFile": "03-美睫细节/01-自然羽感侧眸.jpg"
+    },
+    {
+      "id": "03-02",
+      "series": "lashes",
+      "title": {
+        "zh": "闭眼睫毛弧线",
+        "en": "A soft closed-eye curve"
+      },
+      "src": "/images/gallery/lashes/02.jpg",
+      "thumbnail": "/images/gallery/lashes/02-960.webp",
+      "large": "/images/gallery/lashes/02-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "226e653f104b94dbead1a982b1df610ed3b4d312c1a518052ee0ba4a0f9c30c0",
+      "sourceFile": "03-美睫细节/02-闭眼睫毛弧线.jpg"
+    },
+    {
+      "id": "03-03",
+      "series": "lashes",
+      "title": {
+        "zh": "柔和猫眼",
+        "en": "Gentle cat-eye shape"
+      },
+      "src": "/images/gallery/lashes/03.jpg",
+      "thumbnail": "/images/gallery/lashes/03-960.webp",
+      "large": "/images/gallery/lashes/03-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "e023d98a600e5b54469de38ff0aef4220cce82c60bc17f7abc4a3784af359dbb",
+      "sourceFile": "03-美睫细节/03-柔和猫眼.jpg"
+    },
+    {
+      "id": "03-04",
+      "series": "lashes",
+      "title": {
+        "zh": "清透短睫",
+        "en": "Light natural lashes"
+      },
+      "src": "/images/gallery/lashes/04.jpg",
+      "thumbnail": "/images/gallery/lashes/04-960.webp",
+      "large": "/images/gallery/lashes/04-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "e4c01ba0b320a96018cacd4a2e60b311a26cfc869576490def59c18baa8ebba0",
+      "sourceFile": "03-美睫细节/04-清透短睫.jpg"
+    },
+    {
+      "id": "03-05",
+      "series": "lashes",
+      "title": {
+        "zh": "暖棕柔睫",
+        "en": "Soft brown lashes"
+      },
+      "src": "/images/gallery/lashes/05.jpg",
+      "thumbnail": "/images/gallery/lashes/05-960.webp",
+      "large": "/images/gallery/lashes/05-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "a67028dc229cb18a3323b61bd5070b6bdb87502cebfbc9f923106e98ad1dbcc9",
+      "sourceFile": "03-美睫细节/05-暖棕柔睫.jpg"
+    },
+    {
+      "id": "03-06",
+      "series": "lashes",
+      "title": {
+        "zh": "侧颜睫影",
+        "en": "Lashes in profile"
+      },
+      "src": "/images/gallery/lashes/06.jpg",
+      "thumbnail": "/images/gallery/lashes/06-960.webp",
+      "large": "/images/gallery/lashes/06-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "68a0a4bf0eb2fc8f4bedece5bbcdd1bf91cc353b71e6d7961e375ec85374d9ec",
+      "sourceFile": "03-美睫细节/06-侧颜睫影.jpg"
+    },
+    {
+      "id": "03-07",
+      "series": "lashes",
+      "title": {
+        "zh": "卷翘层次",
+        "en": "Layers and lift"
+      },
+      "src": "/images/gallery/lashes/07.jpg",
+      "thumbnail": "/images/gallery/lashes/07-960.webp",
+      "large": "/images/gallery/lashes/07-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "ec639a920ee1f45127c65448677c4b4180f9c16ae1a9ba6f3729418d79dc9ce1",
+      "sourceFile": "03-美睫细节/07-卷翘层次.jpg"
+    },
+    {
+      "id": "03-08",
+      "series": "lashes",
+      "title": {
+        "zh": "柔光双眸",
+        "en": "Eyes in soft light"
+      },
+      "src": "/images/gallery/lashes/08.jpg",
+      "thumbnail": "/images/gallery/lashes/08-960.webp",
+      "large": "/images/gallery/lashes/08-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "41505503c406a5a9a38fe420fef0fdf907b40b9f27f83a6748dadc11070684f9",
+      "sourceFile": "03-美睫细节/08-柔光双眸.jpg"
+    },
+    {
+      "id": "03-09",
+      "series": "lashes",
+      "title": {
+        "zh": "花影半闭眼",
+        "en": "Petal shadows"
+      },
+      "src": "/images/gallery/lashes/09.jpg",
+      "thumbnail": "/images/gallery/lashes/09-960.webp",
+      "large": "/images/gallery/lashes/09-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "7608c677e11f70c5f3ce7643285b1d0ce8f5a9f78dad4ac800946aed4214bccb",
+      "sourceFile": "03-美睫细节/09-花影半闭眼.jpg"
+    },
+    {
+      "id": "03-10",
+      "series": "lashes",
+      "title": {
+        "zh": "睫根自然细节",
+        "en": "Natural lash-line detail"
+      },
+      "src": "/images/gallery/lashes/10.jpg",
+      "thumbnail": "/images/gallery/lashes/10-960.webp",
+      "large": "/images/gallery/lashes/10-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "2d863bc84f77556f25cca7f1d438274fc0eddb69e500842affa59fde67a7e6e1",
+      "sourceFile": "03-美睫细节/10-睫根自然细节.jpg"
+    },
+    {
+      "id": "04-01",
+      "series": "nails",
+      "title": {
+        "zh": "裸色丝缎",
+        "en": "Nude tones on satin"
+      },
+      "src": "/images/gallery/nails/01.jpg",
+      "thumbnail": "/images/gallery/nails/01-960.webp",
+      "large": "/images/gallery/nails/01-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "6c9a1049de42079e976d5577b06195801e14e05bfd26f001ff4e660527a0e08f",
+      "sourceFile": "04-美甲细节/01-裸色丝缎.jpg"
+    },
+    {
+      "id": "04-02",
+      "series": "nails",
+      "title": {
+        "zh": "极细法式边缘",
+        "en": "Fine French tips"
+      },
+      "src": "/images/gallery/nails/02.jpg",
+      "thumbnail": "/images/gallery/nails/02-960.webp",
+      "large": "/images/gallery/nails/02-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "469101c2b30db7684cb72b0baf9b30d354a483c602f199b553a71ce5d658effe",
+      "sourceFile": "04-美甲细节/02-极细法式边缘.jpg"
+    },
+    {
+      "id": "04-03",
+      "series": "nails",
+      "title": {
+        "zh": "香槟猫眼光泽",
+        "en": "Champagne cat-eye shimmer"
+      },
+      "src": "/images/gallery/nails/03.jpg",
+      "thumbnail": "/images/gallery/nails/03-960.webp",
+      "large": "/images/gallery/nails/03-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "ad3e925d6dff5f97b2df0c222e8db656ebc6340d1998732b7299c64123e076da",
+      "sourceFile": "04-美甲细节/03-香槟猫眼光泽.jpg"
+    },
+    {
+      "id": "04-04",
+      "series": "nails",
+      "title": {
+        "zh": "珍珠奶粉",
+        "en": "Pearl blush"
+      },
+      "src": "/images/gallery/nails/04.jpg",
+      "thumbnail": "/images/gallery/nails/04-960.webp",
+      "large": "/images/gallery/nails/04-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "f335be0033ae23d904801dc789e1bf0b87c41869c9e8ccc6a4b0d5d8dbe810c5",
+      "sourceFile": "04-美甲细节/04-珍珠奶粉.jpg"
+    },
+    {
+      "id": "04-05",
+      "series": "nails",
+      "title": {
+        "zh": "墨绿金箔",
+        "en": "Forest green and gold"
+      },
+      "src": "/images/gallery/nails/05.jpg",
+      "thumbnail": "/images/gallery/nails/05-960.webp",
+      "large": "/images/gallery/nails/05-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "5214cd958a472920e2240d8c6ea8c943256d5c07b73c0f6cffc17bd36fd2e42b",
+      "sourceFile": "04-美甲细节/05-墨绿金箔.jpg"
+    },
+    {
+      "id": "04-06",
+      "series": "nails",
+      "title": {
+        "zh": "黑金极简",
+        "en": "Minimal black and gold"
+      },
+      "src": "/images/gallery/nails/06.jpg",
+      "thumbnail": "/images/gallery/nails/06-960.webp",
+      "large": "/images/gallery/nails/06-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "ba89a7c245ee4d8508d586147a21386d477c7c1efb80dc5e73d2ad5ec1fe540c",
+      "sourceFile": "04-美甲细节/06-黑金极简.jpg"
+    },
+    {
+      "id": "04-07",
+      "series": "nails",
+      "title": {
+        "zh": "奶咖柔光",
+        "en": "Soft latte tones"
+      },
+      "src": "/images/gallery/nails/07.jpg",
+      "thumbnail": "/images/gallery/nails/07-960.webp",
+      "large": "/images/gallery/nails/07-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "7fe80a69e36f46a370ede60581348ce14489e65fecd5a7f86ff0fc74ce433292",
+      "sourceFile": "04-美甲细节/07-奶咖柔光.jpg"
+    },
+    {
+      "id": "04-08",
+      "series": "nails",
+      "title": {
+        "zh": "酒红丝绒",
+        "en": "Burgundy on satin"
+      },
+      "src": "/images/gallery/nails/08.jpg",
+      "thumbnail": "/images/gallery/nails/08-960.webp",
+      "large": "/images/gallery/nails/08-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "22e37b80d3275751f6008f17bccfa751ee6ab2764603e6522ab7279298e26c15",
+      "sourceFile": "04-美甲细节/08-酒红丝绒.jpg"
+    },
+    {
+      "id": "04-09",
+      "series": "nails",
+      "title": {
+        "zh": "金线几何",
+        "en": "Fine gold geometry"
+      },
+      "src": "/images/gallery/nails/09.jpg",
+      "thumbnail": "/images/gallery/nails/09-960.webp",
+      "large": "/images/gallery/nails/09-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "addf552d0ad1dc7303215eca95f11ae531d8343dbedeb368edfd652a3ea5199e",
+      "sourceFile": "04-美甲细节/09-金线几何.jpg"
+    },
+    {
+      "id": "04-10",
+      "series": "nails",
+      "title": {
+        "zh": "乳白陶瓷光泽",
+        "en": "Milky porcelain gloss"
+      },
+      "src": "/images/gallery/nails/10.jpg",
+      "thumbnail": "/images/gallery/nails/10-960.webp",
+      "large": "/images/gallery/nails/10-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "665831a78e3828335f3fc1817a78b76066bac6d9f6848c4a1c9fd2ce156f2701",
+      "sourceFile": "04-美甲细节/10-乳白陶瓷光泽.jpg"
+    },
+    {
+      "id": "05-01",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "抹茶奶油晕染",
+        "en": "Matcha and cream"
+      },
+      "src": "/images/gallery/japanese-nails/01.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/01-960.webp",
+      "large": "/images/gallery/japanese-nails/01-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "4678435ac12771b75cde6027fe8d5c24263a24530e6d4f627d38a0851a61f7dd",
+      "sourceFile": "05-日式美甲/01-抹茶奶油晕染.jpg"
+    },
+    {
+      "id": "05-02",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "琥珀玳瑁",
+        "en": "Amber tortoiseshell"
+      },
+      "src": "/images/gallery/japanese-nails/02.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/02-960.webp",
+      "large": "/images/gallery/japanese-nails/02-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "f230bde4365128518e9a41697dd40a6385b65e184ab118c5bee62f7db6b1da90",
+      "sourceFile": "05-日式美甲/02-琥珀玳瑁.jpg"
+    },
+    {
+      "id": "05-03",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "透明水波纹",
+        "en": "Transparent water ripples"
+      },
+      "src": "/images/gallery/japanese-nails/03.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/03-960.webp",
+      "large": "/images/gallery/japanese-nails/03-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "b67ea3deb0f004e0ab6475ae5ad21ad888d95bddfea0024e0076738d99b3bef6",
+      "sourceFile": "05-日式美甲/03-透明水波纹.jpg"
+    },
+    {
+      "id": "05-04",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "贝壳微光",
+        "en": "A hint of shell"
+      },
+      "src": "/images/gallery/japanese-nails/04.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/04-960.webp",
+      "large": "/images/gallery/japanese-nails/04-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "db2b8cb9027dc6adfb8ad82dd1924f0a3cb6725831722f560df02f3b3276eab0",
+      "sourceFile": "05-日式美甲/04-贝壳微光.jpg"
+    },
+    {
+      "id": "05-05",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "樱花薄粉",
+        "en": "Soft cherry-blossom pink"
+      },
+      "src": "/images/gallery/japanese-nails/05.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/05-960.webp",
+      "large": "/images/gallery/japanese-nails/05-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "f4be61301abd3bb49fc16c507a104f9b42bc70ed8a31bd4e1824bab3fa501ff8",
+      "sourceFile": "05-日式美甲/05-樱花薄粉.jpg"
+    },
+    {
+      "id": "05-06",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "留白负空间",
+        "en": "Thoughtful negative space"
+      },
+      "src": "/images/gallery/japanese-nails/06.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/06-960.webp",
+      "large": "/images/gallery/japanese-nails/06-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "f5671b7ecff4dd7aeeb7239f9df99794d1e9ea5cbe529f1a844d46e5f40a5de1",
+      "sourceFile": "05-日式美甲/06-留白负空间.jpg"
+    },
+    {
+      "id": "05-07",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "金箔茶色",
+        "en": "Tea tones and gold leaf"
+      },
+      "src": "/images/gallery/japanese-nails/07.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/07-960.webp",
+      "large": "/images/gallery/japanese-nails/07-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "11d3768312c36046fd38bd79019682184c7fac5b184804bd1ce1b2d933a4a33b",
+      "sourceFile": "05-日式美甲/07-金箔茶色.jpg"
+    },
+    {
+      "id": "05-08",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "奶茶渐层",
+        "en": "A soft latte gradient"
+      },
+      "src": "/images/gallery/japanese-nails/08.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/08-960.webp",
+      "large": "/images/gallery/japanese-nails/08-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "d6060c4251632887006f26d928bda77263561b0fe1551784f440fb2d514ce2ff",
+      "sourceFile": "05-日式美甲/08-奶茶渐层.jpg"
+    },
+    {
+      "id": "05-09",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "细线植物",
+        "en": "Fine botanical lines"
+      },
+      "src": "/images/gallery/japanese-nails/09.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/09-960.webp",
+      "large": "/images/gallery/japanese-nails/09-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "2cd4919d52f362bdc0033bba43f38371e789fa8290c4e5685749e21fcd9278f1",
+      "sourceFile": "05-日式美甲/09-细线植物.jpg"
+    },
+    {
+      "id": "05-10",
+      "series": "japanese-nails",
+      "title": {
+        "zh": "水墨烟灰",
+        "en": "Ink-wash grey"
+      },
+      "src": "/images/gallery/japanese-nails/10.jpg",
+      "thumbnail": "/images/gallery/japanese-nails/10-960.webp",
+      "large": "/images/gallery/japanese-nails/10-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "fc9cf98cf4a238816c4bdb43410472fc93139247ce118f510fdecb7f2d55f031",
+      "sourceFile": "05-日式美甲/10-水墨烟灰.jpg"
+    },
+    {
+      "id": "06-01",
+      "series": "salon-management",
+      "title": {
+        "zh": "晨间团队培训",
+        "en": "Morning team discussion"
+      },
+      "src": "/images/training/salon-management/01.jpg",
+      "thumbnail": "/images/training/salon-management/01-960.webp",
+      "large": "/images/training/salon-management/01-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "83ad7175b6e57bb42dbbb755a6860e7e8e71c8297f149de000c1b9f10850f5a8",
+      "sourceFile": "06-店务运营培训/01-晨间团队培训.jpg"
+    },
+    {
+      "id": "06-02",
+      "series": "salon-management",
+      "title": {
+        "zh": "接待流程演练",
+        "en": "Reception role play"
+      },
+      "src": "/images/training/salon-management/02.jpg",
+      "thumbnail": "/images/training/salon-management/02-960.webp",
+      "large": "/images/training/salon-management/02-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "13c2af890842a7861559525bc2adf383c9c2463849477e52987a1f31038726f9",
+      "sourceFile": "06-店务运营培训/02-接待流程演练.jpg"
+    },
+    {
+      "id": "06-03",
+      "series": "salon-management",
+      "title": {
+        "zh": "需求沟通演练",
+        "en": "Understanding preferences"
+      },
+      "src": "/images/training/salon-management/03.jpg",
+      "thumbnail": "/images/training/salon-management/03-960.webp",
+      "large": "/images/training/salon-management/03-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "15a0da88f8a2bd887498a028b48cc75a1d3ea3b4a03e481639c0399e8affe3f6",
+      "sourceFile": "06-店务运营培训/03-需求沟通演练.jpg"
+    },
+    {
+      "id": "06-04",
+      "series": "salon-management",
+      "title": {
+        "zh": "排班与预约管理",
+        "en": "Scheduling and appointments"
+      },
+      "src": "/images/training/salon-management/04.jpg",
+      "thumbnail": "/images/training/salon-management/04-960.webp",
+      "large": "/images/training/salon-management/04-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "4e96651f792af628f8e281730ac1f1e2e14aae1ce0b7c4af496d18e298be616f",
+      "sourceFile": "06-店务运营培训/04-排班与预约管理.jpg"
+    },
+    {
+      "id": "06-05",
+      "series": "salon-management",
+      "title": {
+        "zh": "工具库存整理",
+        "en": "Organising supplies"
+      },
+      "src": "/images/training/salon-management/05.jpg",
+      "thumbnail": "/images/training/salon-management/05-960.webp",
+      "large": "/images/training/salon-management/05-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "c30054bd7788052d30392203fc4345c4327083b4953f495a593545aeb88ceeca",
+      "sourceFile": "06-店务运营培训/05-工具库存整理.jpg"
+    },
+    {
+      "id": "06-06",
+      "series": "salon-management",
+      "title": {
+        "zh": "服务陈列培训",
+        "en": "A thoughtful display"
+      },
+      "src": "/images/training/salon-management/06.jpg",
+      "thumbnail": "/images/training/salon-management/06-960.webp",
+      "large": "/images/training/salon-management/06-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "c7ff9f372ac42ebb9f5ef664092f4b3ddfba8f0827f33092fbe5b0c160f7fa14",
+      "sourceFile": "06-店务运营培训/06-服务陈列培训.jpg"
+    },
+    {
+      "id": "06-07",
+      "series": "salon-management",
+      "title": {
+        "zh": "作品拍摄教学",
+        "en": "Photographing details"
+      },
+      "src": "/images/training/salon-management/07.jpg",
+      "thumbnail": "/images/training/salon-management/07-960.webp",
+      "large": "/images/training/salon-management/07-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "0b752dca30e0be5737214114127ef819b3ee09461558f042c2fb4878cf742d6b",
+      "sourceFile": "06-店务运营培训/07-作品拍摄教学.jpg"
+    },
+    {
+      "id": "06-08",
+      "series": "salon-management",
+      "title": {
+        "zh": "经营复盘讨论",
+        "en": "Reflecting on operations"
+      },
+      "src": "/images/training/salon-management/08.jpg",
+      "thumbnail": "/images/training/salon-management/08-960.webp",
+      "large": "/images/training/salon-management/08-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "97bc186efc34fcdfee9dd243f181e81f89bc648528e395be6f28f36575041fb3",
+      "sourceFile": "06-店务运营培训/08-经营复盘讨论.jpg"
+    },
+    {
+      "id": "06-09",
+      "series": "salon-management",
+      "title": {
+        "zh": "服务动线演练",
+        "en": "The service journey"
+      },
+      "src": "/images/training/salon-management/09.jpg",
+      "thumbnail": "/images/training/salon-management/09-960.webp",
+      "large": "/images/training/salon-management/09-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "01543a3093294f412956bd35408dc1e912940430bac6e104d9a5bf9f0f62415e",
+      "sourceFile": "06-店务运营培训/09-服务动线演练.jpg"
+    },
+    {
+      "id": "06-10",
+      "series": "salon-management",
+      "title": {
+        "zh": "服务礼仪指导",
+        "en": "Welcoming with care"
+      },
+      "src": "/images/training/salon-management/10.jpg",
+      "thumbnail": "/images/training/salon-management/10-960.webp",
+      "large": "/images/training/salon-management/10-1600.webp",
+      "width": 2560,
+      "height": 1440,
+      "generated": true,
+      "sha256": "20598d0a6347178a1dca381276ab7da4142e17d39404b114e5d05b99ae720735",
+      "sourceFile": "06-店务运营培训/10-服务礼仪指导.jpg"
+    }
+  ]
+}

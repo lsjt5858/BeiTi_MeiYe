@@ -2,12 +2,36 @@
 import InnerPage from '../_shared/InnerPage.astro';
 import { getServices } from '../../lib/content.ts';
 import { safeSlug, formatValue } from '../_shared/values.ts';
+import VisualPhoto from '../../components/VisualPhoto.astro';
+import { imageById } from '../../lib/visual-catalog.ts';
+import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const href = (path: string) => localizedPath(path, locale);
 const services = getServices();
 const description = services.length
   ? '这里展示已确认的服务信息。请先查看适用条件、项目边界与计费说明，再决定需要咨询什么。'
   : '目前还没有可公开的已确认服务清单。您可以先整理自己的需求；咨询意向不代表某项服务已经开设。';
 ---
 <InnerPage title="先了解，再选择。" eyebrow="Services / 服务信息" description={description} breadcrumbs={[{ label: '服务信息' }]}>
+  <section class="editorial-section" aria-labelledby="explore-visual-heading">
+    <h2 id="explore-visual-heading">{en ? 'Learning and visual inspiration' : '探索技艺与美学灵感'}</h2>
+    <div class="explore-hubs">
+      <article class="explore-hub">
+        <a href={href('/training/')} aria-label={en ? 'Beauty training' : '美业培训'}><VisualPhoto image={imageById('01-08')} /></a>
+        <h3><a href={href('/training/')}>{en ? 'Beauty training' : '美业培训'}</a></h3>
+        <p>{en ? 'Nail training, lash training and salon management: explore learning directions before choosing a course.' : '从美甲、美睫到店务运营，先了解学习方向，再整理自己的课程咨询问题。'}</p>
+        <a class="text-link" href={href('/training/')}>{en ? 'Explore learning directions' : '了解学习方向'} ↗</a>
+      </article>
+      <article class="explore-hub">
+        <a href={href('/gallery/')} aria-label={en ? 'Visual collection' : '美学图鉴'}><VisualPhoto image={imageById('05-02')} /></a>
+        <h3><a href={href('/gallery/')}>{en ? 'Visual collection' : '美学图鉴'}</a></h3>
+        <p>{en ? 'Explore nail details, lash details and Japanese nail art through colour, texture and light.' : '从裸色、柔睫到日式晕染，在配色、材质与光影中寻找自己的偏爱。'}</p>
+        <a class="text-link" href={href('/gallery/')}>{en ? 'Discover visual inspiration' : '浏览美学灵感'} ↗</a>
+      </article>
+    </div>
+    <p class="visual-notice">{en ? 'AI-generated concept imagery. Learning directions do not indicate confirmed services or available classes.' : 'AI 概念影像；学习方向不代表已确认服务或已经开班。'}</p>
+  </section>
   <section class="editorial-section" aria-labelledby="services-heading">
     {services.length ? <>
       <h2 id="services-heading">已确认服务</h2>

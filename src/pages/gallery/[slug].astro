@@ -1,0 +1,23 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import VisualIntro from '../../components/VisualIntro.astro';
+import VisualGallery from '../../components/VisualGallery.astro';
+import { copy, imagesFor, visualSeries, type VisualSeries } from '../../lib/visual-catalog.ts';
+import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
+export function getStaticPaths() {
+  return visualSeries.filter(item => item.section === 'gallery').map(series => ({ params: { slug: series.path.split('/')[2] }, props: { series } }));
+}
+interface Props { series: VisualSeries }
+const { series } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const title = copy(series.title, locale);
+---
+<SiteLayout title={title} description={copy(series.description, locale)} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: en ? 'Visual collection' : '美学图鉴', href: '/gallery/' }, { label: title }]}>
+  <VisualIntro title={title} subtitle={copy(series.subtitle, locale)} description={copy(series.description, locale)} eyebrow="BEITI / VISUAL COLLECTION" image={series.cover} />
+  <div class="container visual-page-body">
+    <div class="visual-section-heading"><h2>{en ? 'A closer look' : '近一点，看见细节'}</h2><p>{en ? 'Ten concept images. Select an image to view the original.' : '十张概念影像，点击图片查看原图。'}</p></div>
+    <VisualGallery images={imagesFor(series)} />
+    <div class="visual-bottom-link"><a class="text-link" href={localizedPath('/gallery/', locale)}>{en ? 'All visual collections' : '全部美学图鉴'} ↗</a><a class="text-link" href={localizedPath('/training/', locale)}>{en ? 'Beauty training' : '美业培训'} ↗</a></div>
+  </div>
+</SiteLayout>

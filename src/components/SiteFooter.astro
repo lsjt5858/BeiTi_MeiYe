@@ -1,10 +1,12 @@
 ---
 import { getLatestUpdate, getReviews, site } from "../lib/content";
-import { localeFromPath, localizedPath, translate } from '../lib/i18n.ts';
+import { localeFromPath, localizedPath, sourcePath, translate } from '../lib/i18n.ts';
+import { visualContentPaths, visualUpdatedAt } from '../lib/visual-routes.ts';
 const locale = localeFromPath(Astro.url.pathname);
 const tr = (text: string) => translate(text, locale);
 const href = (path: string) => localizedPath(path, locale);
-const updated = getLatestUpdate();
+const confirmedUpdate = getLatestUpdate();
+const updated = visualContentPaths.includes(sourcePath(Astro.url.pathname)) ? visualUpdatedAt : confirmedUpdate;
 const date = updated && Number.isFinite(Date.parse(updated)) ? new Date(updated).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
 const year = new Date().getFullYear();
 ---
@@ -17,6 +19,8 @@ const year = new Date().getFullYear();
     </div>
     <nav class="footer-links" aria-label={tr('页脚导航')}>
       <a href={href('/services/')}>{tr('探索美业')}</a>
+      <a href={href('/training/')}>{tr('美业培训')}</a>
+      <a href={href('/gallery/')}>{tr('美学图鉴')}</a>
       <a href={href('/pricing/')}>{tr('价格信息')}</a>
       <a href={href('/about/')}>{tr('品牌理念')}</a>
       <a href={href('/locations/')}>{tr('地点信息')}</a>
@@ -29,6 +33,7 @@ const year = new Date().getFullYear();
   <div class="container footer-bottom">
     <p>© {year} {tr(site.brand)}</p>
     <p>{tr(updated ? "内容更新" : "页面生成")}: <time datetime={date}>{date}</time></p>
+    {confirmedUpdate && confirmedUpdate !== updated && <p>{locale === 'en' ? 'Confirmed information updated' : '已确认信息更新'}: <time datetime={confirmedUpdate}>{confirmedUpdate}</time></p>}
     <nav aria-label={tr('法律信息')}><a href={href('/privacy/')}>{tr('隐私说明')}</a><a href={href('/terms/')}>{tr('使用条款')}</a></nav>
   </div>
   <div class="container privacy-control">

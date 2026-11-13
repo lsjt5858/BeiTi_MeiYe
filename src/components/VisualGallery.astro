@@ -1,0 +1,40 @@
+---
+import { copy, conceptNotice, visualSeries, type VisualImage } from '../lib/visual-catalog.ts';
+import { localeFromPath } from '../lib/i18n.ts';
+import VisualPhoto from './VisualPhoto.astro';
+interface Props { images: VisualImage[]; filters?: boolean; }
+const { images, filters = false } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const english = locale === 'en';
+const groups = visualSeries.filter(series => series.section === 'gallery');
+---
+<section class="visual-gallery" data-gallery aria-label={english ? 'Concept image collection' : '概念影像图集'}>
+  {filters && <div class="visual-filter-bar" data-gallery-filters hidden>
+    <div class="visual-filters" role="group" aria-label={english ? 'Filter by style' : '按风格筛选'}>
+      <button type="button" data-gallery-filter="all" aria-pressed="true">{english ? 'All styles' : '全部风格'}</button>
+      {groups.map(series => <button type="button" data-gallery-filter={series.slug} aria-pressed="false">{copy(series.title, locale)}</button>)}
+    </div>
+    <p class="visual-count" data-gallery-count aria-live="polite" data-count-label={english ? 'images' : '张影像'}>{images.length} {english ? 'images' : '张影像'}</p>
+  </div>}
+  <div class="visual-gallery-grid">
+    {images.map(image => <figure data-gallery-item data-gallery-series={image.series}>
+      <a class="visual-gallery-open" href={image.src} data-gallery-open aria-label={`${english ? 'View original' : '查看原图'} · ${copy(image.title, locale)}`}>
+        <VisualPhoto image={image} sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw" />
+        <span class="visual-enlarge" aria-hidden="true">↗</span>
+      </a>
+      <figcaption><span>{copy(image.title, locale)}</span><small>{english ? 'AI concept' : 'AI 概念'}</small></figcaption>
+    </figure>)}
+  </div>
+  <p class="visual-notice">{copy(conceptNotice, locale)}</p>
+  <dialog class="visual-lightbox" data-gallery-dialog aria-labelledby="gallery-dialog-title">
+    <div class="visual-lightbox-heading"><h2 id="gallery-dialog-title" data-gallery-title></h2><button type="button" data-gallery-close aria-label={english ? 'Close image' : '关闭图片'}>{english ? 'Close' : '关闭'} ×</button></div>
+    <img class="visual-lightbox-image" data-gallery-image alt="" width="2560" height="1440" />
+    <p class="visual-lightbox-status" data-gallery-status aria-live="polite" data-error-label={english ? 'The image could not load. Open the original file below.' : '图片暂未加载，请通过下方链接查看原图。'} data-loading-label={english ? 'Loading original image…' : '正在加载原图…'}></p>
+    <div class="visual-lightbox-actions">
+      <button type="button" data-gallery-prev aria-label={english ? 'Previous image' : '上一张图片'}>← <span>{english ? 'Previous' : '上一张'}</span></button>
+      <a data-gallery-original target="_blank" rel="noopener">{english ? 'Open original' : '查看原图'} ↗</a>
+      <button type="button" data-gallery-next aria-label={english ? 'Next image' : '下一张图片'}><span>{english ? 'Next' : '下一张'}</span> →</button>
+    </div>
+    <p class="visual-notice">{copy(conceptNotice, locale)}</p>
+  </dialog>
+</section>

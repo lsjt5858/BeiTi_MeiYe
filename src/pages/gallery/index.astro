@@ -1,0 +1,23 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import VisualIntro from '../../components/VisualIntro.astro';
+import VisualGallery from '../../components/VisualGallery.astro';
+import { visualImages, visualSeries, copy } from '../../lib/visual-catalog.ts';
+import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const groups = visualSeries.filter(item => item.section === 'gallery');
+const images = groups.flatMap(group => visualImages.filter(image => image.series === group.slug));
+const title = en ? 'Visual collection' : '美学图鉴';
+const description = en ? 'Explore nail details, lash details and Japanese nail art through 30 AI concept images, with colour, texture and light as inspiration.' : '以三十张 AI 概念影像，探索美甲、美睫与日式美甲的配色、材质和光影灵感。';
+---
+<SiteLayout title={title} description={description} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: title }]}>
+  <VisualIntro title={title} subtitle={en ? 'Beauty lives in the details.' : '美，藏在细节里。'} description={description} eyebrow="BEITI / THE BEAUTY OF DETAILS" image="04-01" />
+  <div class="container visual-page-body">
+    <nav class="visual-collection-links" aria-label={en ? 'Explore each collection' : '探索各组图鉴'}>
+      {groups.map(group => <a href={localizedPath(group.path, locale)}><span>{copy(group.title, locale)}</span><span aria-hidden="true">↗</span></a>)}
+    </nav>
+    <VisualGallery images={images} filters />
+    <div class="visual-bottom-link"><p>{en ? 'Explore the learning behind these details.' : '从欣赏细节，到了解学习方向。'}</p><a class="text-link" href={localizedPath('/training/', locale)}>{en ? 'Beauty training' : '美业培训'} ↗</a></div>
+  </div>
+</SiteLayout>

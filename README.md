@@ -42,6 +42,14 @@ client.json     ──►  品牌名称、基础 URL (base_url)、语言、站�
 /                         首页
 /services/                服务/产品概览
 /services/{slug}/         具体服务/课程/产品页面
+/training/                美业培训方向概览
+/training/nails/          美甲学习方向
+/training/lashes/         美睫学习方向
+/training/salon-management/ 店务运营学习方向
+/gallery/                 美学图鉴概览
+/gallery/nails/           美甲细节
+/gallery/lashes/          美睫细节
+/gallery/japanese-nails/  日式美甲
 /pricing/                 价格信息
 /about/                   关于我们/团队介绍
 /locations/               地点概览
@@ -107,6 +115,8 @@ client.json     ──►  品牌名称、基础 URL (base_url)、语言、站�
 
 全站顶部导航在滚动时固定，内页与锚点按导航高度预留空间；首页保留整屏影像。咨询表单及 FAQ 筛选框使用 12px 圆角，咨询必填字段采用图标与 `*` 标记，并保留读屏提示和原有校验规则。输入提示同时提供中文和英文。
 
+“探索美业”现接入“美业培训”和“美学图鉴”。首页增加“一张大图＋两张小图”的细节精选区，以及左右交替的培训方向区；原三张首页轮播保留。培训分为美甲、美睫、店务运营，图鉴分为美甲细节、美睫细节、日式美甲，每组提供 10 张概念影像。培训方向页不代表已开班或可报名，课期、费用和地点继续按事实卡片确认后提供。
+
 ### 安装与运行
 
 项目根目录为 `/Users/bytedance/zimeiti/BeiTi_MeiYe`。使用 Astro 7.4.10 静态生成、TypeScript 与少量原生浏览器 JavaScript。`package.json` 要求 Node.js `>=22.23.4`、npm `>=9.6.5`；本轮使用 Node.js `v26.5.0`、npm `11.17.0`。请先选择满足要求的 Node.js，再在项目根目录执行一次安装：
@@ -161,11 +171,22 @@ src/lib/content.ts          事实/草稿加载、确认过滤、字段和引用
 src/lib/seo.ts              canonical、JSON-LD、搜索文件和公开路径规则
 src/lib/contact.ts          咨询白名单、字段校验、纯文本摘要
 src/pages/                  首页、常规内页、动态服务/地点/文章/评价及 SEO 文件
+src/pages/training/         培训概览与三个学习方向页面
+src/pages/gallery/          图鉴概览与三个风格系列页面
+src/lib/visual-catalog.ts   中英文影像与学习方向元数据
+src/lib/visual-routes.ts    培训/图鉴路径与编辑内容更新时间
+src/components/Visual*.astro 图片、介绍与原图弹窗组件
+src/components/HomeVisuals.astro 首页图鉴与培训精选区
+src/components/visual-interactions.mjs 图鉴筛选、原图弹窗及键盘操作
 src/pages/_shared/          共用内页布局、安全值处理、about.ts 资料类型过滤
 src/layouts/                全站 HTML head、导航与页脚集成
 src/components/             公共组件、品牌图片元数据与交互脚本
 src/styles/global.css       公共视觉与响应式样式
+src/styles/visuals.css       培训、图鉴和首页精选区的图文排版
 public/images/              冻结摄影 JPEG 和 SOURCES.md 来源说明
+public/images/training/     美甲、美睫、店务运营，各 10 张原图及响应式 WebP
+public/images/gallery/      美甲、美睫、日式美甲，各 10 张原图及响应式 WebP
+public/images/visual-catalog.json 图片来源、原始文件名、标题及 SHA-256
 scripts/content-check.ts    构建前内容检查
 scripts/geo-audit.ts        只读构建产物的静态审计
 tests/                      数据、构建、审计与咨询回归测试
@@ -173,7 +194,7 @@ tests/                      数据、构建、审计与咨询回归测试
 dist/                       静态产物（忽略，不提交）
 ```
 
-当前固定页面为 `/`、`/services/`、`/pricing/`、`/about/`、`/locations/`、`/faq/`、`/articles/`、`/contact/`、`/privacy/`、`/terms/`，另有 `404.html` 与 `robots.txt`、`sitemap.xml`、`llms.txt`。服务、地点、文章详情按可公开内容生成；没有授权评价时不生成 `/reviews/`，也不展示评价导航。未生成路径的 HTTP 404 还取决于所用静态托管的正确配置。
+原有固定页面为 `/`、`/services/`、`/pricing/`、`/about/`、`/locations/`、`/faq/`、`/articles/`、`/contact/`、`/privacy/`、`/terms/`；新增 `/training/`、`/training/nails/`、`/training/lashes/`、`/training/salon-management/`、`/gallery/`、`/gallery/nails/`、`/gallery/lashes/`、`/gallery/japanese-nails/`，合计 18 个正式中文页面及其英文版本，另有 `404.html` 与 `robots.txt`、`sitemap.xml`、`llms.txt`。服务、地点、文章详情按可公开内容生成；没有授权评价时不生成 `/reviews/`，也不展示评价导航。未生成路径的 HTTP 404 还取决于所用静态托管的正确配置。
 
 ### 事实维护：先核实，再发布
 
@@ -303,15 +324,17 @@ updated_at: '2026-11-11'
   "environment": "production",
   "public_pages": [
     "/", "/services/", "/pricing/", "/about/", "/locations/",
-    "/faq/", "/articles/", "/contact/", "/privacy/", "/terms/"
+    "/faq/", "/articles/", "/contact/", "/privacy/", "/terms/",
+    "/training/", "/training/nails/", "/training/lashes/", "/training/salon-management/",
+    "/gallery/", "/gallery/nails/", "/gallery/lashes/", "/gallery/japanese-nails/"
   ],
   "analytics_endpoint": ""
 }
 ```
 
-正式配置开放全部 10 个现有固定页面，以已可匿名访问的品牌域名 `https://www.beitimeiye.com` 作为 canonical 和 sitemap 的统一来源。公开页面输出 `index, follow`，并允许搜索结果展示完整文字摘要、大图与视频预览；是否收录、展示或被 AI 引用由对应平台决定。
+正式配置开放全部 18 个固定页面（原有 10 个和新增 8 个培训/图鉴页面），以已可匿名访问的品牌域名 `https://www.beitimeiye.com` 作为 canonical 和 sitemap 的统一来源。公开页面输出 `index, follow`，并允许搜索结果展示完整文字摘要、大图与视频预览；是否收录、展示或被 AI 引用由对应平台决定。
 
-`robots.txt` 使用 `User-agent: *` 与 `Allow: /`，通用规则适用于遵守 robots 的搜索及 AI 爬虫，同时允许抓取 CSS、JS、图片、`sitemap.xml` 和 `llms.txt`。未指定公开的已生成页面仍单独禁止抓取；404 不进入 sitemap，未确认业务事实与草稿继续不发布。正式 sitemap 列出 10 个固定页面及其英文版本，共 20 个实际生成页面的 HTTPS URL 和更新时间，`llms.txt` 提供同一公开页面清单。开发服务器也会显示正式配置下的 sitemap，最终构建再根据真实 HTML 产物校正清单。
+`robots.txt` 使用 `User-agent: *` 与 `Allow: /`，通用规则适用于遵守 robots 的搜索及 AI 爬虫，同时允许抓取 CSS、JS、图片、`sitemap.xml` 和 `llms.txt`。未指定公开的已生成页面仍单独禁止抓取；404 不进入 sitemap，未确认业务事实与草稿继续不发布。正式 sitemap 列出 18 个固定页面及其英文版本，共 36 个实际生成页面的 HTTPS URL 和更新时间，`llms.txt` 提供同一公开页面清单。新增培训/图鉴与首页精选内容的初始日期为 2026-11-13，后续修改时维护 `src/lib/visual-routes.ts` 中的日期，页面与 sitemap 共同使用。开发服务器也会显示正式配置下的 sitemap，最终构建再根据真实 HTML 产物校正清单。
 
 若需要把整个站点改回未公开预览，使用以下配置：
 
@@ -330,7 +353,7 @@ updated_at: '2026-11-11'
 
 生产配置必须先由客户确认实际 HTTPS 公共域名及归属，再设置 `base_url` 和 `environment: "production"`。域名校验拒绝 HTTP、localhost、IP、example/test 等占位域名，以及路径、查询、凭据、非标准端口；它只验证格式，不证明域名归属，也不部署网站。`brand` 与已确认的 `brand` 事实应保持一致。
 
-`public_pages` 是明确的页面路径列表，例如 `["/", "/faq/"]` 表示只公开首页与 FAQ；当前授权范围为上述 10 个现有固定页面。路径不能含查询、片段或穿越；目录路径会规范化为尾斜杠形式。生产 sitemap/llms 只取“指定公开路径 ∩ 实际生成路径”；写入 `/reviews/` 或不存在的详情不会使其生成。未指定页面仍可能存在于 `dist`，但保持 noindex；robots 在允许通用资源的同时禁止未公开的已生成页面，必要时用精确 Allow 覆盖未公开父目录，不能用这些规则替代访问控制。404 不进入公开清单。新增确认后的服务、地点或文章详情时，需将对应路径加入 `public_pages` 才会进入公开清单。
+`public_pages` 是明确的页面路径列表，例如 `["/", "/faq/"]` 表示只公开首页与 FAQ；当前范围为上述 18 个固定页面。路径不能含查询、片段或穿越；目录路径会规范化为尾斜杠形式。生产 sitemap/llms 只取“指定公开路径 ∩ 实际生成路径”；写入 `/reviews/` 或不存在的详情不会使其生成。未指定页面仍可能存在于 `dist`，但保持 noindex；robots 在允许通用资源的同时禁止未公开的已生成页面，必要时用精确 Allow 覆盖未公开父目录，不能用这些规则替代访问控制。404 不进入公开清单。新增确认后的服务、地点或文章详情时，需将对应路径加入 `public_pages` 才会进入公开清单。
 
 生产前重新 test/check/build，并逐项核对 `dist` 的 HTML、canonical、JSON-LD、robots、sitemap、llms 和图片。构建会把确认后的内容写进静态 HTML；运行时改 YAML 不会更新已部署文件。修改配置后需要重新部署才会对线上生效；带 Vercel 登录保护的预览地址不作为收录入口，正式域名必须允许匿名访问，且不能附加 `X-Robots-Tag: noindex`。这里不包含自动部署、真实交易或预约确认。
 
@@ -354,7 +377,7 @@ updated_at: '2026-11-11'
 
 ### 图片来源与使用边界
 
-首页与品牌区块只引用三个本地冻结 JPEG：
+首页原轮播与品牌理念区块继续引用三个本地冻结 JPEG：
 
 - `public/images/beiti-hero-generated.jpg`：美容人像主视觉。
 - `public/images/beiti-detail-generated.jpg`：美甲、丝缎与花的细节摄影。
@@ -363,5 +386,9 @@ updated_at: '2026-11-11'
 三张实际文件均为 `2560 × 1440` JPEG，已逐张检查摄影内容；不是空图或灰色鉴权提示图。来源为宿主合法鉴权的原生 `GenerateImage` 调用 `https://copilot-cn.bytedance.net/api/ide/v1/text_to_image`。中文提示词、`landscape_16_9` 尺寸和由 `encodeURIComponent(prompt)` 生成的准确 URL 保存在 `src/components/brand-media.mjs`，生成记录说明见 `public/images/SOURCES.md`。
 
 网页使用 `frozen: true` 的本地源，不在访问时重试外部生成；未经鉴权访问生成 URL 可能返回灰图，不能把 HTTP 200 当成真实生成成功。旧 `beiti-portrait.jpg`、`beiti-detail.jpg`、`beiti-ritual.jpg` 分别保留为三张真图的字节相同副本，网页不引用这些旧路径。
+
+新增培训与图鉴使用用户指定选图包中的 60 张独立原图。`public/images/training/` 和 `public/images/gallery/` 按系列各分成三个子目录，每组 10 张；2560×1440 JPEG 原图按 `01.jpg`～`10.jpg` 保留，同名 `-960.webp` 与 `-1600.webp` 为响应式缩略版。来源、原文件名、主题、中英文标题和原图 SHA-256 保存于 `public/images/visual-catalog.json`，页面内容由 `src/lib/visual-catalog.ts` 统一读取。原始选图包不修改。
+
+图鉴概览可按美甲、美睫、日式美甲筛选，图片支持原图弹窗、左右切换、Escape 关闭及焦点恢复；无 JavaScript 时仍显示静态内容，并可直接打开原图。培训页面包含学习方向、适用与不适用说明及十图影像组。点击咨询只进入本地需求整理流程，不会生成报名、预约或课程承诺。中英文新页面对应切换，canonical、hreflang、robots、sitemap 与 llms 同步接入。
 
 生成影像仅用于品牌美学表达，非真实门店、员工、客户成果、在售产品或资质证明。OG 图片复用第一张冻结图，实际域名存在时生成绝对 URL，尺寸/alt 来自对应元数据；本地预览没有实际域名时不输出绝对 OG 图片 URL。替换素材时请同步文件、尺寸、alt、元数据与来源说明，勿以生成图充当确认业务事实。

@@ -1,0 +1,22 @@
+---
+import { conceptNotice, copy, imageById } from '../lib/visual-catalog.ts';
+import { localeFromPath } from '../lib/i18n.ts';
+import VisualPhoto from './VisualPhoto.astro';
+import { visualUpdatedAt } from '../lib/visual-routes.ts';
+interface Props { title: string; subtitle: string; description: string; eyebrow: string; image: string; }
+const { title, subtitle, description, eyebrow, image } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+---
+<header class="visual-intro container">
+  <div class="visual-intro-copy">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="visual-subtitle">{subtitle}</p>
+    <p class="visual-description">{description}</p>
+    <p class="visual-notice">{locale === 'en' ? 'Updated' : '内容更新'}：<time datetime={visualUpdatedAt}>{visualUpdatedAt}</time></p>
+  </div>
+  <figure class="visual-intro-photo">
+    <VisualPhoto image={imageById(image)} eager />
+    <figcaption class="visual-notice">{copy(conceptNotice, locale)}</figcaption>
+  </figure>
+</header>

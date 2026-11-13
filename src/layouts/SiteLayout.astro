@@ -7,6 +7,7 @@ import { brandMedia } from "../components/brand-media.mjs";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import "../styles/global.css";
+import "../styles/visuals.css";
 interface Props {
   title: string;
   description?: string;
@@ -78,7 +79,9 @@ const structured = [
     <SiteFooter />
     <script>
       import { initializeSite } from "../components/site-interactions.mjs";
+      import { initializeVisualGalleries } from "../components/visual-interactions.mjs";
       initializeSite();
+      initializeVisualGalleries();
     </script>
   </body>
 </html>

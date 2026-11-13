@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import HomeVisuals from "../components/HomeVisuals.astro";
 import { brandMedia } from "../components/brand-media.mjs";
 import { site, getServices, getFaqs, getArticles } from "../lib/content";
 const services = getServices();
@@ -77,6 +78,8 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
       </div>}
     </div>
   </section>
+
+  <HomeVisuals />
 
   <section class="philosophy-section">
     <div class="container split philosophy-layout">

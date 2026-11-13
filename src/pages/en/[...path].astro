@@ -14,6 +14,11 @@ import Privacy from '../privacy.astro';
 import Terms from '../terms.astro';
 import Reviews from '../[page].astro';
 import NotFound from '../404.astro';
+import Training from '../training/index.astro';
+import TrainingSeries from '../training/[slug].astro';
+import Gallery from '../gallery/index.astro';
+import GallerySeries from '../gallery/[slug].astro';
+import { visualSeries } from '../../lib/visual-catalog.ts';
 import { loadContent } from '../../lib/content.ts';
 import { sourceContentPaths } from '../../lib/seo.ts';
 
@@ -24,9 +29,10 @@ export function getStaticPaths() {
     const service = model.getServices().find(item => path === `/services/${item.slug}/`);
     const location = model.getLocations().find(item => path === `/locations/${item.slug}/`);
     const article = model.getArticles().find(item => path === `/articles/${item.slug}/`);
+    const series = visualSeries.find(item => item.path === path);
     return {
       params: { path: path === '/' ? undefined : path.slice(1, -1) },
-      props: { source: path, pageProps: service ? { service } : location ? { location } : article ? { article } : path === '/reviews/' ? { reviews: model.getReviews() } : {} },
+      props: { source: path, pageProps: series ? { series } : service ? { service } : location ? { location } : article ? { article } : path === '/reviews/' ? { reviews: model.getReviews() } : {} },
     };
   });
 }
@@ -36,10 +42,12 @@ const staticPages = {
   '/locations/': Locations, '/faq/': Faq, '/articles/': Articles,
   '/contact/': Contact, '/privacy/': Privacy, '/terms/': Terms,
   '/404/': NotFound,
+  '/training/': Training, '/gallery/': Gallery,
 };
 const StaticPage = staticPages[source as keyof typeof staticPages];
 ---
-{pageProps.service ? <Service service={pageProps.service} /> :
+{pageProps.series ? (pageProps.series.section === 'training' ? <TrainingSeries series={pageProps.series} /> : <GallerySeries series={pageProps.series} />) :
+  pageProps.service ? <Service service={pageProps.service} /> :
   pageProps.location ? <Location location={pageProps.location} /> :
   pageProps.article ? <Article article={pageProps.article} /> :
   pageProps.reviews ? <Reviews reviews={pageProps.reviews} /> :

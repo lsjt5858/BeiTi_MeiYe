@@ -1,0 +1,29 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import VisualIntro from '../../components/VisualIntro.astro';
+import VisualPhoto from '../../components/VisualPhoto.astro';
+import { copy, imageById, trainingNotice, visualSeries } from '../../lib/visual-catalog.ts';
+import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const href = (path: string) => localizedPath(path, locale);
+const series = visualSeries.filter(item => item.section === 'training');
+const title = en ? 'Beauty training' : '美业培训';
+const description = en ? 'Explore nail training, lash training and salon management as learning directions. Dates, fees and locations still need to be confirmed.' : '了解美甲培训、美睫培训与店务运营的学习方向；课期、费用与地点尚待确认。';
+---
+<SiteLayout title={title} description={description} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: title }]}>
+  <VisualIntro title={title} subtitle={en ? 'Turn inspiration into a considered craft.' : '把热爱，练成技艺。'} description={description} eyebrow="BEITI / BEAUTY LEARNING" image="01-08" />
+  <div class="container visual-page-body">
+    <p class="visual-boundary">{copy(trainingNotice, locale)}</p>
+    <section class="visual-training-list" aria-label={en ? 'Learning directions' : '学习方向'}>
+      {series.map((item, index) => <article class="visual-training-row">
+        <a class="visual-training-photo" href={href(item.path)} aria-label={copy(item.title, locale)}><VisualPhoto image={imageById(item.cover)} /></a>
+        <div class="visual-training-copy"><p class="eyebrow">0{index + 1} / {en ? 'LEARNING DIRECTION' : '学习方向'}</p><h2><a href={href(item.path)}>{copy(item.title, locale)}</a></h2>
+          <p class="visual-subtitle">{copy(item.subtitle, locale)}</p><p>{copy(item.description, locale)}</p>
+          <a class="text-link" href={href(item.path)}>{en ? 'Explore this direction' : '了解学习方向'} <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>)}
+    </section>
+    <div class="visual-bottom-link"><p>{en ? 'Discover the textures and details that inspire your learning.' : '先看看细节，找到自己的审美方向。'}</p><a class="text-link" href={href('/gallery/')}>{en ? 'Explore the visual collection' : '浏览美学图鉴'} ↗</a></div>
+  </div>
+</SiteLayout>
