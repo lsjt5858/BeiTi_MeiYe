@@ -5,6 +5,13 @@ facts:
     value: 贝缇美业
     updated_at: '2026-11-11'
 
+  # 用户确认视频美学为赠送课程内容；课程安排与适用条件后续补充。
+  - id: course.video-aesthetics.gift
+    type: course
+    status: confirmed
+    value: 赠送课程内容
+    updated_at: '2026-11-13'
+
   # 仅确认当前网站功能，不确认企业已经开展的业务。
   - id: faq-consult
     type: faq

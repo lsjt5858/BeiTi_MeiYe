@@ -9,7 +9,7 @@ const en = locale === 'en';
 const href = (path: string) => localizedPath(path, locale);
 const series = visualSeries.filter(item => item.section === 'training');
 const title = en ? 'Beauty training' : '美业培训';
-const description = en ? 'Explore nail training, lash training and salon management as learning directions. Dates, fees and locations still need to be confirmed.' : '了解美甲培训、美睫培训与店务运营的学习方向；课期、费用与地点尚待确认。';
+const description = en ? 'Explore nail training, lash training and salon management as learning directions. Dates, fees and locations still need to be confirmed.' : '了解美甲培训、美睫培训与店务运营管理的学习方向；课期、费用与地点尚待确认。';
 ---
 <SiteLayout title={title} description={description} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: title }]}>
   <VisualIntro title={title} subtitle={en ? 'Turn inspiration into a considered craft.' : '把热爱，练成技艺。'} description={description} eyebrow="BEITI / BEAUTY LEARNING" image="01-08" />

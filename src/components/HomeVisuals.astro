@@ -26,7 +26,7 @@ const training = visualSeries.filter(item => item.section === 'training');
 </section>
 <section class="section home-learning-section" data-home-visual="training">
   <div class="container">
-    <div class="section-heading" data-reveal><div><p class="eyebrow">BEITI / BEAUTY LEARNING</p><h2>{en ? 'From inspiration' : '把热爱，'}<br />{en ? 'to a considered craft.' : '练成技艺。'}</h2></div><div><p>{en ? 'Explore nail training, lash training and salon management.' : '从美甲、美睫，到店务运营，探索学习方向。'}</p><a class="text-link" href={href('/training/')}>{en ? 'All learning directions' : '全部学习方向'} ↗</a></div></div>
+    <div class="section-heading" data-reveal><div><p class="eyebrow">BEITI / BEAUTY LEARNING</p><h2>{en ? 'From inspiration' : '把热爱，'}<br />{en ? 'to a considered craft.' : '练成技艺。'}</h2></div><div><p>{en ? 'Explore nail training, lash training and salon management.' : '从美甲培训、美睫培训到店务运营管理，探索学习方向。'}</p><a class="text-link" href={href('/training/')}>{en ? 'All learning directions' : '全部学习方向'} ↗</a></div></div>
     <div class="home-learning-features">
       {training.map((series, index) => <article class="home-learning-feature" data-reveal>
         <a class="home-learning-photo" href={href(series.path)} aria-label={copy(series.title, locale)}><VisualPhoto image={imageById(index === 0 ? '01-01' : series.cover)} /></a>

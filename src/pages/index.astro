@@ -2,15 +2,15 @@
 import SiteLayout from "../layouts/SiteLayout.astro";
 import HomeVisuals from "../components/HomeVisuals.astro";
 import { brandMedia } from "../components/brand-media.mjs";
-import { site, getServices, getFaqs, getArticles } from "../lib/content";
+import { site, getFact, getServices, getFaqs, getArticles } from "../lib/content";
 const services = getServices();
 const articles = getArticles().slice(0, 3);
 const faqs = getFaqs().slice(0, 4);
-const intents = [
-  { name: "美妆造型", english: "MAKEUP & STYLING", interest: "makeup" },
-  { name: "肌肤护理", english: "SKIN & SELF-CARE", interest: "skin" },
-  { name: "美甲美睫", english: "NAILS & LASHES", interest: "nails" },
-  { name: "美业学习", english: "BEAUTY LEARNING", interest: "learning" },
+const intents: { name: string; english: string; interest: string; note?: string }[] = [
+  { name: "美甲培训", english: "NAIL TRAINING", interest: "nails" },
+  { name: "美睫培训", english: "LASH TRAINING", interest: "lashes" },
+  { name: "店务运营管理", english: "SALON MANAGEMENT", interest: "management" },
+  { name: "视频美学", english: "VIDEO AESTHETICS", interest: "video", note: getFact<string>('course.video-aesthetics.gift') },
 ];
 const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.src : image.generationUrl;
 ---
@@ -58,14 +58,14 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
       <div class="intent-layout" data-reveal>
         <div>
           <p class="eyebrow">01 / EXPLORE YOUR BEAUTY</p>
-          <h2>你想了解<br />哪一种美？</h2>
-          <p class="intent-note">从一个想法开始，找到属于自己的方向。<br />以下是咨询意向分类，不代表已开设服务。</p>
+          <h2>把热爱，<br />练成专业。</h2>
+          <p class="intent-note">从美甲培训、美睫培训到店务运营管理，找到你想了解的方向。<br />课程内容与安排待补充，可先整理咨询问题。</p>
         </div>
         <ol class="intent-list">
           {intents.map((intent, index) => <li>
             <a class="intent-link" href={`/contact/?interest=${intent.interest}`} data-analytics-category={intent.interest}>
               <span class="intent-number" aria-hidden="true">0{index + 1}</span>
-              <span class="intent-title">{intent.name}<small lang="en">{intent.english}</small></span>
+              <span class="intent-title">{intent.name}<small lang="en">{intent.english}</small>{intent.note && <span class="intent-description">{intent.note}</span>}</span>
               <span class="intent-arrow" aria-hidden="true">↗</span>
             </a>
           </li>)}

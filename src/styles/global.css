@@ -184,6 +184,7 @@ html:lang(en) .header-contact { gap: 18px; }
 .intent-number { font: 14px Georgia, serif; color: var(--gold-dark); }
 .intent-title { font: 25px/1.5 var(--serif); letter-spacing: .05em; transition: transform .3s; }
 .intent-title small { display: block; font: 11px/1.5 var(--sans); letter-spacing: .15em; color: var(--muted); margin-top: 5px; }
+.intent-description { display: block; font: 14px/1.6 var(--sans); letter-spacing: .04em; color: var(--gold-dark); margin-top: 6px; }
 .intent-arrow { font-size: 23px; font-weight: 300; transition: transform .3s; }
 .intent-link:hover .intent-title { transform: translateX(5px); }
 .intent-link:hover .intent-arrow { transform: translate(4px, -4px); }
@@ -252,8 +253,9 @@ html:lang(en) .header-contact { gap: 18px; }
 .footer-brand-name { font: 32px/1.5 var(--serif); letter-spacing: .14em; }
 .footer-tagline { color: #bec7bd; font-size: 14px; letter-spacing: .1em; margin-top: 14px; }
 .footer-wordmark { font: 11px Georgia, serif; letter-spacing: .3em; margin-top: 33px; color: var(--gold); }
-.footer-links { display: grid; grid-template-columns: repeat(2, auto); gap: 0 70px; align-content: start; color: #d5dbd0; font-size: 14px; }
-.footer-links a { display: inline-flex; min-height: 44px; align-items: center; justify-content: space-between; gap: 20px; }
+.footer-links { display: grid; grid-template-columns: repeat(2, auto); gap: 8px 64px; align-content: start; color: var(--cream); font-size: 18px; font-weight: 500; line-height: 1.65; }
+.footer-links a { display: inline-flex; min-height: 48px; align-items: center; justify-content: space-between; gap: 16px; }
+.footer-links a span { flex-shrink: 0; }
 .footer-links a:hover, .footer-bottom a:hover { color: var(--gold); }
 .footer-bottom { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12px; letter-spacing: .04em; color: #b7c2b4; padding-top: 22px; }
 .footer-bottom::before { content: ""; position: absolute; top: 0; inset-inline: var(--gutter); height: 1px; background: #38483c; }
@@ -304,7 +306,8 @@ html:lang(en) .header-contact { gap: 18px; }
   .process-steps { gap: 28px; }
   .process-number { margin-bottom: 28px; }
   .home-faq { grid-template-columns: 1fr; gap: 38px; }
-  .footer-links { gap: 0 40px; }
+  .footer-main { flex-wrap: wrap; }
+  .footer-links { column-gap: 40px; }
 }
 @media (max-width: 600px) {
   :root { --header-height: 76px; }
@@ -367,7 +370,8 @@ html:lang(en) .header-contact { gap: 18px; }
   .closing-section p:not(.eyebrow) { max-width: 240px; margin-inline: auto; font-size: 14px; }
   .footer-main { display: block; padding-bottom: 36px; }
   .footer-brand-name { font-size: 30px; }
-  .footer-links { margin-top: 30px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
+  .footer-links { margin-top: 30px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; font-size: 17px; }
+  .footer-links a { gap: 12px; }
   .footer-wordmark { margin-top: 24px; }
   .footer-bottom { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 6px 24px; }
   .footer-bottom nav { width: 100%; gap: 24px; }

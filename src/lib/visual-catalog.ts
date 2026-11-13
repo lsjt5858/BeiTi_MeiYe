@@ -60,7 +60,7 @@ export const visualSeries: VisualSeries[] = [
   },
   {
     slug: 'salon-management', section: 'training', path: '/training/salon-management/',
-    title: { zh: '店务运营培训', en: 'Salon management' },
+    title: { zh: '店务运营管理', en: 'Salon management' },
     subtitle: { zh: '让细致，贯穿每一次相遇。', en: 'Bring care to every part of the experience.' },
     description: { zh: '从接待沟通、预约排班，到库存陈列和经营复盘，梳理美业门店日常运营的学习方向。', en: 'Explore reception, scheduling, supplies, presentation and reflection as parts of everyday salon operations.' },
     cover: '06-01',

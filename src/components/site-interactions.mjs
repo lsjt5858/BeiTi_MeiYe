@@ -34,7 +34,7 @@ export function analyticsConfiguration(site) {
 
 export function analyticsEvent(href, referrer, event = "page_view", category = "page") {
   if (!["page_view", "intent_click", "inquiry_prepared"].includes(event)) return null;
-  if (!["page", "makeup", "skin", "nails", "learning", "general"].includes(category)) return null;
+  if (!["page", "nails", "lashes", "management", "video", "learning", "general"].includes(category)) return null;
   try {
     const path = new URL(href).pathname;
     let origin = "";

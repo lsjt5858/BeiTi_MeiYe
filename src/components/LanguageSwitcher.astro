@@ -39,7 +39,7 @@ const target = sourcePath(current) === '/404/' ? '/404/' : generated.includes(so
       const url = new URL(link.href);
       // Preserve topic codes and anchors, never put form values into a URL or persistent storage.
       const interest = new URLSearchParams(location.search).get('interest');
-      if (targetIsContact(url.pathname) && ['makeup', 'skin', 'nails', 'learning'].includes(interest ?? '')) url.searchParams.set('interest', interest!);
+      if (targetIsContact(url.pathname) && ['nails', 'lashes', 'management', 'video', 'learning'].includes(interest ?? '')) url.searchParams.set('interest', interest!);
       if (location.hash && document.getElementById(location.hash.slice(1))) url.hash = location.hash;
       link.href = `${url.pathname}${url.search}${url.hash}`;
     });

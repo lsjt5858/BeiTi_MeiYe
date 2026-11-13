@@ -20,11 +20,12 @@ export type InquiryResult =
   | { ok: false; errors: InquiryErrors };
 
 // These are visitor intentions, not a catalogue of confirmed services.
-export const INQUIRY_INTERESTS = ['美妆造型', '护理咨询', '美甲美睫', '课程了解', '其他咨询'] as const;
+export const INQUIRY_INTERESTS = ['美甲培训', '美睫培训', '店务运营管理', '视频美学', '课程了解', '其他咨询'] as const;
 const INQUIRY_INTEREST_CODES = [
-  ['makeup', '美妆造型'],
-  ['skin', '护理咨询'],
-  ['nails', '美甲美睫'],
+  ['nails', '美甲培训'],
+  ['lashes', '美睫培训'],
+  ['management', '店务运营管理'],
+  ['video', '视频美学'],
   ['learning', '课程了解'],
 ] as const;
 export const INQUIRY_LIMITS = { name: 40, contact: 11, message: 1200 } as const;
@@ -36,7 +37,7 @@ export function normalizeInquiryPhone(value: string): string {
 }
 
 export function getInquiryInterest(value: string | null): string {
-  // Exact code lookup also preserves existing Chinese values; never reflect raw query data.
+  // Removed topics intentionally remain unselected; do not reinterpret an old request.
   const mapped = INQUIRY_INTEREST_CODES.find(([code]) => code === value)?.[1] ?? value;
   return INQUIRY_INTERESTS.find((interest) => interest === mapped) ?? '';
 }
