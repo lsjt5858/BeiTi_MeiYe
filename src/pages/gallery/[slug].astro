@@ -16,7 +16,7 @@ const title = copy(series.title, locale);
 <SiteLayout title={title} description={copy(series.description, locale)} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: en ? 'Visual collection' : '美学图鉴', href: '/gallery/' }, { label: title }]}>
   <VisualIntro title={title} subtitle={copy(series.subtitle, locale)} description={copy(series.description, locale)} eyebrow="BEITI / VISUAL COLLECTION" image={series.cover} />
   <div class="container visual-page-body">
-    <div class="visual-section-heading"><h2>{en ? 'A closer look' : '近一点，看见细节'}</h2><p>{en ? 'Ten concept images. Select an image to view the original.' : '十张概念影像，点击图片查看原图。'}</p></div>
+    <div class="visual-section-heading"><h2>{en ? 'A closer look' : '近一点，看见细节'}</h2><p>{en ? 'Ten images. Select an image to view the original.' : '十张美学影像，点击图片查看原图。'}</p></div>
     <VisualGallery images={imagesFor(series)} />
     <div class="visual-bottom-link"><a class="text-link" href={localizedPath('/gallery/', locale)}>{en ? 'All visual collections' : '全部美学图鉴'} ↗</a><a class="text-link" href={localizedPath('/training/', locale)}>{en ? 'Beauty training' : '美业培训'} ↗</a></div>
   </div>

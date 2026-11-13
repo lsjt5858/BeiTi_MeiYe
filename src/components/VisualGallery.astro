@@ -8,7 +8,7 @@ const locale = localeFromPath(Astro.url.pathname);
 const english = locale === 'en';
 const groups = visualSeries.filter(series => series.section === 'gallery');
 ---
-<section class="visual-gallery" data-gallery aria-label={english ? 'Concept image collection' : '概念影像图集'}>
+<section class="visual-gallery" data-gallery aria-label={english ? 'Beauty image collection' : '美学影像图集'}>
   {filters && <div class="visual-filter-bar" data-gallery-filters hidden>
     <div class="visual-filters" role="group" aria-label={english ? 'Filter by style' : '按风格筛选'}>
       <button type="button" data-gallery-filter="all" aria-pressed="true">{english ? 'All styles' : '全部风格'}</button>
@@ -22,7 +22,7 @@ const groups = visualSeries.filter(series => series.section === 'gallery');
         <VisualPhoto image={image} sizes="(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw" />
         <span class="visual-enlarge" aria-hidden="true">↗</span>
       </a>
-      <figcaption><span>{copy(image.title, locale)}</span><small>{english ? 'AI concept' : 'AI 概念'}</small></figcaption>
+      <figcaption><span>{copy(image.title, locale)}</span></figcaption>
     </figure>)}
   </div>
   <p class="visual-notice">{copy(conceptNotice, locale)}</p>

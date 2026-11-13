@@ -26,8 +26,8 @@ export interface VisualSeries {
 export const visualImages = catalogue.images as VisualImage[];
 export const copy = (value: Copy, locale: Locale): string => value[locale === 'en' ? 'en' : 'zh'];
 export const conceptNotice: Copy = {
-  zh: 'AI 概念影像，用于审美与学习方向介绍，非真实课堂、人员或客户成果。',
-  en: 'AI-generated concept imagery for visual and learning inspiration, not actual classes, people or customer results.',
+  zh: '影像仅供审美与学习方向参考，不代表真实课堂、人员或客户成果。',
+  en: 'Imagery is for visual and learning inspiration, not actual classes, people or customer results.',
 };
 export const trainingNotice: Copy = {
   zh: '以下为学习方向参考；课期、费用与地点尚待确认，暂不代表已开班或可报名。实操影像不作为教学操作标准。',

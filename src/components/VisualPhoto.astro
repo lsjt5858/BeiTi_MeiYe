@@ -4,6 +4,6 @@ import { localeFromPath } from '../lib/i18n.ts';
 interface Props { image: VisualImage; eager?: boolean; sizes?: string; }
 const { image, eager = false, sizes = '(max-width: 700px) 100vw, 65vw' } = Astro.props;
 const locale = localeFromPath(Astro.url.pathname);
-const alt = `${locale === 'en' ? 'AI concept image' : 'AI 概念影像'} · ${copy(image.title, locale)}`;
+const alt = `${locale === 'en' ? 'Beauty imagery' : '美学影像'} · ${copy(image.title, locale)}`;
 ---
 <img src={image.large} srcset={`${image.thumbnail} 960w, ${image.large} 1600w, ${image.src} 2560w`} sizes={sizes} alt={alt} width={image.width} height={image.height} loading={eager ? 'eager' : 'lazy'} decoding="async" />
