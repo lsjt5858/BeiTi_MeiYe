@@ -1,6 +1,19 @@
 import { englishCopy } from './en-copy.ts';
 // Interface copy. Business facts stay in fact-card.yaml; never translate visitor input.
 export const english: Record<string, string> = {
+  '关注贝缇': 'Follow Beiti',
+  '账号主页': 'Account profile',
+  '平台官网（待接入账号）': 'Official platform website (account not linked yet)',
+  '访问主页': 'Visit profile',
+  '（新窗口打开）': ' (opens in a new window)',
+  '待开通': 'Coming soon',
+  '门店确认后开通': 'After a location is confirmed',
+  '抖音': 'Douyin',
+  '小红书': 'Xiaohongshu',
+  '微信视频号': 'WeChat Channels',
+  '微信公众号': 'WeChat Official Account',
+  '哔哩哔哩': 'Bilibili',
+  '美团 / 大众点评': 'Meituan / Dianping',
   '美业培训': 'Beauty training',
   '美学图鉴': 'Visual collection',
   ...englishCopy,

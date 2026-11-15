@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { loadContent, normalizePath, type ContentModel } from './content.ts';
 import { sourcePath, localizedPath, basePages } from './i18n.ts';
 import { visualContentPaths, visualUpdatedAt } from './visual-routes.ts';
+import { getSocialChannels } from './social.ts';
 
 const staticPaths = basePages;
 
@@ -50,6 +51,11 @@ export function organizationFor(model: ContentModel): Record<string, unknown> {
   if (typeof brand !== 'string' || !brand) return {};
   const phone = model.getFact<string>('contact.phone');
   const email = model.getFact<string>('contact.email');
+  // sameAs identifies the account; access and attribution parameters stay in UI links only.
+  const sameAs = getSocialChannels(model).filter(channel => channel.url).map(channel => {
+    const url = new URL(channel.url!);
+    return `${url.origin}${url.pathname}`;
+  });
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -57,6 +63,7 @@ export function organizationFor(model: ContentModel): Record<string, unknown> {
     ...(model.site.base_url ? { url: model.site.base_url } : {}),
     ...(typeof phone === 'string' && phone ? { telephone: phone } : {}),
     ...(typeof email === 'string' && email ? { email } : {}),
+    ...(sameAs.length ? { sameAs } : {}),
   };
 }
 export function organizationJsonLd() { return organizationFor(loadContent()); }

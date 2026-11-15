@@ -253,6 +253,23 @@ html:lang(en) .header-contact { gap: 18px; }
 .footer-brand-name { font: 32px/1.5 var(--serif); letter-spacing: .14em; }
 .footer-tagline { color: #bec7bd; font-size: 14px; letter-spacing: .1em; margin-top: 14px; }
 .footer-wordmark { font: 11px Georgia, serif; letter-spacing: .3em; margin-top: 33px; color: var(--gold); }
+.footer-social { margin-top: 24px; font-size: 14px; --social-logo-cutout: var(--ink-deep); }
+.social-icon-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; max-width: 616px; }
+.social-icon-link { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 8px; }
+.social-icon-link[href] { transition: background-color .2s, transform .2s; }
+.social-icon-link[href]:hover { background: rgb(220 200 166 / 12%); transform: translateY(-3px); }
+.social-logo { flex-shrink: 0; color: var(--ink); }
+.site-footer .social-logo-douyin, .site-footer .social-logo-tiktok, .site-footer .social-logo-x { color: var(--cream); }
+.social-logo-xiaohongshu { color: #ff2442; }
+.social-logo-wechat-channels, .social-logo-wechat-official { color: #07c160; }
+.social-logo-bilibili { color: #fb7299; }
+.social-logo-dianping { color: #ffc300; }
+.social-logo-instagram { color: #f23c90; }
+.social-logo-youtube { color: #ff3d3d; }
+.social-logo-facebook { color: #438cf6; }
+.social-logo-google-business { color: #34a853; }
+.is-pending .social-logo { color: var(--muted); filter: grayscale(1); }
+.site-footer .is-pending .social-logo { color: #819087; }
 .footer-links { display: grid; grid-template-columns: repeat(2, auto); gap: 8px 64px; align-content: start; color: var(--cream); font-size: 18px; font-weight: 500; line-height: 1.65; }
 .footer-links a { display: inline-flex; min-height: 48px; align-items: center; justify-content: space-between; gap: 16px; }
 .footer-links a span { flex-shrink: 0; }

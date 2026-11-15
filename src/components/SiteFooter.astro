@@ -2,6 +2,8 @@
 import { getLatestUpdate, getReviews, site } from "../lib/content";
 import { localeFromPath, localizedPath, sourcePath, translate } from '../lib/i18n.ts';
 import { visualContentPaths, visualUpdatedAt } from '../lib/visual-routes.ts';
+import { getSocialChannels } from '../lib/social.ts';
+import SocialLogo from './SocialLogo.astro';
 const locale = localeFromPath(Astro.url.pathname);
 const tr = (text: string) => translate(text, locale);
 const href = (path: string) => localizedPath(path, locale);
@@ -9,6 +11,7 @@ const confirmedUpdate = getLatestUpdate();
 const updated = visualContentPaths.includes(sourcePath(Astro.url.pathname)) ? visualUpdatedAt : confirmedUpdate;
 const date = updated && Number.isFinite(Date.parse(updated)) ? new Date(updated).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
 const year = new Date().getFullYear();
+const socialChannels = getSocialChannels();
 ---
 <footer class="site-footer">
   <div class="container footer-main">
@@ -16,6 +19,15 @@ const year = new Date().getFullYear();
       <a href={href('/')} class="footer-brand-name">{tr(site.brand)}</a>
       <p class="footer-tagline">{tr('让美，成为日常。')}</p>
       <p class="footer-wordmark" aria-hidden="true">BEITI BEAUTY</p>
+      <nav id="social-profiles" class="footer-social" aria-label={tr('关注贝缇')}>
+        <ul class="social-icon-list">
+          {socialChannels.map(channel => <li>
+            <a class:list={['social-icon-link', { 'is-pending': !channel.url }]} href={channel.url ?? channel.officialUrl} target="_blank" rel="noopener noreferrer" aria-label={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网（待接入账号）')}${tr('（新窗口打开）')}`} title={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网（待接入账号）')}`}>
+              <SocialLogo platform={channel.id} />
+            </a>
+          </li>)}
+        </ul>
+      </nav>
     </div>
     <nav class="footer-links" aria-label={tr('页脚导航')}>
       <a href={href('/services/')}>{tr('探索美业')}</a>

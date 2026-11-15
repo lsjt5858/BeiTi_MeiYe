@@ -229,6 +229,25 @@ dist/                       静态产物（忽略，不提交）
 - `faq.value`：必需 `question`、`answer`；可选 `category`，缺省为“网站使用”。首页和 FAQ 页读取同一确认数据；FAQ 的 JSON-LD 使用同一问题和答案，搜索只是本地筛选。
 - `review.value`：需 `text`、明确 `authorized: true`、非空 `source`、有效且非未来的 `date`；可选 `author`、`rating`（1–5）。状态 confirmed 不能代替授权，缺少授权/来源/日期仍不公开。不要编造评价或汇总评分。
 - 联系渠道按固定事实 ID 读取：`contact.phone`、`contact.email`，`type: contact`，`value` 为字符串。只显示已确认且格式有效的电话/邮箱，不从示例或咨询输入提取联系方式。
+- 社媒主页使用 `social.<平台 ID>` 事实（`type: social`、`status: confirmed`、`value` 为 HTTPS 主页链接）。当前已接入用户提供的抖音 `social.douyin` 与小红书 `social.xiaohongshu`，访问参数原样保留。全站页脚 `#social-profiles` 提供 Logo 入口，咨询页侧栏提供已确认联系渠道；英文页同步展示。`Organization.sameAs` 仅包含已确认主页的无查询参数地址。
+- 国内／海外规划平台统一在页脚预留灰色 Logo；没有已确认账号 URL 的 Logo 点击打开平台官网，悬停提示“平台官网（待接入账号）”。官网地址维护在 `src/lib/social.ts` 的 `officialUrl` 中，仅用于页脚导航，不作为品牌联系渠道，也不进入 `Organization.sameAs`。后续只需按下列 ID 在 `fact-card.yaml` 增加已确认主页，Logo 就会优先使用账号链接；微信暂未提供主页链接或二维码时使用平台官方入口，不生成假二维码。
+
+| 范围 | 平台及事实 ID | 建议用途与顺序 |
+| --- | --- | --- |
+| 国内优先 | 微信视频号 `social.wechat-channels`、微信公众号 `social.wechat-official` | 承接微信内视频交流、课程资讯与品牌长文 |
+| 国内教学 | 哔哩哔哩 `social.bilibili` | 发布完整教学与学习过程，有持续教学内容时运营 |
+| 国内门店 | 美团／大众点评 `social.dianping` | 门店、营业信息与资质确认后再开通 |
+| 海外优先 | Instagram `social.instagram`、TikTok `social.tiktok` | 美学作品集与短视频；TikTok 和抖音使用独立账号 |
+| 海外教学 | YouTube `social.youtube` | 长视频教学及 Shorts，可复用完整教学素材 |
+| 海外社群 | Facebook `social.facebook` | 品牌主页与社区交流，根据目标市场投入 |
+| 海外动态 | X `social.x` | 品牌动态与海外交流，账号确认后启用主页链接 |
+| 海外门店 | Google Maps／商家资料 `social.google-business` | 实际线下业务及所在地区支持情况确认后再开通；纯线上品牌不符合商家资料资格 |
+
+这些是平台规划建议，不代表账号已创建或门店已营业。选择依据参考[微信视频号认证指南](https://support.weixin.qq.com/cgi-bin/mmtemplatepage-bin/pages/agreement/dE5pLuMlGHtRzPTO)、[美团综合商家入驻说明](https://e.dianping.com/claimcpc/page/index?source=dp)、[Instagram 商业入口](https://business.instagram.com/)、[YouTube 创作者入门](https://www.youtube.com/creators/how-things-work/getting-started/)及 [Google 商家资料资格要求](https://support.google.com/business/answer/13763036?hl=en)（核对日期：2026-11-15）。
+
+社媒入口采用内联 SVG Logo（`src/components/SocialLogo.astro`）：页脚 `#social-profiles` 已接入账号显示彩色可点击 Logo，待开通平台显示灰色 Logo，并通过悬停提示和辅助名称说明状态。咨询页不再重复展示完整平台列表，页脚也不再提供“更多平台”链接。图标使用本地矢量代码，无额外网络请求；品牌轮廓来自 Simple Icons 16（CC0），微信视频号采用微信标记加播放符号。Logo 本身不参与语言翻译。
+
+当前官网入口：[微信视频号](https://channels.weixin.qq.com/)、[微信公众平台](https://mp.weixin.qq.com/)、[哔哩哔哩](https://www.bilibili.com/)、[大众点评](https://www.dianping.com/)、[Instagram](https://www.instagram.com/)、[TikTok](https://www.tiktok.com/)、[YouTube](https://www.youtube.com/)、[Facebook](https://www.facebook.com/)、[X](https://x.com/) 和 [Google Maps](https://www.google.com/maps)。视频号使用官方助手入口，美团／大众点评的合并 Logo 当前使用大众点评官网。
 
 ID 必须唯一；service/location 同类 `slug` 不得重复，只使用小写英文字母、数字与连字符。如果填写 `value.id`，它必须与顶层事实 ID 一致；渲染时 `updatedAt` 来自顶层 `updated_at`。关于页已接入下述实体、团队、资质与登记资料模板；当前根事实卡片没有这些已确认资料，因此仍显示自然空态。
 

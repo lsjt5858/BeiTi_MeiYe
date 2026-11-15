@@ -2,13 +2,15 @@
 import InnerPage from './_shared/InnerPage.astro';
 import { getFact } from '../lib/content.ts';
 import { INQUIRY_INTERESTS, INQUIRY_LIMITS, INQUIRY_EMAIL_PATTERN } from '../lib/contact.ts';
+import { getSocialChannels } from '../lib/social.ts';
 const phoneFact = getFact('contact.phone');
 const emailFact = getFact('contact.email');
 const phone = typeof phoneFact === 'string' && /^\+?[\d ()-]+$/.test(phoneFact)
   && phoneFact.replace(/\D/g, '').length >= 7 && phoneFact.replace(/\D/g, '').length <= 15 ? phoneFact : undefined;
 const email = typeof emailFact === 'string' && INQUIRY_EMAIL_PATTERN.test(emailFact)
   && !/[\u0000-\u001f\u007f]/.test(emailFact) ? emailFact : undefined;
-const hasChannel = !!(phone || email);
+const socialChannels = getSocialChannels().filter(channel => channel.url);
+const hasChannel = !!(phone || email || socialChannels.length);
 ---
 <InnerPage title="把想了解的，说清楚。" eyebrow="Contact / 咨询需求整理" description="这里可以在本地整理您的咨询需求。填写、复制与下载都不会发送信息，也不会创建预约；正式沟通需要由您通过已确认的联系渠道另行完成。" breadcrumbs={[{ label: '咨询需求整理' }]}>
   <section class="editorial-section contact-grid">
@@ -60,6 +62,7 @@ const hasChannel = !!(phone || email);
       {hasChannel ? <><p>以下渠道来自已确认信息。您需要自行联系；本页不会自动代发摘要，也不确认可预约时间。</p><ul class="channel-list">
         {phone && <li><span class="field-help">电话</span><a class="text-link" href={`tel:${phone.replace(/[ ()-]/g, '')}`}>{phone}</a></li>}
         {email && <li><span class="field-help">邮箱</span><a class="text-link" href={`mailto:${email.split('@').map(encodeURIComponent).join('@')}`}>{email}</a></li>}
+        {socialChannels.map(channel => <li><span class="field-help">{channel.name}</span><a class="text-link" href={channel.url} target="_blank" rel="noopener noreferrer">访问主页 <span aria-hidden="true">↗</span><span class="visually-hidden">（新窗口打开）</span></a></li>)}
       </ul></> : <><p class="channel-status">正式预约暂未开放。</p><p>目前没有可公开的已确认电话或邮箱。您可以先保存问题，待真实联系渠道公布后再沟通。</p></>}
       <div class="contact-note-rule"><h3>整理 → 核对 → 自行选择</h3><p>生成摘要后，您可以复制或下载。信息仍未发送，分享与否由您决定。不要把摘要作为预约凭证。</p></div>
       <a class="text-link" href="/faq/">查看咨询操作问答 <span aria-hidden="true">→</span></a>

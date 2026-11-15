@@ -5,6 +5,18 @@ facts:
     value: 贝缇美业
     updated_at: '2026-11-11'
 
+  # 用户提供并确认的社媒主页；小红书访问参数保留在公开链接中。
+  - id: social.douyin
+    type: social
+    status: confirmed
+    value: 'https://www.douyin.com/user/MS4wLjABAAAAvndYXyBRmVUeCMQ5FRnzqXMyUIdl5qzrPfnluWzIHYU?from_tab_name=main'
+    updated_at: '2026-11-15'
+  - id: social.xiaohongshu
+    type: social
+    status: confirmed
+    value: 'https://www.xiaohongshu.com/user/profile/5995c4735e87e77e622bb206?xsec_token=AB4NCcjbvlUGbeP0RDkN3dH8CYMuRR3fl-pZAmyepZrXM=&xsec_source=pc_user'
+    updated_at: '2026-11-15'
+
   # 用户确认视频美学为赠送课程内容；课程安排与适用条件后续补充。
   - id: course.video-aesthetics.gift
     type: course
