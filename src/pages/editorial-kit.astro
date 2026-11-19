@@ -161,7 +161,7 @@ import PrintButton from '../components/PrintButton.astro';
     </section>
 
     <section class="kit-section" aria-labelledby="kit-inventory-title">
-      <SectionHeader number="07" eyebrow="CONTENT INVENTORY" title="素材库，还没到发布状态" headingId="kit-inventory-title" description="18 篇草稿按主题簇分组，只展示库存和状态；未确认事实不写成已确认。" />
+      <SectionHeader number="07" eyebrow="CONTENT INVENTORY" title="素材库，还没到发布状态" headingId="kit-inventory-title" description="18 篇行业草稿 + 3 篇站点操作稿按主题簇分组；未确认事实不写成已确认。" />
       <div class="kit-table-wrap">
         <table class="kit-table">
           <thead><tr><th>主题簇</th><th>篇数</th><th>代表问题</th><th>当前状态</th></tr></thead>
@@ -175,8 +175,12 @@ import PrintButton from '../components/PrintButton.astro';
         </table>
       </div>
       <Callout tone="note" title="发布前还要做什么">
-        <p>18 篇草稿只作为素材，当前没有改动它们的 status。正式发布前需要补齐 <code>fact_refs</code>、<code>updated_at</code>，逐条核实事实，并把“待确认”改成已确认信息或明确占位。</p>
+        <p>18 篇行业草稿和 3 篇站点操作稿只作为素材，当前没有改动正文和结论。正式发布前需要逐条核实事实，并把“待确认”改成已确认信息或明确占位。</p>
       </Callout>
+      <div class="kit-actions">
+        <a class="button" href="/articles/preview/">打开全部草稿预览</a>
+        <a class="text-link" href="/articles/">查看已确认文章</a>
+      </div>
     </section>
   </div>
 </SiteLayout>

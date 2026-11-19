@@ -1,0 +1,71 @@
+---
+import InnerPage from '../../_shared/InnerPage.astro';
+import SectionHeader from '../../../components/SectionHeader.astro';
+import StatusBadge from '../../../components/StatusBadge.astro';
+import Callout from '../../../components/Callout.astro';
+import { loadContent } from '../../../lib/content.ts';
+import { draftGroups } from '../../../lib/draft-groups.ts';
+
+const drafts = loadContent().drafts;
+const bySlug = new Map(drafts.map((draft) => [draft.frontmatter.slug, draft]));
+const confirmedCount = drafts.filter((draft) => draft.frontmatter.status === 'confirmed').length;
+const pendingCount = drafts.length - confirmedCount;
+const groups = draftGroups.map((group) => ({
+  ...group,
+  items: group.slugs.flatMap((slug) => {
+    const draft = bySlug.get(slug);
+    return draft ? [draft] : [];
+  }),
+}));
+---
+<InnerPage
+  title="草稿预览"
+  eyebrow="Draft preview / 待确认草稿"
+  description={`${pendingCount} 篇待确认草稿 + ${confirmedCount} 篇已确认样例。每篇保留独立页面，主题重叠的内容用同主题草稿互链，不删除原文。`}
+  breadcrumbs={[{ label: '文章与解答', href: '/articles/' }, { label: '草稿预览' }]}
+>
+  <Callout tone="warn" title="待确认草稿只用于内部预览">
+    <p>这些页面不会进入 sitemap，也不代表事实已经确认。价格、课期、地点和班型等未确认信息，仍以“待确认”或“需另行核对”标出。</p>
+  </Callout>
+
+  {groups.map((group, index) => <section class="editorial-section" aria-labelledby={`group-${index}`}>
+    <SectionHeader
+      number={String(index + 1).padStart(2, '0')}
+      eyebrow={group.eyebrow}
+      title={group.title}
+      description={group.description}
+      headingId={`group-${index}`}
+    />
+    <ol class="editorial-list">
+      {group.items.map((draft) => {
+        const fm = draft.frontmatter;
+        const confirmed = fm.status === 'confirmed';
+        const href = confirmed ? `/articles/${fm.slug}/` : `/articles/preview/${fm.slug}/`;
+        const description = fm.description.startsWith('PENDING_ONLY') ? '站点操作说明，等待对应信息确认后发布。' : fm.description;
+        return <li class="editorial-row">
+          <div><span class="row-number">{fm.slug}</span><h3><a class="text-link" href={href}>{fm.title}</a></h3></div>
+          <div>
+            <p>{description}</p>
+            <p class="preview-meta">
+              <StatusBadge status={confirmed ? 'confirmed' : 'pending'} label={confirmed ? '已确认' : '待确认'} />
+              <time datetime={fm.updated_at}>{fm.updated_at.slice(0, 10)}</time>
+            </p>
+            <a class="text-link" href={href}>{confirmed ? '阅读正式页' : '打开草稿预览'} <span aria-hidden="true">→</span></a>
+          </div>
+        </li>;
+      })}
+    </ol>
+  </section>)}
+
+  <section class="editorial-section">
+    <p class="intro-copy">想先看模块和排版，可以打开编辑样式样例；想看正式文章模板，可以打开已确认样例。</p>
+    <div class="page-actions">
+      <a class="button" href="/editorial-kit/">查看编辑样式样例</a>
+      <a class="text-link" href="/articles/">返回全部文章</a>
+    </div>
+  </section>
+</InnerPage>
+
+<style>
+  .preview-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 10px; color: var(--muted); font-size: 14px; }
+</style>

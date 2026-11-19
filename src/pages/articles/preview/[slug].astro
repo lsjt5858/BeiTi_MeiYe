@@ -1,0 +1,37 @@
+---
+import ArticleView from '../../../components/ArticleView.astro';
+import { loadContent, safeMarkdown } from '../../../lib/content.ts';
+import { groupForSlug } from '../../../lib/draft-groups.ts';
+import { safeSlug } from '../../_shared/values.ts';
+
+export function getStaticPaths() {
+  const model = loadContent();
+  const drafts = model.drafts.filter((draft) => draft.frontmatter.status !== 'confirmed');
+  const bySlug = new Map(model.drafts.map((draft) => [draft.frontmatter.slug, draft]));
+  return drafts.map((draft) => {
+    const fm = draft.frontmatter;
+    const description = fm.description.startsWith('PENDING_ONLY') ? '站点操作说明，等待对应信息确认后发布。' : fm.description;
+    const body = draft.body.replace(/PENDING_ONLY_NOT_PUBLIC_[A-Z_]+/g, '这篇站点操作说明仍在整理，等待对应信息确认后发布。');
+    const group = groupForSlug(fm.slug);
+    const related = (group?.slugs ?? []).filter((slug) => slug !== fm.slug).flatMap((slug) => {
+      const other = bySlug.get(slug);
+      return other ? [{ slug, title: other.frontmatter.title, status: other.frontmatter.status }] : [];
+    });
+    return {
+      params: { slug: safeSlug(fm.slug) },
+      props: {
+        article: {
+          ...fm,
+          description,
+          updatedAt: fm.updated_at,
+          body,
+          html: safeMarkdown(body),
+        },
+        related,
+      },
+    };
+  });
+}
+const { article, related } = Astro.props;
+---
+<ArticleView article={article} pending related={related} />

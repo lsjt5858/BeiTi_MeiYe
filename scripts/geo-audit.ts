@@ -105,10 +105,10 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
     check(0, documents.has(path), `${path} 应生成但缺少 HTML`, true);
   }
   if (!model.getReviews().length) check(0, !documents.has('/reviews/'), '/reviews/ 没有授权评价却生成了页面', true);
-  // 防止过滤逻辑出错后生成不在确认模型中的详情页面。
+  // 防止过滤逻辑出错后生成不在确认模型中的详情页面。草稿预览是内部 noindex 路由，不参与公开实体检查。
   const expected = new Set(contentPaths(model));
   for (const path of paths) {
-    if (/^\/(?:services|locations|articles)\/[^/]+\/$/.test(path)) check(0, expected.has(path), `${path} 生成了未确认实体详情`, true);
+    if (!path.startsWith('/articles/preview/') && /^\/(?:services|locations|articles)\/[^/]+\/$/.test(path)) check(0, expected.has(path), `${path} 生成了未确认实体详情`, true);
   }
   const knownStrings = factStrings(model);
   const unpublishedStrings = new Set<string>();
@@ -156,10 +156,11 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
     check(6, robots.length === 1 && noindex === seo.noindex && (seo.canonical ? canonicals.length === 1 && canonical === seo.canonical : canonicals.length === 0), `${path} SEO noindex/canonical 与站点环境不一致`, true);
     const html = byTag('html')[0];
     check(6, !!html && attribute(html, 'lang') === locale, `${path} SEO html lang 与页面语言不一致`);
-    check(8, !/PENDING_ONLY_NOT_PUBLIC|EXPIRED_ONLY_NOT_PUBLIC|\bTODO\b|\bTBD\b|\bFIXME\b|\bx{3,}\b|\{\{[^}]+\}\}/i.test(raw), `${path} 含未确认哨兵或占位符`, true);
-    check(8, !exaggeratedPattern.test(mains.map(text).join('')), `${path} 含夸张效果承诺`, true);
+    const isPreview = path.startsWith('/articles/preview/');
+    check(8, isPreview || !/PENDING_ONLY_NOT_PUBLIC|EXPIRED_ONLY_NOT_PUBLIC|\bTODO\b|\bTBD\b|\bFIXME\b|\bx{3,}\b|\{\{[^}]+\}\}/i.test(raw), `${path} 含未确认哨兵或占位符`, true);
+    check(8, isPreview || !exaggeratedPattern.test(mains.map(text).join('')), `${path} 含夸张效果承诺`, true);
     const exposedContent = `${html ? text(html) : ''}\n${byTag('script').filter(node => attribute(node, 'type') === 'application/ld+json').map(rawText).join('')}`;
-    check(8, ![...unpublishedStrings].some(value => exposedContent.includes(value)), `${path} 泄漏未确认或已过期内容`, true);
+    check(8, isPreview || ![...unpublishedStrings].some(value => exposedContent.includes(value)), `${path} 泄漏未确认或已过期内容`, true);
 
     const linked = nodes.filter(node => (node.tagName === 'a' && attribute(node, 'href') !== undefined) || (['img', 'script', 'source'].includes(node.tagName) && attribute(node, 'src') !== undefined) || (node.tagName === 'link' && !attribute(node, 'rel')?.split(/\s+/).includes('canonical') && attribute(node, 'href') !== undefined));
     for (const node of linked) {

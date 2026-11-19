@@ -208,7 +208,7 @@ function inspectText(value: unknown, label: string, publishable: boolean, warnin
 function escapeHtml(value: string): string {
   return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
 }
-function safeMarkdown(body: string): string {
+export function safeMarkdown(body: string): string {
   const markdown = new Marked({
     async: false,
     renderer: {

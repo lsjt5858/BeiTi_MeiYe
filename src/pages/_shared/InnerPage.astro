@@ -36,10 +36,17 @@ const { title, description, eyebrow, breadcrumbs, jsonLd, updatedAt = getLatestU
   .page-body :global(.row-number) { display: block; font-size: calc(.78rem + 2px); letter-spacing: .12em; margin-bottom: 1.1rem; color: var(--muted, #686258); }
   .page-body :global(.empty-editorial) { padding-block: clamp(2rem, 5vw, 4rem); max-width: 46rem; }
   .page-body :global(.empty-editorial p) { line-height: 1.9; margin-bottom: 2rem; }
-  .page-body :global(.fact-table) { width: 100%; border-collapse: collapse; text-align: left; line-height: 1.8; }
-  .page-body :global(.fact-table th), .page-body :global(.fact-table td) { padding: 1.15rem .8rem 1.15rem 0; border-bottom: 1px solid var(--line, #d9d1c4); vertical-align: top; overflow-wrap: anywhere; }
-  .page-body :global(.fact-table th) { font-weight: 500; }
-  .page-body :global(.table-scroll) { overflow-x: auto; }
+  .page-body :global(.fact-table) { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; line-height: 1.8; }
+  .page-body :global(.fact-table th), .page-body :global(.fact-table td) { padding: 1.1rem 1rem; border-bottom: 1px solid var(--line, #d9d1c4); vertical-align: top; overflow-wrap: anywhere; }
+  .page-body :global(.fact-table thead th) { background: #e9e4d6; color: var(--ink, #232620); font-weight: 600; font-size: calc(.85rem + 2px); letter-spacing: .05em; white-space: nowrap; }
+  .page-body :global(.fact-table tbody th) { font-weight: 500; }
+  .page-body :global(.fact-table tbody tr:nth-child(even)) { background: rgb(238 234 223 / 55%); }
+  .page-body :global(.fact-table .num) { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .page-body :global(.fact-table caption) { padding: 0 0 12px; text-align: left; }
+  .page-body :global(.table-scroll) { overflow-x: auto; border: 1px solid var(--line, #d9d1c4); background: #fbf9f3; -webkit-overflow-scrolling: touch; }
+  .page-body :global(.table-scroll .fact-table) { min-width: 44rem; }
+  .page-body :global(.table-scroll .fact-table th:first-child), .page-body :global(.table-scroll .fact-table td:first-child) { padding-left: 1.2rem; }
+  .page-body :global(.table-scroll .fact-table th:last-child), .page-body :global(.table-scroll .fact-table td:last-child) { padding-right: 1.2rem; }
   .page-body :global(.fact-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 4rem; }
   .page-body :global(.fact-grid dt) { color: var(--muted, #686258); font-size: calc(.9rem + 2px); margin-bottom: .6rem; }
   .page-body :global(.fact-grid dd) { margin: 0; line-height: 1.9; overflow-wrap: anywhere; }
