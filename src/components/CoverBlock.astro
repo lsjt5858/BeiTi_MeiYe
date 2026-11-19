@@ -1,0 +1,37 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  conclusion: string;
+  meta?: string[];
+  headingId?: string;
+  level?: 'h1' | 'h2';
+  class?: string;
+}
+const { eyebrow, title, conclusion, meta = [], headingId, level = 'h1', class: className } = Astro.props;
+const Heading = level;
+---
+<header class:list={['cover-block', className]}>
+  {eyebrow && <p class="eyebrow cover-eyebrow">{eyebrow}</p>}
+  <Heading id={headingId} class="cover-title">{title}</Heading>
+  <div class="cover-conclusion">
+    <p class="eyebrow">先说结论</p>
+    <p>{conclusion}</p>
+  </div>
+  {meta.length > 0 && <p class="cover-meta">{meta.join(' · ')}</p>}
+  <slot />
+</header>
+
+<style>
+  .cover-block { max-width: 1180px; margin: 0 auto; padding: clamp(56px, 7vw, 96px) 0 clamp(40px, 5vw, 64px); border-bottom: 1px solid var(--line); }
+  .cover-eyebrow { color: var(--gold-dark); }
+  .cover-title { margin: 18px 0 0; font-family: var(--serif); font-size: clamp(42px, 6vw, 76px); font-weight: 400; line-height: 1.2; letter-spacing: .02em; }
+  .cover-conclusion { max-width: 760px; margin-top: 32px; padding: 22px 26px; border-left: 3px solid var(--gold-dark); background: #f3ecdc; }
+  .cover-conclusion .eyebrow { margin-bottom: 8px; color: var(--gold-dark); }
+  .cover-conclusion p:last-child { margin: 0; font-size: 17px; line-height: 1.9; }
+  .cover-meta { margin: 22px 0 0; color: var(--muted); font-size: 13px; letter-spacing: .04em; line-height: 1.7; }
+  @media (max-width: 640px) {
+    .cover-conclusion { padding: 18px 20px; }
+    .cover-title { font-size: clamp(38px, 10vw, 54px); }
+  }
+</style>

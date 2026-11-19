@@ -1,0 +1,41 @@
+---
+interface Props {
+  number?: string;
+  eyebrow: string;
+  title: string;
+  description?: string;
+  headingId?: string;
+  level?: 'h1' | 'h2';
+  class?: string;
+}
+const { number, eyebrow, title, description, headingId, level = 'h2', class: className } = Astro.props;
+const Heading = level;
+---
+<header class:list={['section-header', className]}>
+  <div class="section-header-main">
+    <p class="eyebrow section-header-eyebrow">
+      {number && <span class="section-header-number" aria-hidden="true">{number}</span>}
+      {number && <span class="section-header-divider" aria-hidden="true">/</span>}
+      <span>{eyebrow}</span>
+    </p>
+    <Heading id={headingId} class="section-header-title">{title}</Heading>
+    {Astro.slots.has('default') && <div class="section-header-actions"><slot /></div>}
+  </div>
+  {description && <p class="section-header-description">{description}</p>}
+</header>
+
+<style>
+  .section-header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px 40px; margin-bottom: 40px; }
+  .section-header-main { min-width: 0; }
+  .section-header-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .section-header-number { color: var(--gold-dark); font: 600 12px/1 var(--sans); letter-spacing: .1em; }
+  .section-header-divider { color: var(--line); }
+  .section-header-title { margin: 0; font-family: var(--serif); font-size: clamp(30px, 3.4vw, 46px); font-weight: 400; line-height: 1.35; letter-spacing: .03em; }
+  .section-header-description { max-width: 340px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.9; }
+  .section-header-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+  @media (max-width: 600px) {
+    .section-header { display: block; margin-bottom: 30px; }
+    .section-header-description { margin-top: 18px; max-width: none; }
+    .section-header-actions { margin-top: 18px; }
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  status?: 'confirmed' | 'pending' | 'conditional' | 'soon' | 'local';
+  label: string;
+  class?: string;
+}
+const { status = 'pending', label, class: className } = Astro.props;
+---
+<span class:list={['status-badge', `status-badge--${status}`, className]}>{label}</span>
+
+<style>
+  .status-badge { display: inline-flex; align-items: center; gap: 7px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 2px; font-size: 12px; font-weight: 600; letter-spacing: .08em; line-height: 1.6; white-space: nowrap; vertical-align: middle; }
+  .status-badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .status-badge--confirmed { color: #2f5544; background: #e5ece5; border-color: #c4d3c6; }
+  .status-badge--pending { color: #7a5c2e; background: #f4ead5; border-color: #e0ceb0; }
+  .status-badge--conditional { color: var(--gold-dark); background: #f6f0e4; border-color: #e2d3b7; }
+  .status-badge--soon { color: var(--muted); background: #efeee8; border-color: var(--line); }
+  .status-badge--local { color: var(--ink); background: transparent; border-color: var(--ink); }
+</style>

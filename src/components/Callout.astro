@@ -1,0 +1,28 @@
+---
+interface Props {
+  tone?: 'key' | 'warn' | 'note';
+  title?: string;
+  class?: string;
+}
+const { tone = 'note', title, class: className } = Astro.props;
+---
+<div class:list={['callout', `callout--${tone}`, className]}>
+  {(title || Astro.slots.has('title')) && <div class="callout-title">{title}{Astro.slots.has('title') && <slot name="title" />}</div>}
+  <div class="callout-body"><slot /></div>
+</div>
+
+<style>
+  .callout { border-left: 3px solid var(--line); background: rgb(238 234 223 / 45%); padding: 20px 24px; margin: 24px 0; }
+  .callout-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 8px; font-weight: 600; font-size: 15px; letter-spacing: .04em; }
+  .callout-body { color: #3f4a44; font-size: 15px; line-height: 1.9; }
+  .callout-body :global(p) { margin: 0 0 8px; }
+  .callout-body :global(p:last-child) { margin-bottom: 0; }
+  .callout-body :global(ul) { margin: 8px 0 0; padding-left: 1.2rem; }
+  .callout--key { border-left-color: var(--gold-dark); background: #f3ecdc; }
+  .callout--key .callout-title { color: var(--gold-dark); }
+  .callout--warn { border-left-color: #9a5a44; background: #f6ebe4; }
+  .callout--warn .callout-title { color: #7d4433; }
+  .callout--note { border-left-color: var(--line); background: transparent; }
+  .callout--note .callout-title { color: var(--ink); }
+  @media (max-width: 600px) { .callout { padding: 18px 20px; margin: 20px 0; } }
+</style>
