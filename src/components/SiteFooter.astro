@@ -22,7 +22,7 @@ const socialChannels = getSocialChannels();
       <nav id="social-profiles" class="footer-social" aria-label={tr('关注贝缇')}>
         <ul class="social-icon-list">
           {socialChannels.map(channel => <li>
-            <a class:list={['social-icon-link', { 'is-pending': !channel.url }]} href={channel.url ?? channel.officialUrl} target="_blank" rel="noopener noreferrer" aria-label={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网（待接入账号）')}${tr('（新窗口打开）')}`} title={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网（待接入账号）')}`}>
+            <a class:list={['social-icon-link', { 'is-external': !channel.url }]} href={channel.url ?? channel.officialUrl} target="_blank" rel="noopener noreferrer" aria-label={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网')}${tr('（新窗口打开）')}`} title={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网')}`}>
               <SocialLogo platform={channel.id} />
             </a>
           </li>)}

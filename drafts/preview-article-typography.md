@@ -4,7 +4,7 @@ title: 怎么判断一篇美甲培训文章值不值得读？
 description: 从结论、依据、边界和清单四个部分，判断一篇美甲培训文章是否值得参考。
 question: 怎么判断一篇美甲培训文章值不值得读？
 fact_refs: [brand]
-status: confirmed
+status: pending
 updated_at: 2026-11-19
 ---
 

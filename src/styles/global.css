@@ -268,8 +268,8 @@ html:lang(en) .header-contact { gap: 18px; }
 .social-logo-youtube { color: #ff3d3d; }
 .social-logo-facebook { color: #438cf6; }
 .social-logo-google-business { color: #34a853; }
-.is-pending .social-logo { color: var(--muted); filter: grayscale(1); }
-.site-footer .is-pending .social-logo { color: #819087; }
+.is-external .social-logo { color: var(--muted); filter: grayscale(1); }
+.site-footer .is-external .social-logo { color: #819087; }
 .footer-links { display: grid; grid-template-columns: repeat(2, auto); gap: 8px 64px; align-content: start; color: var(--cream); font-size: 18px; font-weight: 500; line-height: 1.65; }
 .footer-links a { display: inline-flex; min-height: 48px; align-items: center; justify-content: space-between; gap: 16px; }
 .footer-links a span { flex-shrink: 0; }

@@ -1,11 +1,11 @@
-export interface DraftGroup {
+export interface ArticleGroup {
   title: string;
   eyebrow: string;
   description: string;
   slugs: string[];
 }
 
-export const draftGroups: DraftGroup[] = [
+export const articleGroups: ArticleGroup[] = [
   {
     title: '选校与学习路径',
     eyebrow: 'SCHOOL & LEARNING',
@@ -18,14 +18,16 @@ export const draftGroups: DraftGroup[] = [
       'how-long-to-learn-nail',
       'hangzhou-weekend-nail-class',
       'online-vs-offline-nail-course',
+      'nail-school-checklist',
     ],
   },
   {
     title: '费用与合同',
     eyebrow: 'COST & CONTRACT',
-    description: '学费、工具费、合同条款和包教包会的核对框架。',
+    description: '学费构成、工具支出、合同条款和“学会为止”的核对方法。',
     slugs: [
       'hangzhou-nail-training-price',
+      'nail-training-cost-framework',
       'nail-starter-tool-kit-cost',
       'nail-training-contract-checklist',
       'nail-training-until-learned',
@@ -34,9 +36,10 @@ export const draftGroups: DraftGroup[] = [
   {
     title: '职业与经营',
     eyebrow: 'CAREER & BUSINESS',
-    description: '收入、接单、开店成本、证照和年龄转行。',
+    description: '收入结构、接单渠道、开店成本、证照和转行路径。',
     slugs: [
       'nail-technician-monthly-income',
+      'nail-income-framework',
       'where-to-get-nail-clients',
       'how-much-to-open-nail-salon',
       'open-nail-salon-license',
@@ -46,28 +49,11 @@ export const draftGroups: DraftGroup[] = [
   {
     title: '技术方向',
     eyebrow: 'TECHNIQUE',
-    description: '日式与俄式、美甲与美睫的路线比较。',
+    description: '日式与俄式的差异，以及美甲、美睫一起学的取舍。',
     slugs: ['japanese-vs-russian-nail', 'nail-and-lash-together'],
-  },
-  {
-    title: '站点操作',
-    eyebrow: 'SITE GUIDES',
-    description: '服务、地点和评价的了解方式，属于站点操作说明。',
-    slugs: ['consultation-guide', 'location-guide', 'review-guide'],
-  },
-  {
-    title: '已确认样例',
-    eyebrow: 'CONFIRMED SAMPLES',
-    description: '已按站点格式发布的一般性文章样例，可在正式文章路由查看。',
-    slugs: [
-      'preview-article-typography',
-      'nail-training-cost-framework',
-      'nail-school-checklist',
-      'nail-income-framework',
-    ],
   },
 ];
 
 export function groupForSlug(slug: string) {
-  return draftGroups.find((group) => group.slugs.includes(slug));
+  return articleGroups.find((group) => group.slugs.includes(slug));
 }

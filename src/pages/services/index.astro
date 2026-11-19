@@ -2,7 +2,6 @@
 import InnerPage from '../_shared/InnerPage.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
 import Callout from '../../components/Callout.astro';
-import StatusBadge from '../../components/StatusBadge.astro';
 import { getServices } from '../../lib/content.ts';
 import { safeSlug, formatValue } from '../_shared/values.ts';
 import VisualPhoto from '../../components/VisualPhoto.astro';
@@ -38,9 +37,7 @@ const description = services.length
     </Callout>
   </section>
   <section class="editorial-section" aria-labelledby="services-heading">
-    <SectionHeader number="02" eyebrow="CONFIRMED SERVICES" title={services.length ? (en ? 'Confirmed services' : '已确认服务') : (en ? 'Make your wishes clear. Choose with confidence.' : '把期待说清楚，让选择有依据。')} headingId="services-heading">
-      <StatusBadge status={services.length ? 'confirmed' : 'pending'} label={services.length ? (en ? 'Confirmed' : '已确认') : (en ? 'To be confirmed' : '待确认')} />
-    </SectionHeader>
+    <SectionHeader number="02" eyebrow="SERVICES" title={services.length ? (en ? 'Confirmed services' : '已确认服务') : (en ? 'Make your wishes clear. Choose with confidence.' : '把期待说清楚，让选择有依据。')} headingId="services-heading" />
     {services.length ? <>
       <ol class="editorial-list">
         {services.map((service, index) => <li class="editorial-row">

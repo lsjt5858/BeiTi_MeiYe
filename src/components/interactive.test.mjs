@@ -171,10 +171,10 @@ if (existsSync(moduleUrl)) {
   });
 
   test("分析事件只包含分类、页面路径与来源 origin，不保留查询或表单数据", () => {
-    const event = analyticsEvent("https://beiti.example/contact/?name=private#message", "https://chatgpt.com/c/private?q=secret", "intent_click", "skin");
+    const event = analyticsEvent("https://beiti.example/contact/?name=private#message", "https://chatgpt.com/c/private?q=secret", "intent_click", "nails");
     assert.deepEqual(event, {
       event: "intent_click",
-      category: "skin",
+      category: "nails",
       path: "/contact/",
       referrer_origin: "https://chatgpt.com",
       source: "ai",

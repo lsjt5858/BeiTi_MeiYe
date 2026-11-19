@@ -1,9 +1,9 @@
 ---
 import InnerPage from '../pages/_shared/InnerPage.astro';
 import Callout from './Callout.astro';
-import StatusBadge from './StatusBadge.astro';
 import { brandMedia } from './brand-media.mjs';
 import { getServices, getLocations, site } from '../lib/content.ts';
+import { localeFromPath } from '../lib/i18n.ts';
 import { safeSlug } from '../pages/_shared/values.ts';
 
 type TocItem = { level: 2 | 3; text: string; id: string };
@@ -24,7 +24,6 @@ export interface ArticleViewData {
 
 interface Props {
   article: ArticleViewData;
-  pending?: boolean;
   related?: RelatedItem[];
   prev?: PagerItem;
   next?: PagerItem;
@@ -60,7 +59,8 @@ function addHeadingIds(html: string) {
   return { html: output, items };
 }
 
-const { article, pending = false, related = [], prev, next } = Astro.props;
+const { article, related = [], prev, next } = Astro.props;
+const en = localeFromPath(Astro.url.pathname) === 'en';
 const updatedAt = article.updatedAt || article.updated_at || '';
 const services = getServices().filter((service) => article.fact_refs.includes(service.id));
 const locations = getLocations().filter((location) => article.fact_refs.includes(location.id));
@@ -79,27 +79,20 @@ const heroFigure = figureMatch?.[0] ?? '';
 const articleHtml = figureMatch ? figureHtml.replace(figureMatch[0], '') : figureHtml;
 const fallbackHero = brandMedia.find((item) => item.frozen) ?? brandMedia[0];
 const heroMarkup = heroFigure || (fallbackHero ? `<figure class="article-figure article-figure--fallback"><img src="${fallbackHero.src}" alt="${fallbackHero.alt}" loading="lazy"><figcaption>${fallbackHero.alt}</figcaption></figure>` : '');
-const hrefFor = (item: PagerItem | RelatedItem) => item.status === 'confirmed'
-  ? `/articles/${safeSlug(item.slug)}/`
-  : `/articles/preview/${safeSlug(item.slug)}/`;
 const readingMinutes = Math.max(2, Math.ceil(article.body.replace(/[#>*_`~\-\[\]()|]/g, '').replace(/\s+/g, '').length / 450));
-const jsonLd = pending ? undefined : {
+const jsonLd = {
   '@context': 'https://schema.org', '@type': 'Article',
   headline: article.title, description: article.description,
   dateModified: updatedAt,
   publisher: { '@type': 'Organization', name: site.brand },
 };
-const breadcrumbs = pending
-  ? [{ label: '文章与解答', href: '/articles/' }, { label: '草稿预览', href: '/articles/preview/' }, { label: article.title }]
-  : [{ label: '文章与解答', href: '/articles/' }, { label: article.title }];
+const breadcrumbs = [{ label: '文章与解答', href: '/articles/' }, { label: article.title }];
+const hrefFor = (item: PagerItem | RelatedItem) => `/articles/${safeSlug(item.slug)}/`;
 ---
-<InnerPage title={article.title} eyebrow={pending ? 'Draft preview / 待确认草稿' : 'Journal / 问题解答'} description={article.description} updatedAt={updatedAt} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
+<InnerPage title={article.title} eyebrow="Journal / 问题解答" description={article.description} updatedAt={updatedAt} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
   <div class="article-layout" id="article-top">
     <article class="article-main">
-      {pending && <Callout tone="warn" title="待确认草稿，尚未发布">
-        <p>这篇内容仍在核对，当前页面只用于内部预览，不构成公开信息，也不代表服务、价格或开班安排已经确认。</p>
-      </Callout>}
-
+      <a class="article-back" href="/articles/"><span aria-hidden="true">←</span> {en ? 'Back to journal' : '返回文章列表'}</a>
       <header class="article-cover">
         <p class="eyebrow">这篇文章回答</p>
         <p class="article-cover-question">{article.question}</p>
@@ -108,7 +101,6 @@ const breadcrumbs = pending
           <p set:html={coverAnswer} />
         </div>
         <p class="article-cover-meta">
-          <StatusBadge status={pending ? 'pending' : 'confirmed'} label={pending ? '待确认草稿' : '已确认内容'} />
           <span>更新于 <time datetime={updatedAt}>{updatedAt.slice(0, 10)}</time> · 约 {readingMinutes} 分钟阅读 · {toc.length} 个章节</span>
         </p>
       </header>
@@ -119,6 +111,10 @@ const breadcrumbs = pending
         <div><p class="eyebrow">这篇会帮你</p><p>建立一个判断框架，知道该问什么、该核对什么。</p></div>
         <div><p class="eyebrow">这篇不替代</p><p>具体服务、价格、地点与预约安排，仍需按已确认信息另行核对。</p></div>
       </div>
+
+      <Callout tone="note" title="阅读提示">
+        <p>文中的价格与学时为行业公开口径或通用区间，用于比较班型与成本结构，不构成贝缇报价；涉及具体班期、费用与包含项目，以实际沟通和书面协议为准。</p>
+      </Callout>
 
       {toc.length > 0 && <details class="article-toc-mobile">
         <summary>文章目录 <span class="toc-count">{toc.length} 节</span></summary>
@@ -152,11 +148,10 @@ const breadcrumbs = pending
       {next ? <a href={hrefFor(next)}><span>下一篇</span><strong>{next.title}</strong></a> : <span></span>}
     </nav>}
     {related.length > 0 && <section class="article-related" aria-labelledby="article-related-title">
-      <h2 class="article-section-title" id="article-related-title">{pending ? '同主题草稿' : '继续阅读'}</h2>
+      <h2 class="article-section-title" id="article-related-title">继续阅读</h2>
       <ul class="article-related-list">
         {related.map((item) => <li>
           <a href={hrefFor(item)}>{item.title}</a>
-          <StatusBadge status={item.status === 'confirmed' ? 'confirmed' : 'pending'} label={item.status === 'confirmed' ? '已确认' : '待确认'} />
         </li>)}
       </ul>
     </section>}
@@ -172,7 +167,7 @@ const breadcrumbs = pending
         <div class="article-qa-row"><dt>下一步应该做什么？</dt><dd>把目标、预算和最关心的问题整理出来，再通过已确认的联系渠道核对。</dd></div>
       </dl>
     </section>
-    <section class="editorial-section"><h2>准备好之后，把问题写下来。</h2><p class="intro-copy">把问题和您已经了解的信息一起写下来。咨询摘要只在本地整理，不发送，也不代替具体服务确认。</p><div class="page-actions"><a class="button" href="/contact/">继续整理问题</a><a class="text-link" href={pending ? '/articles/preview/' : '/articles/'}>{pending ? '返回草稿预览' : '返回全部文章'}</a><button class="text-link article-print" type="button" data-print-article>打印这篇文章</button></div></section>
+    <section class="editorial-section"><h2>准备好之后，把问题写下来。</h2><p class="intro-copy">把问题和您已经了解的信息一起写下来。咨询摘要只在本地整理，不发送，也不代替具体服务确认。</p><div class="page-actions"><a class="button" href="/contact/">继续整理问题</a><a class="text-link" href="/articles/">返回全部文章</a><button class="text-link article-print" type="button" data-print-article>打印这篇文章</button></div></section>
   </div>
 </InnerPage>
 
@@ -185,6 +180,9 @@ const breadcrumbs = pending
 <style>
   .article-layout { display: grid; grid-template-columns: minmax(0, 760px) 240px; gap: clamp(36px, 5vw, 72px); max-width: 1080px; margin: 0 auto; }
   .article-main { min-width: 0; }
+  .article-back { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-bottom: 10px; color: var(--muted); font-size: 13px; letter-spacing: .06em; border-bottom: 1px solid transparent; }
+  .article-back:hover { color: var(--ink); border-color: var(--ink); }
+  .article-back span { color: var(--gold-dark); }
   .article-footer { max-width: 1080px; margin: 0 auto; }
 
   .article-cover { margin: 0 0 2.2rem; padding: 1.5rem 1.7rem; border-left: 3px solid var(--gold-dark); background: #f3ecdc; }

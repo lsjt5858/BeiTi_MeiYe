@@ -1,6 +1,7 @@
 ---
 import ArticleView from '../../components/ArticleView.astro';
 import { getArticles } from '../../lib/content.ts';
+import { groupForSlug } from '../../lib/draft-groups.ts';
 import { safeSlug } from '../_shared/values.ts';
 
 export function getStaticPaths() {
@@ -10,10 +11,18 @@ type Article = ReturnType<typeof getArticles>[number];
 interface Props { article: Article }
 const { article } = Astro.props;
 const articles = getArticles();
+const bySlug = new Map(articles.map((item) => [item.slug, item]));
+const group = groupForSlug(article.slug);
+const related = (group?.slugs ?? [])
+  .filter((slug) => slug !== article.slug)
+  .flatMap((slug) => {
+    const item = bySlug.get(slug);
+    return item ? [{ slug, title: item.title, status: 'confirmed' }] : [];
+  })
+  .slice(0, 4);
 const index = articles.findIndex((item) => item.slug === article.slug);
 const pager = (item: Article | undefined) => item ? { slug: item.slug, title: item.title, status: 'confirmed' } : undefined;
 const prev = pager(articles[index - 1]);
 const next = pager(articles[index + 1]);
-const related = articles.filter((item) => item.slug !== article.slug).slice(0, 3).map((item) => ({ slug: item.slug, title: item.title, status: 'confirmed' }));
 ---
 <ArticleView article={article} prev={prev} next={next} related={related} />

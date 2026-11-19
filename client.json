@@ -2,7 +2,10 @@
   "brand": "贝缇美业",
   "base_url": "https://www.beitimeiye.com",
   "language": "zh-CN",
-  "languages": ["zh-CN", "en"],
+  "languages": [
+    "zh-CN",
+    "en"
+  ],
   "environment": "production",
   "public_pages": [
     "/",
@@ -22,7 +25,28 @@
     "/articles/",
     "/contact/",
     "/privacy/",
-    "/terms/"
+    "/terms/",
+    "/articles/apprentice-vs-nail-school/",
+    "/articles/career-change-nail-hangzhou/",
+    "/articles/hangzhou-nail-training-price/",
+    "/articles/hangzhou-nail-training-where-good/",
+    "/articles/hangzhou-weekend-nail-class/",
+    "/articles/how-long-to-learn-nail/",
+    "/articles/how-much-to-open-nail-salon/",
+    "/articles/how-to-choose-nail-school/",
+    "/articles/japanese-vs-russian-nail/",
+    "/articles/learn-nail-at-35/",
+    "/articles/nail-and-lash-together/",
+    "/articles/nail-income-framework/",
+    "/articles/nail-school-checklist/",
+    "/articles/nail-starter-tool-kit-cost/",
+    "/articles/nail-technician-monthly-income/",
+    "/articles/nail-training-contract-checklist/",
+    "/articles/nail-training-cost-framework/",
+    "/articles/nail-training-until-learned/",
+    "/articles/online-vs-offline-nail-course/",
+    "/articles/open-nail-salon-license/",
+    "/articles/where-to-get-nail-clients/"
   ],
   "analytics_endpoint": ""
 }

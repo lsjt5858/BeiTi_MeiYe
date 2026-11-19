@@ -1,11 +1,624 @@
 ---
-import InnerPage from '../_shared/InnerPage.astro';
-import { getArticles } from '../../lib/content.ts';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getArticles, getLatestUpdate } from '../../lib/content.ts';
+import { articleGroups } from '../../lib/draft-groups.ts';
+import { localeFromPath } from '../../lib/i18n.ts';
 import { safeSlug } from '../_shared/values.ts';
+
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
 const articles = getArticles();
+const bySlug = new Map(articles.map((article) => [article.slug, article]));
+const latest = getLatestUpdate();
+const categoryIds = ['school', 'cost', 'career', 'technique'];
+const categoryEnglish: Record<string, { title: string; description: string }> = {
+  school: { title: 'School & learning', description: 'Comparing schools, apprenticeships, study timelines, weekend classes and online versus offline courses.' },
+  cost: { title: 'Cost & contract', description: 'Tuition structure, tool costs, contract terms and how to check a “learn until you can” promise.' },
+  career: { title: 'Career & business', description: 'Income structure, client acquisition, opening costs, licensing and career-change paths.' },
+  technique: { title: 'Technique', description: 'Japanese versus Russian nails, and whether to learn nails and lashes together.' },
+};
+
+const categories = articleGroups.map((group, index) => {
+  const id = categoryIds[index] ?? `group-${index}`;
+  return {
+    id,
+    title: group.title,
+    titleEn: categoryEnglish[id]?.title ?? group.title,
+    description: group.description,
+    descriptionEn: categoryEnglish[id]?.description ?? group.description,
+    count: group.slugs.filter((slug) => bySlug.has(slug)).length,
+  };
+});
+const categoryBySlug = new Map<string, string>();
+articleGroups.forEach((group, index) => {
+  const id = categoryIds[index] ?? `group-${index}`;
+  group.slugs.forEach((slug) => categoryBySlug.set(slug, id));
+});
+const orderedFromGroups = articleGroups.flatMap((group) => group.slugs.flatMap((slug) => {
+  const article = bySlug.get(slug);
+  return article ? [article] : [];
+}));
+const groupedSlugs = new Set(orderedFromGroups.map((article) => article.slug));
+const ungrouped = articles.filter((article) => !groupedSlugs.has(article.slug));
+const listArticles = [...orderedFromGroups, ...ungrouped];
+if (ungrouped.length > 0) {
+  categories.push({
+    id: 'more',
+    title: '更多文章',
+    titleEn: 'More articles',
+    description: '其他已确认发布的文章。',
+    descriptionEn: 'Other published articles.',
+    count: ungrouped.length,
+  });
+  ungrouped.forEach((article) => categoryBySlug.set(article.slug, 'more'));
+}
+const categoryById = new Map(categories.map((category) => [category.id, category]));
+
+const topicDefinitions = [
+  { id: 'beginner', title: '零基础入门', titleEn: 'Starting from zero', slugs: ['how-to-choose-nail-school', 'hangzhou-nail-training-where-good', 'how-long-to-learn-nail', 'nail-school-checklist', 'apprentice-vs-nail-school'] },
+  { id: 'school', title: '选校避坑', titleEn: 'Choosing a school', slugs: ['how-to-choose-nail-school', 'hangzhou-nail-training-where-good', 'apprentice-vs-nail-school', 'nail-school-checklist', 'hangzhou-weekend-nail-class'] },
+  { id: 'cost', title: '学费与预算', titleEn: 'Tuition & budget', slugs: ['hangzhou-nail-training-price', 'nail-training-cost-framework', 'nail-starter-tool-kit-cost'] },
+  { id: 'contract', title: '合同与复训', titleEn: 'Contracts & retraining', slugs: ['nail-training-contract-checklist', 'nail-training-until-learned', 'nail-training-cost-framework'] },
+  { id: 'hangzhou', title: '杭州学习', titleEn: 'Studying in Hangzhou', slugs: ['hangzhou-nail-training-price', 'hangzhou-nail-training-where-good', 'hangzhou-weekend-nail-class', 'career-change-nail-hangzhou'] },
+  { id: 'career-change', title: '转行与年龄', titleEn: 'Career change & age', slugs: ['career-change-nail-hangzhou', 'learn-nail-at-35', 'apprentice-vs-nail-school'] },
+  { id: 'income', title: '收入与接单', titleEn: 'Income & clients', slugs: ['nail-technician-monthly-income', 'nail-income-framework', 'where-to-get-nail-clients'] },
+  { id: 'salon', title: '开店与证照', titleEn: 'Opening a salon', slugs: ['how-much-to-open-nail-salon', 'open-nail-salon-license'] },
+  { id: 'flexible', title: '周末与线上', titleEn: 'Weekends & online', slugs: ['hangzhou-weekend-nail-class', 'online-vs-offline-nail-course'] },
+  { id: 'technique', title: '日式与俄式', titleEn: 'Japanese & Russian', slugs: ['japanese-vs-russian-nail', 'nail-and-lash-together'] },
+];
+const topics = topicDefinitions
+  .map((topic) => ({ ...topic, count: topic.slugs.filter((slug) => bySlug.has(slug)).length }))
+  .filter((topic) => topic.count > 0);
+const topicsFor = (slug: string) => topics.filter((topic) => topic.slugs.includes(slug));
+
+function firstImage(body: string) {
+  const match = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/.exec(body);
+  return match ? { alt: match[1] ?? '', src: match[2] ?? '' } : null;
+}
+
+const title = '文章与解答';
+const description = en
+  ? `A journal of ${articles.length} long-form articles on choosing a nail school, costs, learning paths, careers and salon operations. Each starts with a conclusion, then explains the reasoning, limits and what to check.`
+  : `围绕选校、费用、学习路径、职业与经营整理的 ${articles.length} 篇文章。每篇先给结论，再拆依据、边界和可执行的核对清单。`;
+const pageSize = 6;
 ---
-<InnerPage title="有问题，就慢慢读。" eyebrow="Journal / 文章与解答" description={articles.length ? '这里的文章围绕具体问题展开，仅发布状态已确认、事实引用有效的内容。您可以先读结论，再查看相关说明与服务边界。' : '目前还没有可公开的已确认文章。您可以先阅读网站操作问答，或整理希望进一步了解的问题；待核实内容不会提前发布。'} breadcrumbs={[{ label: '文章与解答' }]}>
-  <section class="editorial-section">{articles.length ? <><h2>从问题找到答案</h2><ol class="editorial-list">
-    {articles.map((article, index) => <li class="editorial-row"><div><span class="row-number">{String(index + 1).padStart(2, '0')}</span><p class="meta"><time datetime={article.updatedAt || article.updated_at}>{(article.updatedAt || article.updated_at).slice(0, 10)}</time></p><h3><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>{article.title}</a></h3></div><div><p>{article.description}</p><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>阅读解答 <span aria-hidden="true">→</span></a></div></li>)}
-  </ol></> : <div class="empty-editorial empty-state"><p class="eyebrow">Questions worth keeping</p><h2>先保留好问题，<br />不急着给出结论。</h2><p>价格、项目与案例需要有确认依据。文章会在内容和引用核实后公开，您不必用未经证实的说法做决定。</p><div class="page-actions"><a class="button" href="/faq/">先看常见问题</a><a class="text-link" href="/contact/">记录我想了解的事</a></div></div>}</section>
-</InnerPage>
+
+<SiteLayout title={en ? 'Journal' : title} description={description}>
+  <div class="journal-page">
+    <header class="journal-hero">
+      <div class="journal-container">
+        <nav class="journal-crumb" aria-label={en ? 'Breadcrumbs' : '面包屑'}>
+          <a href="/"><span aria-hidden="true">←</span>{en ? 'Home' : '首页'}</a>
+          <span class="journal-crumb-sep" aria-hidden="true">/</span>
+          <span class="journal-crumb-current" aria-current="page">{en ? 'Journal' : title}</span>
+        </nav>
+
+        <div class="journal-hero-grid">
+          <div class="journal-hero-copy">
+            <p class="eyebrow">{en ? 'Journal / Articles & answers' : 'Journal / 文章与解答'}</p>
+            <h1>{en ? 'Journal' : title}</h1>
+            <p class="journal-subtitle">{en ? 'Good questions deserve time.' : '有问题，就慢慢读。'}</p>
+          </div>
+          <div class="journal-hero-aside">
+            <p class="journal-lede">{description}</p>
+            <div class="journal-stats">
+              <span><strong>{articles.length}</strong>{en ? ' articles' : ' 篇文章'}</span>
+              <span><strong>{categories.length}</strong>{en ? ' categories' : ' 个分类'}</span>
+              <span>{en ? 'Updated ' : '更新于 '}<time datetime={latest}>{latest}</time></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="journal-container journal-mobile-filter">
+      <label class="journal-select">
+        <span class="journal-select-label">{en ? 'Category' : '分类'}</span>
+        <span class="journal-select-control">
+          <select data-category-select aria-label={en ? 'Filter articles by category' : '按分类筛选文章'}>
+            <option value="all">{en ? `All articles (${articles.length})` : `全部文章（${articles.length}）`}</option>
+            {categories.map((category) => <option value={category.id}>
+              {en ? `${category.titleEn} (${category.count})` : `${category.title}（${category.count}）`}
+            </option>)}
+          </select>
+        </span>
+      </label>
+    </div>
+
+    <div
+      class="journal-container journal-shell"
+      data-journal
+      data-page-size={pageSize}
+      data-locale={en ? 'en' : 'zh'}
+    >
+      <aside class="journal-side journal-side--categories" aria-labelledby="journal-categories-title">
+        <p class="journal-side-kicker">CATEGORIES</p>
+        <h2 class="journal-side-title" id="journal-categories-title">{en ? 'Browse by type' : '分类浏览'}</h2>
+        <ul class="journal-categories">
+          <li>
+            <button type="button" class="journal-cat" data-category="all" data-label={en ? 'All articles' : '全部文章'} aria-pressed="true">
+              <span class="journal-cat-index">00</span>
+              <span class="journal-cat-label">{en ? 'All articles' : '全部文章'}</span>
+              <span class="journal-cat-count">{articles.length}</span>
+            </button>
+          </li>
+          {categories.map((category, index) => <li>
+            <button type="button" class="journal-cat" data-category={category.id} data-label={en ? category.titleEn : category.title} aria-pressed="false">
+              <span class="journal-cat-index">{String(index + 1).padStart(2, '0')}</span>
+              <span class="journal-cat-label">{en ? category.titleEn : category.title}</span>
+              <span class="journal-cat-count">{category.count}</span>
+            </button>
+          </li>)}
+        </ul>
+        <p class="journal-side-note">{en ? 'Choose a type to narrow the list. Topics on the right cut across all types.' : '先按类型缩小范围，右侧议题可以跨分类查看。'}</p>
+      </aside>
+
+      <section class="journal-main" aria-labelledby="journal-list-title">
+        <div class="journal-toolbar">
+          <h2 class="journal-list-title" id="journal-list-title">{en ? 'All articles' : '全部文章'}</h2>
+          <p class="journal-result" aria-live="polite">
+            <strong data-result-count>{articles.length}</strong>
+            <span>{en ? ' articles' : ' 篇'}</span>
+            <span class="journal-filter-note" data-filter-note hidden>· {en ? 'filtered' : '已筛选'}</span>
+          </p>
+        </div>
+
+        <div class="journal-active" data-active-filters hidden>
+          <span class="journal-active-label">{en ? 'Filtered by' : '当前筛选'}</span>
+          <button type="button" class="journal-active-chip" data-clear-category hidden>
+            <span data-active-category></span><span aria-hidden="true">×</span>
+          </button>
+          <button type="button" class="journal-active-chip" data-clear-topic hidden>
+            <span data-active-topic></span><span aria-hidden="true">×</span>
+          </button>
+          <button type="button" class="journal-clear-all" data-clear-all>{en ? 'Clear all' : '清除全部'}</button>
+        </div>
+
+        <div class="journal-list" data-article-list>
+          {listArticles.map((article, index) => {
+            const category = categoryById.get(categoryBySlug.get(article.slug) ?? 'more') ?? categories[0];
+            const image = firstImage(article.body);
+            const itemTopics = topicsFor(article.slug).slice(0, 3);
+            const itemTopicIds = topicsFor(article.slug).map((topic) => topic.id).join(' ');
+            return <article
+              class="journal-item"
+              data-article-item
+              data-category={category?.id ?? 'more'}
+              data-topics={itemTopicIds}
+            >
+              <div class="journal-item-body">
+                <p class="journal-item-meta">
+                  <span class="journal-item-index">{String(index + 1).padStart(2, '0')}</span>
+                  <span class="journal-item-category">{en ? category?.titleEn : category?.title}</span>
+                  <time datetime={article.updatedAt}>{article.updatedAt.slice(0, 10)}</time>
+                </p>
+                <h3 class="journal-item-title">
+                  <a href={`/articles/${safeSlug(article.slug)}/`}>{article.title}</a>
+                </h3>
+                <p class="journal-item-desc">{article.description}</p>
+                <div class="journal-item-foot">
+                  {itemTopics.length > 0 && <ul class="journal-item-topics">
+                    {itemTopics.map((topic) => <li>
+                      <button type="button" class="journal-item-topic" data-topic={topic.id} data-label={en ? topic.titleEn : topic.title}>
+                        {en ? topic.titleEn : topic.title}
+                      </button>
+                    </li>)}
+                  </ul>}
+                  <a class="journal-item-read" href={`/articles/${safeSlug(article.slug)}/`}>
+                    {en ? 'Read' : '阅读全文'} <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </div>
+              {image?.src && <a class="journal-item-media" href={`/articles/${safeSlug(article.slug)}/`} tabindex="-1" aria-hidden="true">
+                <img src={image.src} alt="" loading="lazy" decoding="async" />
+              </a>}
+            </article>;
+          })}
+        </div>
+
+        <div class="journal-empty" data-empty hidden>
+          <p class="eyebrow">NO RESULTS</p>
+          <h3>{en ? 'No matching articles' : '没有匹配的文章'}</h3>
+          <p>{en ? 'Try another category or topic, or clear the filters to see all articles.' : '换个分类或议题试试，也可以清除筛选查看全部文章。'}</p>
+          <button type="button" class="button-secondary journal-empty-reset" data-clear-all>{en ? 'Show all articles' : '查看全部文章'}</button>
+        </div>
+
+        <noscript>
+          <p class="journal-noscript">{en ? 'All articles are listed above. Filters and pagination require JavaScript.' : '全部分章已按顺序列在上方；分类筛选与分页需要浏览器启用 JavaScript。'}</p>
+        </noscript>
+
+        <nav
+          class="journal-pagination"
+          data-pagination
+          aria-label={en ? 'Article pagination' : '文章分页'}
+          data-label-prev={en ? 'Previous page' : '上一页'}
+          data-label-next={en ? 'Next page' : '下一页'}
+          data-label-page={en ? 'Page {n}' : '第 {n} 页'}
+          hidden
+        ></nav>
+      </section>
+
+      <aside class="journal-side journal-side--topics" aria-labelledby="journal-topics-title">
+        <p class="journal-side-kicker">TOPICS</p>
+        <h2 class="journal-side-title" id="journal-topics-title">{en ? 'Frequent topics' : '高频议题'}</h2>
+        <div class="journal-topics">
+          {topics.map((topic) => <button
+            type="button"
+            class="journal-topic"
+            data-topic={topic.id}
+            data-label={en ? topic.titleEn : topic.title}
+            aria-pressed="false"
+          >
+            <span>{en ? topic.titleEn : topic.title}</span>
+            <span class="journal-topic-count">{topic.count}</span>
+          </button>)}
+        </div>
+        <div class="journal-aside-card">
+          <p class="eyebrow">START HERE</p>
+          <p>{en ? 'Not sure where to begin? Start with the school checklist, then confirm cost, contract and schedule item by item.' : '不确定从哪篇开始？先看选校核对清单，再按费用、合同和时间安排逐项确认。'}</p>
+          <a class="text-link" href="/articles/nail-school-checklist/">{en ? 'Start with the checklist' : '从选校清单开始'} <span aria-hidden="true">→</span></a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</SiteLayout>
+
+<script>
+  const journal = document.querySelector<HTMLElement>('[data-journal]');
+  if (journal) {
+    const items = Array.from(journal.querySelectorAll<HTMLElement>('[data-article-item]'));
+    const categoryButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('button[data-category]'));
+    const topicButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-topic]'));
+    const categorySelect = document.querySelector<HTMLSelectElement>('[data-category-select]');
+    const list = journal.querySelector<HTMLElement>('[data-article-list]');
+    const pagination = journal.querySelector<HTMLElement>('[data-pagination]');
+    const count = journal.querySelector<HTMLElement>('[data-result-count]');
+    const filterNote = journal.querySelector<HTMLElement>('[data-filter-note]');
+    const activeBar = journal.querySelector<HTMLElement>('[data-active-filters]');
+    const activeCategory = journal.querySelector<HTMLElement>('[data-active-category]');
+    const activeTopic = journal.querySelector<HTMLElement>('[data-active-topic]');
+    const clearCategory = journal.querySelector<HTMLButtonElement>('[data-clear-category]');
+    const clearTopic = journal.querySelector<HTMLButtonElement>('[data-clear-topic]');
+    const clearAllButtons = Array.from(journal.querySelectorAll<HTMLButtonElement>('[data-clear-all]'));
+    const empty = journal.querySelector<HTMLElement>('[data-empty]');
+    const pageSize = Number(journal.dataset.pageSize) || 6;
+    const isEnglish = journal.dataset.locale === 'en';
+    const categoryIds = new Set(categoryButtons.map((button) => button.dataset.category ?? ''));
+    const topicIds = new Set(topicButtons.map((button) => button.dataset.topic ?? ''));
+    const labelPrev = pagination?.dataset.labelPrev ?? (isEnglish ? 'Previous page' : '上一页');
+    const labelNext = pagination?.dataset.labelNext ?? (isEnglish ? 'Next page' : '下一页');
+    const labelPage = pagination?.dataset.labelPage ?? (isEnglish ? 'Page {n}' : '第 {n} 页');
+    const state = { category: 'all', topic: '', page: 1 };
+
+    function readUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const category = params.get('category') ?? 'all';
+      const topic = params.get('topic') ?? '';
+      const page = Number(params.get('page') ?? '1');
+      state.category = categoryIds.has(category) ? category : 'all';
+      state.topic = topicIds.has(topic) ? topic : '';
+      state.page = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+    }
+
+    function writeUrl(push: boolean) {
+      const params = new URLSearchParams();
+      if (state.category !== 'all') params.set('category', state.category);
+      if (state.topic) params.set('topic', state.topic);
+      if (state.page > 1) params.set('page', String(state.page));
+      const url = `${window.location.pathname}${params.toString() ? `?${params}` : ''}`;
+      const method = push ? 'pushState' : 'replaceState';
+      window.history[method]({ ...state }, '', url);
+    }
+
+    function matches(item: HTMLElement) {
+      const categoryMatch = state.category === 'all' || item.dataset.category === state.category;
+      const topicMatch = !state.topic || (item.dataset.topics ?? '').split(' ').includes(state.topic);
+      return categoryMatch && topicMatch;
+    }
+
+    function selectedLabel(selector: string, value: string) {
+      const button = document.querySelector<HTMLButtonElement>(`button${selector}[data-${selector.includes('topic') ? 'topic' : 'category'}="${value}"]`);
+      return button?.dataset.label ?? '';
+    }
+
+    function renderPagination(total: number, pages: number) {
+      if (!pagination) return;
+      pagination.replaceChildren();
+      pagination.hidden = pages <= 1;
+      if (pages <= 1) return;
+
+      const add = (label: string, page: number, options: { current?: boolean; disabled?: boolean; arrow?: boolean; aria?: string } = {}) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = `journal-page-btn${options.arrow ? ' journal-page-arrow' : ''}`;
+        button.dataset.page = String(page);
+        button.textContent = label;
+        if (options.aria) button.setAttribute('aria-label', options.aria);
+        if (options.current) button.setAttribute('aria-current', 'page');
+        button.disabled = Boolean(options.disabled);
+        pagination.append(button);
+      };
+
+      add('←', state.page - 1, { disabled: state.page === 1, arrow: true, aria: labelPrev });
+      const numbers: (number | '…')[] = [];
+      if (pages <= 7) {
+        for (let page = 1; page <= pages; page += 1) numbers.push(page);
+      } else {
+        numbers.push(1);
+        if (state.page > 4) numbers.push('…');
+        const start = Math.max(2, state.page - 1);
+        const end = Math.min(pages - 1, state.page + 1);
+        for (let page = start; page <= end; page += 1) numbers.push(page);
+        if (state.page < pages - 3) numbers.push('…');
+        numbers.push(pages);
+      }
+      numbers.forEach((page) => {
+        if (page === '…') {
+          const ellipsis = document.createElement('span');
+          ellipsis.className = 'journal-page-ellipsis';
+          ellipsis.textContent = '…';
+          ellipsis.setAttribute('aria-hidden', 'true');
+          pagination.append(ellipsis);
+          return;
+        }
+        add(String(page), page, { current: page === state.page, aria: labelPage.replace('{n}', String(page)) });
+      });
+      add('→', state.page + 1, { disabled: state.page === pages, arrow: true, aria: labelNext });
+      pagination.dataset.total = String(total);
+    }
+
+    function render(options: { scroll?: boolean; push?: boolean } = {}) {
+      const filtered = items.filter(matches);
+      const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+      state.page = Math.min(Math.max(1, state.page), pages);
+      const start = (state.page - 1) * pageSize;
+      const visible = new Set(filtered.slice(start, start + pageSize));
+      items.forEach((item) => { item.hidden = !visible.has(item); });
+
+      if (count) count.textContent = String(filtered.length);
+      if (filterNote) filterNote.hidden = state.category === 'all' && !state.topic;
+      if (empty) empty.hidden = filtered.length > 0;
+      if (list) list.hidden = filtered.length === 0;
+      if (categorySelect) categorySelect.value = state.category;
+      categoryButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.category === state.category)));
+      topicButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.topic === state.topic)));
+
+      const hasCategory = state.category !== 'all';
+      const hasTopic = Boolean(state.topic);
+      if (activeBar) activeBar.hidden = !hasCategory && !hasTopic;
+      if (clearCategory) clearCategory.hidden = !hasCategory;
+      if (clearTopic) clearTopic.hidden = !hasTopic;
+      if (activeCategory && hasCategory) activeCategory.textContent = selectedLabel('[data-category]', state.category);
+      if (activeTopic && hasTopic) activeTopic.textContent = selectedLabel('[data-topic]', state.topic);
+
+      renderPagination(filtered.length, pages);
+      writeUrl(Boolean(options.push));
+      if (options.scroll) {
+        const target = journal?.querySelector<HTMLElement>('.journal-main');
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    }
+
+    categoryButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        state.category = button.dataset.category ?? 'all';
+        state.topic = '';
+        state.page = 1;
+        render({ scroll: true, push: true });
+      });
+    });
+
+    topicButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const topic = button.dataset.topic ?? '';
+        if (state.topic === topic) {
+          state.topic = '';
+        } else {
+          state.topic = topic;
+          state.category = 'all';
+        }
+        state.page = 1;
+        render({ scroll: true, push: true });
+      });
+    });
+
+    categorySelect?.addEventListener('change', () => {
+      state.category = categorySelect.value;
+      state.topic = '';
+      state.page = 1;
+      render({ scroll: true, push: true });
+    });
+
+    clearCategory?.addEventListener('click', () => {
+      state.category = 'all';
+      state.page = 1;
+      render({ scroll: true, push: true });
+    });
+
+    clearTopic?.addEventListener('click', () => {
+      state.topic = '';
+      state.page = 1;
+      render({ scroll: true, push: true });
+    });
+
+    clearAllButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        state.category = 'all';
+        state.topic = '';
+        state.page = 1;
+        render({ scroll: true, push: true });
+      });
+    });
+
+    pagination?.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-page]');
+      if (!button || button.disabled) return;
+      state.page = Number(button.dataset.page);
+      render({ scroll: true, push: true });
+    });
+
+    window.addEventListener('popstate', () => {
+      readUrl();
+      render();
+    });
+
+    readUrl();
+    render();
+  }
+</script>
+
+<style>
+  .journal-page { background: var(--cream); }
+  .journal-container { width: 100%; max-width: 1440px; margin-inline: auto; padding-inline: var(--gutter); }
+
+  .journal-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); padding-block: 18px clamp(38px, 5vw, 64px); }
+  .journal-hero::after { content: "JOURNAL"; position: absolute; right: var(--gutter); bottom: -18px; color: rgb(21 33 29 / 4%); font: 400 clamp(88px, 12vw, 180px)/1 var(--serif); letter-spacing: .04em; pointer-events: none; }
+  .journal-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; letter-spacing: .08em; }
+  .journal-crumb a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--ink); border-bottom: 1px solid transparent; }
+  .journal-crumb a:hover { border-color: var(--ink); }
+  .journal-crumb a span { color: var(--gold-dark); }
+  .journal-crumb-sep { color: #98a09a; }
+  .journal-crumb-current { color: var(--gold-dark); }
+
+  .journal-hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: clamp(28px, 6vw, 90px); align-items: end; margin-top: clamp(26px, 4vw, 46px); }
+  .journal-hero-copy .eyebrow { margin-bottom: 16px; }
+  .journal-hero h1 { font-family: var(--serif); font-size: clamp(40px, 6vw, 76px); font-weight: 400; line-height: 1.08; letter-spacing: .06em; }
+  .journal-subtitle { margin-top: 18px; color: var(--gold-dark); font-family: var(--serif); font-size: clamp(20px, 2.2vw, 28px); line-height: 1.5; letter-spacing: .04em; }
+  .journal-hero-aside { padding-bottom: 6px; }
+  .journal-lede { max-width: 520px; color: var(--muted); font-size: 15px; line-height: 1.95; }
+  .journal-stats { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; letter-spacing: .08em; }
+  .journal-stats strong { margin-right: 5px; color: var(--ink); font: 400 21px/1 var(--serif); letter-spacing: 0; }
+  .journal-stats time { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .journal-shell { display: grid; grid-template-columns: 216px minmax(0, 1fr) 252px; gap: clamp(28px, 3.6vw, 52px); align-items: start; padding-block: clamp(40px, 5vw, 68px) clamp(64px, 8vw, 100px); }
+  .journal-side { min-width: 0; }
+  .journal-main { scroll-margin-top: calc(var(--header-height) + 24px); }
+  .journal-side--categories, .journal-side--topics { position: sticky; top: calc(var(--header-height) + 28px); }
+  .journal-side-kicker { color: var(--gold-dark); font-size: 10px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase; }
+  .journal-side-title { margin-top: 8px; margin-bottom: 20px; font-family: var(--serif); font-size: 22px; line-height: 1.4; letter-spacing: .04em; }
+  .journal-categories { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .journal-cat { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: baseline; gap: 10px; width: 100%; padding: 15px 0; border: 0; border-bottom: 1px solid var(--line); background: none; color: var(--muted); text-align: left; transition: color .2s, padding .2s; }
+  .journal-cat:hover { color: var(--ink); padding-left: 5px; }
+  .journal-cat::before { content: ""; position: absolute; left: -13px; top: 50%; width: 2px; height: 0; background: var(--gold-dark); transform: translateY(-50%); transition: height .2s; }
+  .journal-cat[aria-pressed="true"] { color: var(--ink); }
+  .journal-cat[aria-pressed="true"]::before { height: 22px; }
+  .journal-cat-index { color: #9aa29c; font-size: 10px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+  .journal-cat-label { font-family: var(--serif); font-size: 16px; line-height: 1.5; }
+  .journal-cat-count { color: #9aa29c; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .journal-side-note { margin-top: 18px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+
+  .journal-toolbar { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--ink); }
+  .journal-list-title { margin: 0; font-family: var(--serif); font-size: 24px; letter-spacing: .04em; }
+  .journal-result { color: var(--muted); font-size: 12px; letter-spacing: .08em; white-space: nowrap; }
+  .journal-result strong { margin-right: 2px; color: var(--ink); font: 400 22px/1 var(--serif); letter-spacing: 0; }
+  .journal-filter-note { color: var(--gold-dark); }
+
+  .journal-active { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 0 0; color: var(--muted); font-size: 12px; }
+  .journal-active-label { letter-spacing: .1em; }
+  .journal-active-chip, .journal-clear-all { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font-size: 12px; transition: border-color .2s, color .2s; }
+  .journal-active-chip:hover, .journal-clear-all:hover { border-color: var(--ink); }
+  .journal-clear-all { border-color: transparent; color: var(--gold-dark); text-decoration: underline; text-underline-offset: 4px; }
+
+  .journal-list { margin-top: 2px; }
+  .journal-item { display: grid; grid-template-columns: minmax(0, 1fr) 188px; gap: clamp(20px, 3vw, 34px); padding: 30px 0 32px; border-bottom: 1px solid var(--line); }
+  .journal-item-body { min-width: 0; }
+  .journal-item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+  .journal-item-index { color: #9aa29c; font-variant-numeric: tabular-nums; }
+  .journal-item-category { color: var(--gold-dark); font-size: 11px; letter-spacing: .13em; }
+  .journal-item-meta time { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .journal-item-title { margin: 10px 0 10px; font-family: var(--serif); font-size: clamp(22px, 2.2vw, 29px); font-weight: 400; line-height: 1.42; letter-spacing: .015em; }
+  .journal-item-title a { background-image: linear-gradient(currentColor, currentColor); background-repeat: no-repeat; background-position: 0 100%; background-size: 0 1px; transition: background-size .3s; }
+  .journal-item-title a:hover { background-size: 100% 1px; }
+  .journal-item-desc { max-width: 53ch; color: var(--muted); font-size: 14px; line-height: 1.95; }
+  .journal-item-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 18px; margin-top: 16px; }
+  .journal-item-topics { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .journal-item-topic { padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font-size: 11px; line-height: 1.5; transition: border-color .2s, color .2s; }
+  .journal-item-topic:hover { border-color: var(--gold-dark); color: var(--ink); }
+  .journal-item-read { display: inline-flex; align-items: center; gap: 8px; padding-bottom: 3px; border-bottom: 1px solid currentColor; color: var(--ink); font-size: 12px; letter-spacing: .08em; white-space: nowrap; }
+  .journal-item-read span { transition: transform .25s; }
+  .journal-item-read:hover span { transform: translateX(4px); }
+  .journal-item-media { display: block; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--line); background: var(--paper); }
+  .journal-item-media img { width: 100%; height: 100%; object-fit: cover; opacity: .92; transition: transform .65s ease, opacity .35s; }
+  .journal-item:hover .journal-item-media img { transform: scale(1.045); opacity: 1; }
+
+  .journal-side--topics .journal-topics { display: flex; flex-wrap: wrap; gap: 8px; }
+  .journal-topic { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--muted); font-size: 12px; line-height: 1.5; transition: border-color .2s, background .2s, color .2s; }
+  .journal-topic:hover { border-color: var(--gold-dark); color: var(--ink); }
+  .journal-topic[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--cream); }
+  .journal-topic-count { color: #9aa29c; font-size: 10px; font-variant-numeric: tabular-nums; }
+  .journal-topic[aria-pressed="true"] .journal-topic-count { color: #c9cec5; }
+  .journal-aside-card { margin-top: 28px; padding: 22px 20px; border: 1px solid var(--line); background: rgb(238 234 223 / 45%); }
+  .journal-aside-card .eyebrow { margin-bottom: 10px; font-size: 10px; letter-spacing: .2em; }
+  .journal-aside-card p:not(.eyebrow) { color: var(--muted); font-size: 13px; line-height: 1.85; }
+  .journal-aside-card .text-link { margin-top: 10px; font-size: 13px; gap: 12px; }
+
+  .journal-pagination { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .journal-pagination :global(.journal-page-btn) { display: inline-flex; min-width: 38px; min-height: 38px; align-items: center; justify-content: center; padding: 0 10px; border: 1px solid transparent; background: transparent; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; transition: border-color .2s, background .2s, color .2s; }
+  .journal-pagination :global(.journal-page-btn:hover) { border-color: var(--line); color: var(--ink); }
+  .journal-pagination :global(.journal-page-btn[aria-current="page"]) { border-color: var(--gold-dark); background: var(--gold-dark); color: var(--cream); }
+  .journal-pagination :global(.journal-page-btn:disabled) { opacity: .28; }
+  .journal-pagination :global(.journal-page-arrow) { border-color: var(--line); color: var(--ink); font-size: 15px; }
+  .journal-pagination :global(.journal-page-ellipsis) { padding: 0 3px; color: var(--muted); }
+  .journal-empty { padding: 44px 0 10px; }
+  .journal-empty h3 { margin: 0 0 10px; font-family: var(--serif); font-size: 26px; font-weight: 400; }
+  .journal-empty p:not(.eyebrow) { max-width: 440px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+  .journal-empty-reset { margin-top: 20px; min-height: 46px; padding: 10px 22px; }
+  .journal-noscript { margin-top: 24px; color: var(--muted); font-size: 13px; }
+  .journal-mobile-filter { display: none; }
+
+  @media (max-width: 1180px) {
+    .journal-shell { grid-template-columns: 190px minmax(0, 1fr) 220px; gap: 30px; }
+    .journal-item { grid-template-columns: minmax(0, 1fr) 158px; }
+  }
+
+  @media (max-width: 1024px) {
+    .journal-shell { grid-template-columns: minmax(0, 1fr) 230px; }
+    .journal-side--categories { display: none; }
+    .journal-mobile-filter { display: block; padding-top: 28px; }
+    .journal-select { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .journal-select-label { color: var(--gold-dark); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+    .journal-select-control { position: relative; flex: 1 1 240px; max-width: 360px; }
+    .journal-select-control::after { content: "↓"; position: absolute; right: 14px; top: 50%; color: var(--gold-dark); font-size: 13px; transform: translateY(-50%); pointer-events: none; }
+    .journal-select select { width: 100%; min-height: 46px; padding: 8px 40px 8px 14px; border: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); font-size: 14px; appearance: none; }
+  }
+
+  @media (max-width: 900px) {
+    .journal-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+    .journal-hero-aside { max-width: 620px; }
+    .journal-shell { grid-template-columns: minmax(0, 1fr); padding-top: 28px; }
+    .journal-side--topics { position: static; order: -1; padding-bottom: 6px; }
+    .journal-side--topics .journal-side-title { margin-bottom: 14px; }
+    .journal-side--topics .journal-topics { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+    .journal-topic { flex: 0 0 auto; }
+    .journal-aside-card { display: none; }
+    .journal-main { order: 1; }
+    .journal-item { padding-block: 26px; }
+  }
+
+  @media (max-width: 640px) {
+    .journal-hero { padding-top: 10px; }
+    .journal-hero::after { display: none; }
+    .journal-crumb { font-size: 12px; }
+    .journal-hero-grid { margin-top: 18px; }
+    .journal-hero h1 { font-size: clamp(34px, 10vw, 46px); }
+    .journal-subtitle { margin-top: 12px; font-size: 19px; }
+    .journal-lede { font-size: 14px; line-height: 1.9; }
+    .journal-stats { gap: 8px 16px; margin-top: 18px; padding-top: 14px; }
+    .journal-stats strong { font-size: 18px; }
+    .journal-mobile-filter { padding-top: 20px; }
+    .journal-shell { padding-top: 22px; gap: 24px; }
+    .journal-side--topics { border-top: 1px solid var(--line); padding-top: 18px; }
+    .journal-toolbar { padding-bottom: 12px; }
+    .journal-list-title { font-size: 21px; }
+    .journal-item { grid-template-columns: minmax(0, 1fr) 94px; gap: 14px; padding-block: 22px 24px; }
+    .journal-item-title { margin-block: 8px; font-size: 20px; line-height: 1.45; }
+    .journal-item-desc { display: -webkit-box; overflow: hidden; font-size: 13.5px; line-height: 1.85; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .journal-item-topics { display: none; }
+    .journal-item-foot { margin-top: 12px; }
+    .journal-item-media { aspect-ratio: 1; }
+    .journal-pagination { gap: 4px; margin-top: 28px; padding-top: 20px; }
+    .journal-pagination :global(.journal-page-btn) { min-width: 34px; min-height: 34px; padding: 0 7px; font-size: 12px; }
+    .journal-empty h3 { font-size: 22px; }
+  }
+</style>

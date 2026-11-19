@@ -2,7 +2,6 @@
 import InnerPage from './_shared/InnerPage.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Callout from '../components/Callout.astro';
-import StatusBadge from '../components/StatusBadge.astro';
 import { getServices } from '../lib/content.ts';
 import { safeSlug, formatValue } from './_shared/values.ts';
 import { localeFromPath } from '../lib/i18n.ts';
@@ -15,9 +14,7 @@ const description = pricedServices.length
 ---
 <InnerPage title="让费用，清楚一点。" eyebrow="Pricing / 价格信息" description={description} breadcrumbs={[{ label: '价格信息' }]}>
   <section class="editorial-section" aria-labelledby="pricing-heading">
-    <SectionHeader number="01" eyebrow="CONFIRMED PRICING" title={pricedServices.length ? (en ? 'Confirmed prices' : '已确认价格') : (en ? 'Clarify the scope, then the cost.' : '先问清范围，再谈具体费用。')} headingId="pricing-heading">
-      <StatusBadge status={pricedServices.length ? 'confirmed' : 'pending'} label={pricedServices.length ? (en ? 'Confirmed' : '已确认') : (en ? 'To be confirmed' : '待确认')} />
-    </SectionHeader>
+    <SectionHeader number="01" eyebrow="PRICING" title={pricedServices.length ? (en ? 'Confirmed prices' : '已确认价格') : (en ? 'Clarify the scope, then the cost.' : '先问清范围，再谈具体费用。')} headingId="pricing-heading" />
     {pricedServices.length ? <>
       <div class="table-scroll" role="region" aria-label="已确认价格对照表" tabindex="0">
         <table class="fact-table"><caption class="small-note">金额按确认数据原样展示，不推断币种、优惠或额外费用。</caption><thead><tr><th scope="col">项目</th><th scope="col" class="num">价格</th><th scope="col" class="num">计费单位</th><th scope="col" class="num">价格生效日期</th><th scope="col" class="num">信息更新</th></tr></thead><tbody>
