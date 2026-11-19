@@ -2,10 +2,12 @@
 import InnerPage from '../pages/_shared/InnerPage.astro';
 import Callout from './Callout.astro';
 import StatusBadge from './StatusBadge.astro';
+import { brandMedia } from './brand-media.mjs';
 import { getServices, getLocations, site } from '../lib/content.ts';
 import { safeSlug } from '../pages/_shared/values.ts';
 
 type TocItem = { level: 2 | 3; text: string; id: string };
+interface PagerItem { slug: string; title: string; status: string }
 interface RelatedItem { slug: string; title: string; status: string }
 
 export interface ArticleViewData {
@@ -24,6 +26,8 @@ interface Props {
   article: ArticleViewData;
   pending?: boolean;
   related?: RelatedItem[];
+  prev?: PagerItem;
+  next?: PagerItem;
 }
 
 function decodeHeadingText(value: string) {
@@ -56,7 +60,7 @@ function addHeadingIds(html: string) {
   return { html: output, items };
 }
 
-const { article, pending = false, related = [] } = Astro.props;
+const { article, pending = false, related = [], prev, next } = Astro.props;
 const updatedAt = article.updatedAt || article.updated_at || '';
 const services = getServices().filter((service) => article.fact_refs.includes(service.id));
 const locations = getLocations().filter((location) => article.fact_refs.includes(location.id));
@@ -64,7 +68,20 @@ const { html: headingHtml, items: toc } = addHeadingIds(article.html);
 const htmlWithTables = headingHtml.replace(/<table([^>]*)>([\s\S]*?)<\/table>/gi, '<div class="article-table-scroll"><table$1>$2</table></div>');
 const coverMatch = /^\s*<p>(?!<img)([\s\S]*?)<\/p>/i.exec(htmlWithTables);
 const coverAnswer = (coverMatch?.[1] ?? article.description).replace(/^\s*(?:<strong>)?先说结论[：:](?:<\/strong>)?\s*/, '');
-const articleHtml = coverMatch ? htmlWithTables.slice(coverMatch[0].length) : htmlWithTables;
+const htmlAfterCover = coverMatch ? htmlWithTables.slice(coverMatch[0].length) : htmlWithTables;
+const figureHtml = htmlAfterCover.replace(/<p>\s*<img([^>]*)>\s*<\/p>/gi, (_match, attrs) => {
+  const altMatch = /\balt="([^"]*)"/i.exec(attrs);
+  const alt = decodeHeadingText(altMatch?.[1] ?? '');
+  return `<figure class="article-figure"><img${attrs}>${alt ? `<figcaption>${alt}</figcaption>` : ''}</figure>`;
+});
+const figureMatch = /<figure class="article-figure">[\s\S]*?<\/figure>/i.exec(figureHtml);
+const heroFigure = figureMatch?.[0] ?? '';
+const articleHtml = figureMatch ? figureHtml.replace(figureMatch[0], '') : figureHtml;
+const fallbackHero = brandMedia.find((item) => item.frozen) ?? brandMedia[0];
+const heroMarkup = heroFigure || (fallbackHero ? `<figure class="article-figure article-figure--fallback"><img src="${fallbackHero.src}" alt="${fallbackHero.alt}" loading="lazy"><figcaption>${fallbackHero.alt}</figcaption></figure>` : '');
+const hrefFor = (item: PagerItem | RelatedItem) => item.status === 'confirmed'
+  ? `/articles/${safeSlug(item.slug)}/`
+  : `/articles/preview/${safeSlug(item.slug)}/`;
 const readingMinutes = Math.max(2, Math.ceil(article.body.replace(/[#>*_`~\-\[\]()|]/g, '').replace(/\s+/g, '').length / 450));
 const jsonLd = pending ? undefined : {
   '@context': 'https://schema.org', '@type': 'Article',
@@ -75,9 +92,6 @@ const jsonLd = pending ? undefined : {
 const breadcrumbs = pending
   ? [{ label: '文章与解答', href: '/articles/' }, { label: '草稿预览', href: '/articles/preview/' }, { label: article.title }]
   : [{ label: '文章与解答', href: '/articles/' }, { label: article.title }];
-const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
-  ? `/articles/${safeSlug(item.slug)}/`
-  : `/articles/preview/${safeSlug(item.slug)}/`;
 ---
 <InnerPage title={article.title} eyebrow={pending ? 'Draft preview / 待确认草稿' : 'Journal / 问题解答'} description={article.description} updatedAt={updatedAt} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
   <div class="article-layout" id="article-top">
@@ -98,6 +112,8 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
           <span>更新于 <time datetime={updatedAt}>{updatedAt.slice(0, 10)}</time> · 约 {readingMinutes} 分钟阅读 · {toc.length} 个章节</span>
         </p>
       </header>
+
+      {heroMarkup && <div class="article-hero" set:html={heroMarkup} />}
 
       <div class="article-compare" aria-label="阅读说明">
         <div><p class="eyebrow">这篇会帮你</p><p>建立一个判断框架，知道该问什么、该核对什么。</p></div>
@@ -131,11 +147,15 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
   </div>
 
   <div class="article-footer">
+    {(prev || next) && <nav class="article-pager" aria-label="文章翻页">
+      {prev ? <a href={hrefFor(prev)}><span>上一篇</span><strong>{prev.title}</strong></a> : <span></span>}
+      {next ? <a href={hrefFor(next)}><span>下一篇</span><strong>{next.title}</strong></a> : <span></span>}
+    </nav>}
     {related.length > 0 && <section class="article-related" aria-labelledby="article-related-title">
-      <h2 class="article-section-title" id="article-related-title">同主题草稿</h2>
+      <h2 class="article-section-title" id="article-related-title">{pending ? '同主题草稿' : '继续阅读'}</h2>
       <ul class="article-related-list">
         {related.map((item) => <li>
-          <a href={relatedHref(item)}>{item.title}</a>
+          <a href={hrefFor(item)}>{item.title}</a>
           <StatusBadge status={item.status === 'confirmed' ? 'confirmed' : 'pending'} label={item.status === 'confirmed' ? '已确认' : '待确认'} />
         </li>)}
       </ul>
@@ -174,6 +194,10 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
   .article-cover-answer .eyebrow { margin-bottom: 8px; }
   .article-cover-answer p:last-child { margin: 0; font-size: 17px; line-height: 1.9; }
   .article-cover-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 1.2rem 0 0; color: var(--muted); font-size: 13px; letter-spacing: .04em; line-height: 1.7; }
+  .article-hero { margin: 0 0 2.4rem; }
+  .article-hero :global(.article-figure) { margin: 0; }
+  .article-hero :global(img) { display: block; width: 100%; height: auto; border: 1px solid var(--line); background: var(--paper); }
+  .article-hero :global(figcaption) { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.7; }
   .article-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 0 2.4rem; border: 1px solid var(--line); background: #fbf9f3; }
   .article-compare > div { padding: 1.2rem 1.4rem; }
   .article-compare > div + div { border-left: 1px solid var(--line); }
@@ -205,6 +229,9 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
   .article-body :global(tbody tr:nth-child(even)) { background: rgb(238 234 223 / 55%); }
   .article-body :global(tbody tr:last-child td) { border-bottom: 0; }
   .article-body :global(img) { display: block; width: 100%; height: auto; margin: 2rem 0 1.4rem; border: 1px solid var(--line); background: var(--paper); }
+  .article-body :global(.article-figure) { margin: 2rem 0; }
+  .article-body :global(.article-figure img) { margin: 0; }
+  .article-body :global(figcaption) { margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.7; }
   .article-body :global(hr) { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
   .article-body :global(code) { padding: 2px 6px; border: 1px solid var(--line); background: var(--paper); font-size: .9em; }
   .article-body :global(pre) { overflow-x: auto; padding: 1.2rem; background: var(--ink-deep); color: var(--cream); }
@@ -228,6 +255,11 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
   .article-related-list li { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: .8rem 0; border-top: 1px solid var(--line); }
   .article-related-list a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--gold-dark); text-underline-offset: 4px; }
   .article-related-list a:hover { color: var(--gold-dark); }
+  .article-pager { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 760px; margin: 0 0 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .article-pager a { display: flex; flex-direction: column; gap: 6px; padding: 18px; border: 1px solid var(--line); background: #fbf9f3; text-decoration: none; }
+  .article-pager a:hover { border-color: var(--gold-dark); }
+  .article-pager span { color: var(--muted); font-size: 13px; letter-spacing: .08em; }
+  .article-pager strong { font-family: var(--serif); font-size: 19px; font-weight: 400; line-height: 1.5; }
 
   .article-qa { max-width: 760px; margin: 0; padding: 2.5rem 0 0; border-top: 1px solid var(--line); }
   .article-section-title { margin: 0 0 1.2rem; font-family: var(--serif); font-size: clamp(24px, 2.8vw, 30px); font-weight: 400; line-height: 1.45; }
@@ -257,6 +289,7 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
     .article-body :global(h2) { margin-top: 2.6rem; font-size: 26px; }
     .article-body :global(h3) { font-size: 18px; }
     .article-qa-row { grid-template-columns: minmax(0, 1fr); gap: .4rem; }
+    .article-pager { grid-template-columns: minmax(0, 1fr); }
   }
 
   @media print {
@@ -266,9 +299,10 @@ const relatedHref = (item: RelatedItem) => item.status === 'confirmed'
     :global(.page-header h1) { font-size: 22pt !important; }
     :global(.page-description) { color: #333 !important; font-size: 10.5pt !important; }
     .article-layout { display: block; max-width: none; }
-    .article-aside, .article-toc-mobile, .article-print, .article-related, .article-footer .page-actions { display: none !important; }
+    .article-aside, .article-toc-mobile, .article-print, .article-related, .article-pager, .article-footer .page-actions { display: none !important; }
     .article-main, .article-body, .article-qa { max-width: none; }
-    .article-cover, .article-compare, .article-qa { break-inside: avoid; background: #f4f4f4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .article-cover, .article-compare, .article-qa, .article-hero { break-inside: avoid; background: #f4f4f4 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .article-hero :global(img) { max-width: 100%; }
     .article-compare { display: grid; grid-template-columns: 1fr 1fr; }
     .article-qa-row { grid-template-columns: .8fr 1.2fr; }
     .article-body { font-size: 10.5pt; line-height: 1.65; }

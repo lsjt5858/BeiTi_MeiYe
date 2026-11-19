@@ -17,6 +17,14 @@ export function getStaticPaths() {
       const other = bySlug.get(slug);
       return other ? [{ slug, title: other.frontmatter.title, status: other.frontmatter.status }] : [];
     });
+    const groupDrafts = (group?.slugs ?? []).flatMap((slug) => {
+      const other = bySlug.get(slug);
+      return other ? [other] : [];
+    });
+    const groupIndex = groupDrafts.findIndex((item) => item.frontmatter.slug === fm.slug);
+    const pager = (item: typeof groupDrafts[number] | undefined) => item
+      ? { slug: item.frontmatter.slug, title: item.frontmatter.title, status: item.frontmatter.status }
+      : undefined;
     return {
       params: { slug: safeSlug(fm.slug) },
       props: {
@@ -28,10 +36,12 @@ export function getStaticPaths() {
           html: safeMarkdown(body),
         },
         related,
+        prev: pager(groupDrafts[groupIndex - 1]),
+        next: pager(groupDrafts[groupIndex + 1]),
       },
     };
   });
 }
-const { article, related } = Astro.props;
+const { article, related, prev, next } = Astro.props;
 ---
-<ArticleView article={article} pending related={related} />
+<ArticleView article={article} pending related={related} prev={prev} next={next} />

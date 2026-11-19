@@ -9,5 +9,11 @@ export function getStaticPaths() {
 type Article = ReturnType<typeof getArticles>[number];
 interface Props { article: Article }
 const { article } = Astro.props;
+const articles = getArticles();
+const index = articles.findIndex((item) => item.slug === article.slug);
+const pager = (item: Article | undefined) => item ? { slug: item.slug, title: item.title, status: 'confirmed' } : undefined;
+const prev = pager(articles[index - 1]);
+const next = pager(articles[index + 1]);
+const related = articles.filter((item) => item.slug !== article.slug).slice(0, 3).map((item) => ({ slug: item.slug, title: item.title, status: 'confirmed' }));
 ---
-<ArticleView article={article} />
+<ArticleView article={article} prev={prev} next={next} related={related} />
