@@ -29,26 +29,58 @@ facts:
     type: faq
     status: confirmed
     value:
-      question: 如何整理咨询需求？
-      answer: 在咨询页填写需求并同意隐私说明后，可以生成本地摘要，复制或下载。摘要不会自动发送，也不代表预约成功。
-      category: 网站使用
-    updated_at: '2026-11-11'
+      question: 咨询前要准备什么？
+      answer: 想清楚想了解的方向、能投入的时间、大致预算，以及最想问的两三个问题。写在咨询页后，可以生成一份摘要带去沟通。
+      category: 咨询准备
+    updated_at: '2026-11-20'
+  - id: faq-location
+    type: faq
+    status: confirmed
+    value:
+      question: 校区在哪里，怎么过去？
+      answer: 具体校区地址与路线以校区回复为准。确定到店前，建议先在咨询页写下出发地和方便的时间。
+      category: 到店与联系
+    updated_at: '2026-11-20'
+  - id: faq-contact
+    type: faq
+    status: confirmed
+    value:
+      question: 怎么联系你们？
+      answer: 目前可以通过抖音、小红书主页留言；电话与邮箱以校区回复为准。
+      category: 到店与联系
+    updated_at: '2026-11-20'
+  - id: faq-directions
+    type: faq
+    status: confirmed
+    value:
+      question: 有没有美甲、美睫或店务运营的课程？
+      answer: 目前有美甲培训、美睫培训、店务运营管理三个学习方向，视频美学为赠送课程内容。开班形式与班期以校区回复为准。
+      category: 学习方向
+    updated_at: '2026-11-20'
   - id: faq-pricing
     type: faq
     status: confirmed
     value:
-      question: 网站没有价格时，如何查看说明？
-      answer: 价格页仅展示已确认的价格信息。如果当前没有价格，请保留咨询方向与希望了解的问题，不要把页面中的意向分类当成已开设服务或报价。
-      category: 信息查看
-    updated_at: '2026-11-11'
+      question: 价格怎么看？
+      answer: 价格页按项目列出已确认的价格与计费单位；没有列出的项目，以校区回复和书面报价为准。
+      category: 价格与费用
+    updated_at: '2026-11-20'
+  - id: faq-hours
+    type: faq
+    status: confirmed
+    value:
+      question: 营业和上课时间怎么安排？
+      answer: 营业、试听与上课时间以校区回复为准。可以先在咨询页写下方便的时间段。
+      category: 到店与联系
+    updated_at: '2026-11-20'
   - id: faq-privacy
     type: faq
     status: confirmed
     value:
-      question: 咨询摘要会自动发送或保存吗？
-      answer: 当前咨询工具只在本地整理摘要，不自动发送，也不将表单内容持久化。复制或下载后，请自行妥善保管其中的联系方式。
+      question: 咨询摘要会保存或发送吗？
+      answer: 咨询摘要只在您的浏览器中生成；保存、复制或下载都由您自己决定，请妥善保管其中的联系方式。
       category: 隐私与使用
-    updated_at: '2026-11-11'
+    updated_at: '2026-11-20'
 
   # 显著哨兵便于审计验证；不得把这些值写入 HTML、JSON-LD 或 sitemap。
   - id: service.pending

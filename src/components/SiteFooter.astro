@@ -1,15 +1,11 @@
 ---
-import { getLatestUpdate, getReviews, site } from "../lib/content";
-import { localeFromPath, localizedPath, sourcePath, translate } from '../lib/i18n.ts';
-import { visualContentPaths, visualUpdatedAt } from '../lib/visual-routes.ts';
+import { getReviews, site } from "../lib/content";
+import { localeFromPath, localizedPath, translate } from '../lib/i18n.ts';
 import { getSocialChannels } from '../lib/social.ts';
 import SocialLogo from './SocialLogo.astro';
 const locale = localeFromPath(Astro.url.pathname);
 const tr = (text: string) => translate(text, locale);
 const href = (path: string) => localizedPath(path, locale);
-const confirmedUpdate = getLatestUpdate();
-const updated = visualContentPaths.includes(sourcePath(Astro.url.pathname)) ? visualUpdatedAt : confirmedUpdate;
-const date = updated && Number.isFinite(Date.parse(updated)) ? new Date(updated).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
 const year = new Date().getFullYear();
 const socialChannels = getSocialChannels();
 ---
@@ -37,29 +33,13 @@ const socialChannels = getSocialChannels();
       <a href={href('/about/')}>{tr('品牌理念')}</a>
       <a href={href('/locations/')}>{tr('地点信息')}</a>
       <a href={href('/articles/')}>{tr('美学手记')}</a>
-      <a href={href('/faq/')}>{tr('常见问题')}</a>
+      <a href={href('/faq/')}>{tr('咨询前须知')}</a>
       {getReviews().length > 0 && <a href={href('/reviews/')}>{tr('授权评价')}</a>}
       <a href={href('/contact/')}>{tr('整理咨询需求')} <span aria-hidden="true">↗</span></a>
     </nav>
   </div>
   <div class="container footer-bottom">
     <p>© {year} {tr(site.brand)}</p>
-    <p>{tr(updated ? "内容更新" : "页面生成")}: <time datetime={date}>{date}</time></p>
-    {confirmedUpdate && confirmedUpdate !== updated && <p>{locale === 'en' ? 'Confirmed information updated' : '已确认信息更新'}: <time datetime={confirmedUpdate}>{confirmedUpdate}</time></p>}
     <nav aria-label={tr('法律信息')}><a href={href('/privacy/')}>{tr('隐私说明')}</a><a href={href('/terms/')}>{tr('使用条款')}</a></nav>
-  </div>
-  <div class="container privacy-control">
-    <button
-      class="analytics-toggle"
-      type="button"
-      data-analytics-toggle
-      data-environment={site.environment}
-      data-base-url={site.base_url}
-      data-endpoint={site.analytics_endpoint}
-      aria-pressed="false"
-      aria-describedby="analytics-status"
-      disabled
-    >{tr('开启访问分析')}</button>
-    <span id="analytics-status" data-analytics-status aria-live="polite">{tr('默认关闭，不发送访问数据。')}</span>
   </div>
 </footer>

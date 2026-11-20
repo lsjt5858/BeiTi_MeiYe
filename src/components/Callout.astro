@@ -1,6 +1,6 @@
 ---
 interface Props {
-  tone?: 'key' | 'warn' | 'note';
+  tone?: 'key' | 'note';
   title?: string;
   class?: string;
 }
@@ -20,8 +20,6 @@ const { tone = 'note', title, class: className } = Astro.props;
   .callout-body :global(ul) { margin: 8px 0 0; padding-left: 1.2rem; }
   .callout--key { border-left-color: var(--gold-dark); background: #f3ecdc; }
   .callout--key .callout-title { color: var(--gold-dark); }
-  .callout--warn { border-left-color: #9a5a44; background: #f6ebe4; }
-  .callout--warn .callout-title { color: #7d4433; }
   .callout--note { border-left-color: var(--line); background: transparent; }
   .callout--note .callout-title { color: var(--ink); }
   @media (max-width: 600px) { .callout { padding: 18px 20px; margin: 20px 0; } }

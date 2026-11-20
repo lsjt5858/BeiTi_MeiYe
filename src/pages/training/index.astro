@@ -16,7 +16,7 @@ const description = en ? 'Explore nail training, lash training and salon managem
 <SiteLayout title={title} description={description} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: title }]}>
   <VisualIntro title={title} subtitle={en ? 'Turn inspiration into a considered craft.' : '把热爱，练成技艺。'} description={description} eyebrow="BEITI / BEAUTY LEARNING" image="01-08" />
   <div class="container visual-page-body">
-    <Callout tone="warn" title={en ? 'Learning direction notice' : '学习方向说明'}>
+    <Callout tone="note" title={en ? 'Learning direction notice' : '学习方向说明'}>
       <p>{copy(trainingNotice, locale)}</p>
     </Callout>
     <section class="visual-training-list" aria-label={en ? 'Learning directions' : '学习方向'}>

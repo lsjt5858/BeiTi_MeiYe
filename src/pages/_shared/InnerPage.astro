@@ -17,13 +17,13 @@ const { title, description, eyebrow, breadcrumbs, jsonLd, updatedAt = getLatestU
   <PageHeader title={title} description={description} eyebrow={eyebrow} />
   <div class="container page-body">
     <slot />
-    {updatedAt && <p class="meta page-update">内容最近更新：<time datetime={updatedAt}>{updatedAt.slice(0, 10)}</time></p>}
+    {updatedAt && <p class="meta page-update visually-hidden"><time datetime={updatedAt}>{updatedAt.slice(0, 10)}</time></p>}
   </div>
 </SiteLayout>
 
 <style>
   .page-body { padding-bottom: clamp(4rem, 8vw, 8rem); }
-  .page-update { margin-top: 4rem; border-top: 1px solid var(--line, #d9d1c4); padding-top: 1.5rem; }
+  .page-update { margin-top: 4rem; }
   .page-body :global(.editorial-section) { padding-block: clamp(2.5rem, 5vw, 4.5rem); border-top: 1px solid var(--line, #d9d1c4); }
   .page-body :global(.editorial-section:first-child) { padding-top: 1rem; border-top: 0; }
   .page-body :global(h2) { font-size: clamp(1.7rem, 3.5vw, 2.8rem); line-height: 1.3; margin: 0 0 1.5rem; font-weight: 400; }

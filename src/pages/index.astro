@@ -6,11 +6,11 @@ import { site, getFact, getServices, getFaqs, getArticles } from "../lib/content
 const services = getServices();
 const articles = getArticles().slice(0, 3);
 const faqs = getFaqs().slice(0, 4);
-const intents: { name: string; english: string; interest: string; note?: string }[] = [
-  { name: "美甲培训", english: "NAIL TRAINING", interest: "nails" },
-  { name: "美睫培训", english: "LASH TRAINING", interest: "lashes" },
-  { name: "店务运营管理", english: "SALON MANAGEMENT", interest: "management" },
-  { name: "视频美学", english: "VIDEO AESTHETICS", interest: "video", note: getFact<string>('course.video-aesthetics.gift') },
+const intents: { name: string; english: string; interest: string; href: string; note?: string }[] = [
+  { name: "美甲培训", english: "NAIL TRAINING", interest: "nails", href: "/training/nails/" },
+  { name: "美睫培训", english: "LASH TRAINING", interest: "lashes", href: "/training/lashes/" },
+  { name: "店务运营管理", english: "SALON MANAGEMENT", interest: "management", href: "/training/salon-management/" },
+  { name: "视频美学", english: "VIDEO AESTHETICS", interest: "video", href: "/training/", note: getFact<string>('course.video-aesthetics.gift') },
 ];
 const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.src : image.generationUrl;
 ---
@@ -26,7 +26,7 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
       <h1>{site.brand}</h1>
       <p class="hero-tagline">让美，成为日常。</p>
       <div class="hero-actions">
-        <a class="button" href="/contact/" data-analytics-category="general">聊聊你的需求 <span aria-hidden="true">↗</span></a>
+        <a class="button" href="/contact/" data-analytics-category="general">找我们聊聊 <span aria-hidden="true">↗</span></a>
         <a class="text-link" href="#explore">探索你的美 <span aria-hidden="true">↓</span></a>
       </div>
     </div>
@@ -59,11 +59,11 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
         <div>
           <p class="eyebrow">01 / EXPLORE YOUR BEAUTY</p>
           <h2>把热爱，<br />练成专业。</h2>
-          <p class="intent-note">从美甲培训、美睫培训到店务运营管理，找到你想了解的方向。<br />课程内容与安排待补充，可先整理咨询问题。</p>
+          <p class="intent-note">从美甲培训、美睫培训到店务运营管理，找到你想了解的方向。</p>
         </div>
         <ol class="intent-list">
           {intents.map((intent, index) => <li>
-            <a class="intent-link" href={`/contact/?interest=${intent.interest}`} data-analytics-category={intent.interest}>
+            <a class="intent-link" href={intent.href} data-analytics-category={intent.interest}>
               <span class="intent-number" aria-hidden="true">0{index + 1}</span>
               <span class="intent-title">{intent.name}<small lang="en">{intent.english}</small>{intent.note && <span class="intent-description">{intent.note}</span>}</span>
               <span class="intent-arrow" aria-hidden="true">↗</span>
@@ -110,7 +110,7 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
         <li data-reveal><span class="process-number" aria-hidden="true">03</span><h3>整理咨询摘要</h3><p>在你的设备上生成摘要，复制或下载后自行保留。你的需求不会自动发送。</p></li>
       </ol>
       <div class="process-footnote">
-        <p>当前支持本地需求整理；未公布正式渠道前，暂不开放正式预约。</p>
+        <p>把想了解的问题整理成摘要，再通过已公布的联系方式沟通。</p>
         <a class="text-link" href="/contact/" data-analytics-category="general">开始整理需求 <span aria-hidden="true">↗</span></a>
       </div>
     </div>
@@ -122,12 +122,12 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
         <div class="home-faq-heading" data-reveal>
           <p class="eyebrow">04 / GOOD TO KNOW</p>
           <h2>在开始之前，<br />你可能想知道。</h2>
-          <a class="text-link" href="/faq/">查看常见问题 <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="/faq/">咨询前须知 <span aria-hidden="true">↗</span></a>
         </div>
         {faqs.length > 0 ? <div class="home-faq-list" data-reveal>
           {faqs.map((faq, index) => <details id={`home-faq-${faq.id}`}>
             <summary><span class="home-faq-number" aria-hidden="true">0{index + 1}</span>{faq.question}</summary>
-            <div class="home-faq-answer"><p>{faq.answer}</p>{"updatedAt" in faq && faq.updatedAt && <time class="meta" datetime={faq.updatedAt}>更新：{faq.updatedAt.slice(0, 10)}</time>}</div>
+            <div class="home-faq-answer"><p>{faq.answer}</p>{"updatedAt" in faq && faq.updatedAt && <time class="meta visually-hidden" datetime={faq.updatedAt}>{faq.updatedAt.slice(0, 10)}</time>}</div>
           </details>)}
         </div> : <div data-reveal>
           <p>把想了解的问题整理下来，从一个想法开始。</p>
@@ -151,7 +151,7 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
       <p class="eyebrow">YOUR BEAUTY, YOUR WAY</p>
       <h2>下一段美好，<br />从你的想法开始。</h2>
       <p>把关于美的期待，慢慢说给我们听。</p>
-      <a class="button" href="/contact/" data-analytics-category="general">聊聊你的需求 <span aria-hidden="true">↗</span></a>
+      <a class="button" href="/contact/" data-analytics-category="general">找我们聊聊 <span aria-hidden="true">↗</span></a>
     </div>
   </section>
 </SiteLayout>

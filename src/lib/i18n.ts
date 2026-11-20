@@ -31,7 +31,7 @@ export function translate(text: string, locale: Locale): string {
   const special = trimmed
     .replace(/^(\d+) 个已确认问题$/, '$1 confirmed questions')
     .replace(/^找到 (\d+) 个问题$/, '$1 questions found')
-    .replace(/^尚未整理，请检查以下 (\d+) 处填写。信息没有发送。$/, 'Not prepared. Please check $1 fields. Nothing has been sent.')
+    .replace(/^请检查以下 (\d+) 处填写。$/, 'Please check $1 fields.')
     .replace(/^第 (\d+) 张，共 (\d+) 张。/, 'Slide $1 of $2. ')
     .replace(/^查看第 (\d+) 张：/, 'View slide $1: ')
     .replace(/^直达问题 (\d+)：/, 'Go to question $1: ');

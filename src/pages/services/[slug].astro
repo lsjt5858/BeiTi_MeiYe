@@ -48,8 +48,8 @@ const blocks = [
   {faqs.length > 0 && <section class="editorial-section">
     <h2>{relatedFaqs.length ? '相关问答' : '网站与咨询操作问答'}</h2>
     {faqs.map((faq) => <div class="editorial-row"><h3>{faq.question}</h3><p>{faq.answer}</p></div>)}
-    <a class="text-link" href="/faq/">查看全部常见问题</a>
+    <a class="text-link" href="/faq/">查看咨询前须知</a>
   </section>}
   {articles.length > 0 && <section class="editorial-section"><h2>进一步阅读</h2><ul class="editorial-list">{articles.map((article) => <li class="editorial-row"><h3><a class="text-link" href={`/articles/${safeSlug(article.slug)}/`}>{article.title}</a></h3><p>{article.description}</p></li>)}</ul></section>}
-  <section class="editorial-section"><h2>还有哪些信息需要确认？</h2><p class="intro-copy">把关于「{service.name}」的疑问写进咨询留言。此步骤仅整理需求，不发送，也不创建预约。</p><div class="page-actions"><a class="button" href="/contact/">整理咨询需求</a><a class="text-link" href="/services/">返回服务信息</a></div></section>
+  <section class="editorial-section"><h2>还有哪些信息需要确认？</h2><p class="intro-copy">把关于「{service.name}」的疑问写进咨询留言，具体安排以实际沟通为准。</p><div class="page-actions"><a class="button" href="/contact/">整理咨询需求</a><a class="text-link" href="/services/">返回服务信息</a></div></section>
 </InnerPage>

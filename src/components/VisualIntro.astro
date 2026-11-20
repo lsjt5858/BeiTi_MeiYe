@@ -13,7 +13,7 @@ const locale = localeFromPath(Astro.url.pathname);
     <h1>{title}</h1>
     <p class="visual-subtitle">{subtitle}</p>
     <p class="visual-description">{description}</p>
-    <p class="visual-notice">{locale === 'en' ? 'Updated' : '内容更新'}：<time datetime={visualUpdatedAt}>{visualUpdatedAt}</time></p>
+    <p class="visual-notice visually-hidden"><time datetime={visualUpdatedAt}>{visualUpdatedAt}</time></p>
   </div>
   <figure class="visual-intro-photo">
     <VisualPhoto image={imageById(image)} eager />

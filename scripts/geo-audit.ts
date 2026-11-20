@@ -5,6 +5,7 @@ import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { loadContent, isValidDate, exaggeratedPattern, type ContentModel } from '../src/lib/content.ts';
 import { contentPaths, pageSeo, publishedPaths, readDistPagePaths, renderRobots, renderSitemap, renderLlms } from '../src/lib/seo.ts';
 import { localeFromPath, sourcePath, translate } from '../src/lib/i18n.ts';
+import { visualPaths, visualUpdatedAt } from '../src/lib/visual-routes.ts';
 
 type Node = DefaultTreeAdapterMap['node'];
 type Element = DefaultTreeAdapterMap['element'];
@@ -139,8 +140,10 @@ export function auditDist(distRoot: string | URL, model: ContentModel, options: 
     const article = model.getArticles().find(item => `/articles/${item.slug}/` === source);
     const service = model.getServices().find(item => `/services/${item.slug}/` === source);
     const location = model.getLocations().find(item => `/locations/${item.slug}/` === source);
-    const updated = article?.updatedAt ?? service?.updatedAt ?? location?.updatedAt ?? model.getLatestUpdate();
-    check(3, times.length > 0 && times.every(node => isValidDate(attribute(node, 'datetime'))) && (!updated || times.some(node => attribute(node, 'datetime') === updated)), `${path} 缺少合法、同步事实的更新日期`, true);
+    const latestUpdate = model.getLatestUpdate();
+    const updated = article?.updatedAt ?? service?.updatedAt ?? location?.updatedAt ?? (visualPaths.includes(source) ? visualUpdatedAt : latestUpdate);
+    const allowedDates = visualPaths.includes(source) ? [updated, latestUpdate] : [updated];
+    check(3, times.length > 0 && times.every(node => isValidDate(attribute(node, 'datetime'))) && allowedDates.some(date => !date || times.some(node => attribute(node, 'datetime') === date)), `${path} 缺少合法、同步事实的更新日期`, true);
     const mains = byTag('main');
     const skipLink = byTag('a').some(node => {
       const href = attribute(node, 'href');

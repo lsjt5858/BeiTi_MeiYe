@@ -74,7 +74,7 @@ export function buildInquirySummary(inquiry: InquiryData, locale: Locale = 'zh-C
   const tr = (text: string) => translate(text, locale);
   return [
     tr('咨询需求'),
-    tr('状态：需求已整理，尚未发送'),
+    tr('状态：需求摘要已生成'),
     '',
     `${tr('称呼：')}${inquiry.name}`,
     `${tr('联系方式：')}${inquiry.contact}`,

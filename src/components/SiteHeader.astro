@@ -11,7 +11,7 @@ const links = [
   { href: "/services/", label: "探索美业" },
   { href: "/about/", label: "品牌理念" },
   { href: "/articles/", label: "美学手记" },
-  { href: "/faq/", label: "常见问题" },
+  { href: "/faq/", label: "咨询前须知" },
 ];
 if (getReviews().length) links.push({ href: "/reviews/", label: "评价" });
 const active = (href: string) => href === "/" ? current === "/" : current.startsWith(href) || (href === '/services/' && /^\/(?:training|gallery)\//.test(current));
@@ -29,7 +29,7 @@ const active = (href: string) => href === "/" ? current === "/" : current.starts
       {links.map((link) => <a href={href(link.href)} aria-current={active(link.href) ? "page" : undefined}>{tr(link.label)}</a>)}
     </nav>
     <div class="header-actions">
-      <a class="header-contact" href={href('/contact/')} data-analytics-category="general">{tr('聊聊你的需求')} <span aria-hidden="true">↗</span></a>
+      <a class="header-contact" href={href('/contact/')} data-analytics-category="general">{tr('找我们聊聊')} <span aria-hidden="true">↗</span></a>
       <LanguageSwitcher />
     <details class="mobile-menu" data-mobile-menu>
       <summary aria-label={tr('打开导航菜单')} aria-expanded="false" aria-controls="mobile-navigation">
@@ -40,7 +40,7 @@ const active = (href: string) => href === "/" ? current === "/" : current.starts
         {links.map((link, index) => <Fragment><a href={href(link.href)} aria-current={active(link.href) ? "page" : undefined}><small aria-hidden="true">0{index + 1}</small>{tr(link.label)}</a>
           {link.href === '/services/' && <><a class="mobile-explore-sub" href={href('/training/')}>{tr('美业培训')} ↗</a><a class="mobile-explore-sub" href={href('/gallery/')}>{tr('美学图鉴')} ↗</a></>}
         </Fragment>)}
-        <a class="mobile-contact" href={href('/contact/')} data-analytics-category="general">{tr('聊聊你的需求')} <span aria-hidden="true">↗</span></a>
+        <a class="mobile-contact" href={href('/contact/')} data-analytics-category="general">{tr('找我们聊聊')} <span aria-hidden="true">↗</span></a>
       </nav>
     </details>
     </div>
