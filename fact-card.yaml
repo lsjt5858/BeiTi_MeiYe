@@ -44,20 +44,20 @@ facts:
           detail: 水彩美甲、动漫主题彩绘与色彩搭配。
     updated_at: '2026-11-22'
 
-  # 姓名及授课关联：2025美睫全科班.pptx 第2—4页；不发布相互矛盾的管理年限。
+  # 姓名、门店经营与人员管理经历：2025美睫全科班.pptx 第2页。
+  # 年限沿用原页记载，不随网站更新日期增加；与美甲第8页老师的履历分别对应。
   - id: team
     type: team
     status: confirmed
     value:
       - name: 媛媛
         role: 美睫课程讲师
-        bio: 2025版课件记录了5年的美甲、美睫与纹绣门店经营经历，也提到跨行业创业与门店人员管理。课程从工具和材料认识进入，再讲取毛、贴合、款式、眼型分析与真人实操。
+        bio: 拥有5年美甲、美睫与纹绣门店经营经验，以及8年门店人员管理经验。持续开展跨行业创业，兼具美业讲师与手艺人的实践背景，关注美业技术与门店经营。
         photo:
           src: /images/team/yuanyuan-2025.webp
-          alt: 媛媛老师，取自美睫全科课件自我介绍页
+          alt: 媛媛老师，美睫课程讲师
           width: 334
           height: 502
-          caption: 媛媛 · 美睫课程讲师
     updated_at: '2026-11-22'
 
   # 用户明确：美甲相关事务均由安妮老师管理。课件未标出安妮姓名与照片的对应关系。
@@ -313,47 +313,43 @@ facts:
     updated_at: '2026-11-22'
 
   # 来源：《贝缇基础强化班2025.pdf》第7–10页；同名PPTX逐页一致。
-  # 原页没有姓名，因此按教学分工展示，不推断人员对应关系或当前团队人数。
+  # 原页没有姓名，因此按教学分工展示；经历年限沿用原文，不推算当前年限或团队人数。
   - id: team.roles
     type: note
     status: confirmed
     value:
       - name: 美甲教学与产品研发
         role: 主理人
-        bio: 课件记录了13年行业经历，专注美甲培训与产品研发，擅长美甲款式设计和综合提升。
+        bio: 深耕美业13年，专注美甲培训与产品研发，擅长美甲款式设计与综合技术提升。具备JNEC一级美甲师、CPMA三级美甲师认证。
         photo:
           src: /images/team/nail-teaching-2025.webp
-          alt: 美甲教学与产品研发师资介绍页的老师肖像
+          alt: 贝缇美甲教学与产品研发老师
           width: 540
           height: 720
-          caption: 美甲教学与研发 · 课件师资照片
-      - name: 店务运营与美睫教学
-        role: 主理人 · 店务运营老师
-        bio: 课件介绍了跨行业创业、营销团队管理与店务运营教学经历，同时承担美睫讲授。
-        photo:
-          src: /images/team/salon-management-2025.webp
-          alt: 店务运营与美睫教学师资介绍页的老师肖像
-          width: 540
-          height: 720
-          caption: 店务运营与美睫 · 课件师资照片
-      - name: 美睫教学与眼型调整
-        role: 美睫部总监
-        bio: 课件记录了8年行业经历和3年创业经历，擅长多翘度调整眼型，结合不同学员的情况系统授课。
-        photo:
-          src: /images/team/lash-director-2025.webp
-          alt: 美睫部总监师资介绍页的老师肖像
-          width: 540
-          height: 720
-          caption: 美睫部总监 · 课件师资照片
       - name: 美术基础与美甲彩绘
         role: 美甲主讲老师
-        bio: 课件记录了10年美术学习和5年美术教师工作经历，专注水彩美甲创作，擅长动漫主题彩绘与色彩搭配。
+        bio: 拥有10年美术学习经历与5年美术教师工作经验，专注水彩美甲创作。擅长动漫主题彩绘与色彩搭配，将美术基础与美甲款式创作相结合。
         photo:
           src: /images/team/nail-art-instructor-2025.webp
-          alt: 美甲主讲老师的美术与彩绘师资介绍页肖像
+          alt: 贝缇美甲彩绘主讲老师
           width: 540
           height: 720
-          caption: 美甲彩绘 · 课件师资照片
+      - name: 店务运营与美睫教学
+        role: 主理人 · 店务运营老师 · 美睫讲师
+        bio: 跨行业持续创业者，拥有12年门店人员管理经验，具备营销团队管理背景。承担学院店务运营与美睫教学，分享门店经营、人员管理与营销团队管理经验。
+        photo:
+          src: /images/team/salon-management-2025.webp
+          alt: 贝缇店务运营与美睫教学老师
+          width: 540
+          height: 720
+      - name: 美睫教学与眼型调整
+        role: 美睫部总监 · 美睫讲师
+        bio: 深耕美睫行业8年，拥有3年自主创业经历。擅长运用多种翘度调整眼型，并根据不同学员的基础与学习需求系统授课。
+        photo:
+          src: /images/team/lash-director-2025.webp
+          alt: 贝缇美睫部总监
+          width: 540
+          height: 720
     updated_at: '2026-11-22'
 
   # 来源：《贝缇基础强化班2025.pdf》第7页。
@@ -363,7 +359,5 @@ facts:
     status: confirmed
     value:
       - name: JNEC 一级美甲师
-        description: 列于美甲教学与产品研发的师资介绍中。
       - name: CPMA 三级美甲师
-        description: 列于同一份美甲师资介绍中。
     updated_at: '2026-11-22'

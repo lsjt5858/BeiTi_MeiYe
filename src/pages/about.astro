@@ -54,13 +54,12 @@ const tr = (text: string) => translate(text, locale);
   {(team.length > 0 || teachingRoles.length > 0) && <section class="editorial-section" aria-labelledby="team-heading">
     <p class="eyebrow">PEOPLE & TEACHING</p>
     <h2 id="team-heading">{en ? 'Teachers and teaching areas' : '老师与教学方向'}</h2>
-    {team.length > 0 && <ul class="teacher-list">{team.map((member) => <TeacherProfile member={member} />)}</ul>}
-    {teachingRoles.length > 0 && <ul class="teacher-list teacher-role-list">{teachingRoles.map((role) => <TeacherProfile member={role} />)}</ul>}
-    <p class="small-note">{en ? 'Teacher profiles from the 2025 course materials.' : '师资介绍依据2025版课程资料。'}</p>
+    {team.length > 0 && <ul class="teacher-list">{team.map(member => <TeacherProfile member={member} />)}</ul>}
+    {teachingRoles.length > 0 && <ul class="teacher-list teacher-role-list">{teachingRoles.map(member => <TeacherProfile member={member} />)}</ul>}
   </section>}
   {qualifications.length > 0 && <section class="editorial-section" aria-labelledby="qualifications-heading">
     <p class="eyebrow">NAIL CREDENTIALS</p>
-    <h2 id="qualifications-heading">{en ? 'Nail credentials listed in the course deck' : '课件列出的美甲认证'}</h2>
+    <h2 id="qualifications-heading">{en ? 'Nail instructor credentials' : '美甲师资认证'}</h2>
     <ul class="editorial-list">{qualifications.map((qualification) => <li class="editorial-row">
       <h3>{tr(qualification.name)}</h3>
       <div>
