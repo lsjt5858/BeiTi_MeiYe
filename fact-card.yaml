@@ -35,8 +35,8 @@ facts:
       address: 浙江省杭州市拱墅区兴业街29号 金通数字经济科创园16幢
       hours: ''
       transport: 地铁 4 号线华中南路站 E 口
-      booking: 出发前先拨 18258162683，确认当天能不能到校、是否可以试听。
-    updated_at: '2026-11-20'
+      booking: 到访前可通过抖音、小红书主页留言，确认当天安排。
+    updated_at: '2026-11-22'
 
   # 仅确认当前网站功能，不确认企业已经开展的业务。
   - id: faq-consult
@@ -52,17 +52,17 @@ facts:
     status: confirmed
     value:
       question: 校区在哪里，怎么过去？
-      answer: 杭州校区在拱墅区兴业街29号 金通数字经济科创园16幢，地铁 4 号线华中南路站 E 口。出发前先拨 18258162683，确认当天能不能到校。
+      answer: 杭州校区在拱墅区兴业街29号 金通数字经济科创园16幢，地铁 4 号线华中南路站 E 口。咨询电话：159****8888。到访前可通过抖音、小红书主页留言，确认当天安排。
       category: 到店与联系
-    updated_at: '2026-11-20'
+    updated_at: '2026-11-22'
   - id: faq-contact
     type: faq
     status: confirmed
     value:
       question: 怎么联系你们？
-      answer: 电话 18258162683。也可以先在抖音、小红书主页留言。
+      answer: 咨询电话：159****8888。也可以先在抖音、小红书主页留言。
       category: 到店与联系
-    updated_at: '2026-11-20'
+    updated_at: '2026-11-22'
   - id: faq-directions
     type: faq
     status: confirmed
@@ -84,9 +84,9 @@ facts:
     status: confirmed
     value:
       question: 上课时间怎么确认？
-      answer: 上课、试听和到访都先电话约，号码是 18258162683。当天几点到、能不能试听，以电话里的回复为准。
+      answer: 咨询电话：159****8888。上课、试听和到访安排可通过抖音、小红书主页留言询问。
       category: 到店与联系
-    updated_at: '2026-11-20'
+    updated_at: '2026-11-22'
   - id: faq-privacy
     type: faq
     status: confirmed
@@ -125,14 +125,9 @@ facts:
       source: PENDING_ONLY_NOT_PUBLIC_SOURCE
       date: '2026-11-11'
     updated_at: '2026-11-11'
-  # 来源：知识库《贝缇基础强化班2025》第32页；30篇技术文章结尾同一号码。
+  # 用户于 2026-11-22 指定全站展示此脱敏号码，不作为可拨打号码。
   - id: contact.phone
     type: contact
     status: confirmed
-    value: '18258162683'
-    updated_at: '2026-11-20'
-  - id: contact.email
-    type: contact
-    status: pending
-    value: PENDING_ONLY_NOT_PUBLIC_EMAIL
-    updated_at: '2026-11-11'
+    value: '159****8888'
+    updated_at: '2026-11-22'

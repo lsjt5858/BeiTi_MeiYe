@@ -1,5 +1,5 @@
 ---
-import { getReviews, getLocations, getFact, site } from "../lib/content";
+import { getReviews, getLocations, getContactPhone, site } from "../lib/content";
 import { localeFromPath, localizedPath, translate } from '../lib/i18n.ts';
 import { getSocialChannels } from '../lib/social.ts';
 import SocialLogo from './SocialLogo.astro';
@@ -9,9 +9,7 @@ const href = (path: string) => localizedPath(path, locale);
 const year = new Date().getFullYear();
 const socialChannels = getSocialChannels();
 const campus = getLocations()[0];
-const phoneFact = getFact('contact.phone');
-const phone = typeof phoneFact === 'string' && /^\+?[\d ()-]+$/.test(phoneFact)
-  && phoneFact.replace(/\D/g, '').length >= 7 && phoneFact.replace(/\D/g, '').length <= 15 ? phoneFact : undefined;
+const { display: phone, tel } = getContactPhone();
 ---
 <footer class="site-footer">
   <div class="container footer-main">
@@ -22,7 +20,7 @@ const phone = typeof phoneFact === 'string' && /^\+?[\d ()-]+$/.test(phoneFact)
       {campus && <address class="footer-nap">
         <span>{tr(campus.name)}</span>
         <span>{tr(campus.address)}</span>
-        {phone && <a href={`tel:${phone.replace(/[ ()-]/g, '')}`}>{phone}</a>}
+        {phone && <span>{tr('咨询电话：')}{tel ? <a href={`tel:${tel}`}>{phone}</a> : <span>{phone}</span>}</span>}
       </address>}
       <nav id="social-profiles" class="footer-social" aria-label={tr('关注贝缇')}>
         <ul class="social-icon-list">

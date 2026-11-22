@@ -1,6 +1,6 @@
 ---
 import InnerPage from '../_shared/InnerPage.astro';
-import { getLocations, getArticles, getFact } from '../../lib/content.ts';
+import { getLocations, getArticles, getContactPhone } from '../../lib/content.ts';
 import { safeSlug, safeHttpUrl, formatValue } from '../_shared/values.ts';
 export function getStaticPaths() {
   return getLocations().map((location) => ({ params: { slug: safeSlug(location.slug) }, props: { location } }));
@@ -13,16 +13,13 @@ const address = formatValue(location.address);
 const transport = formatValue(location.transport);
 const hours = formatValue(location.hours);
 const booking = formatValue(location.booking);
-const phoneFact = getFact('contact.phone');
-const phone = typeof phoneFact === 'string' && /^\+?[\d ()-]+$/.test(phoneFact)
-  && phoneFact.replace(/\D/g, '').length >= 7 && phoneFact.replace(/\D/g, '').length <= 15 ? phoneFact : undefined;
-const tel = phone?.replace(/[ ()-]/g, '');
+const { display: phone, tel } = getContactPhone();
 const description = address
   ? `${location.name}在${address}，${transport || '按地址导航'}。出发前先打电话，确认当天安排。`
   : `${location.name}的具体地址尚未公开。请在地址与时间确认前不要出发。`;
 const jsonLd = address ? {
   '@context': 'https://schema.org', '@type': 'LocalBusiness', name: location.name,
-  address, ...(phone ? { telephone: phone } : {}), ...(mapUrl ? { hasMap: mapUrl } : {}),
+  address, ...(tel ? { telephone: phone } : {}), ...(mapUrl ? { hasMap: mapUrl } : {}),
 } : undefined;
 const articles = getArticles().filter((article) => article.fact_refs.includes(location.id));
 ---
@@ -32,7 +29,7 @@ const articles = getArticles().filter((article) => article.fact_refs.includes(lo
     <dl class="fact-grid">
       <div><dt>地址</dt><dd>{address || '尚未公开确认'}</dd></div>
       <div><dt>地铁</dt><dd>{transport || '尚未公开确认'}</dd></div>
-      <div><dt>电话</dt><dd>{tel && phone ? <a class="text-link" href={`tel:${tel}`}>{phone}</a> : '尚未公开确认'}</dd></div>
+      {phone && <div><dt>咨询电话</dt><dd>{tel ? <a class="text-link" href={`tel:${tel}`}>{phone}</a> : <span>{phone}</span>}</dd></div>}
       {hours && <div><dt>开放时间</dt><dd>{hours}</dd></div>}
       <div><dt>到访安排</dt><dd>{booking || '出发前请先电话确认当天安排。'}</dd></div>
     </dl>

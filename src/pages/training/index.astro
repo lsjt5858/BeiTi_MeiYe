@@ -6,7 +6,7 @@ import VisualIntro from '../../components/VisualIntro.astro';
 import VisualPhoto from '../../components/VisualPhoto.astro';
 import { copy, imageById, trainingNotice, visualSeries } from '../../lib/visual-catalog.ts';
 import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
-import { getFact, getLocations } from '../../lib/content.ts';
+import { getContactPhone, getLocations } from '../../lib/content.ts';
 const locale = localeFromPath(Astro.url.pathname);
 const en = locale === 'en';
 const href = (path: string) => localizedPath(path, locale);
@@ -14,10 +14,7 @@ const series = visualSeries.filter(item => item.section === 'training');
 const campus = getLocations()[0];
 const campusAddress = en ? 'Building 16, Jintong Digital Economy Science and Innovation Park, 29 Xingye Street, Gongshu District, Hangzhou' : campus?.address;
 const campusTransport = en ? 'Metro Line 4, Huazhong South Road Station, Exit E' : campus?.transport;
-const phoneFact = getFact('contact.phone');
-const phone = typeof phoneFact === 'string' && /^\+?[\d ()-]+$/.test(phoneFact)
-  && phoneFact.replace(/\D/g, '').length >= 7 && phoneFact.replace(/\D/g, '').length <= 15 ? phoneFact : undefined;
-const tel = phone?.replace(/[ ()-]/g, '');
+const { display: phone, tel } = getContactPhone();
 const title = en ? 'Beauty training' : '美业培训';
 const description = en ? 'Explore nail training, lash training and salon management as learning directions. Dates and fees follow the actual schedule.' : '了解美甲培训、美睫培训与店务运营管理的学习方向；课期与费用以实际安排为准。';
 ---
@@ -42,7 +39,7 @@ const description = en ? 'Explore nail training, lash training and salon managem
       <div>
         <p>{campusAddress}</p>
         <p>{campusTransport}</p>
-        {phone && <p>{en ? 'To see a class, call ' : '想来看课堂，先拨 '}<a class="text-link" href={`tel:${tel}`}>{phone}</a>{en ? ' first. Ask whether a class or a trial session is available that day.' : '；当天有没有课、能不能试听，电话里问最准。'}</p>}
+        {phone && <p>{en ? 'Consultation phone: ' : '咨询电话：'}{tel ? <a class="text-link" href={`tel:${tel}`}>{phone}</a> : <span>{phone}</span>}</p>}
         <a class="text-link" href={href('/locations/')}>{en ? 'Campus address and visiting notes' : '校区地址与到访说明'} ↗</a>
       </div>
     </section>}

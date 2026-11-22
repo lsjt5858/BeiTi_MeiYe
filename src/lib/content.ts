@@ -388,6 +388,16 @@ export const site = validateSite(JSON.parse(readFileSync(join(defaultRoot, 'clie
 let defaultModel: ContentModel | undefined;
 function current() { return defaultModel ??= loadContent(defaultRoot); }
 export const getFact = <T = FactValue>(id: string) => current().getFact<T>(id);
+/** 脱敏号码仅用于展示；完整且格式有效的号码才生成拨号链接。 */
+export function getContactPhone(model: Pick<ContentModel, 'getFact'> = { getFact }): { display?: string; tel?: string } {
+  const value = model.getFact('contact.phone');
+  if (typeof value !== 'string') return {};
+  const digits = value.replace(/\D/g, '');
+  if (/^\+?[\d ()-]+$/.test(value) && digits.length >= 7 && digits.length <= 15) {
+    return { display: value, tel: value.replace(/[ ()-]/g, '') };
+  }
+  return /^1\d{2}\*{4}\d{4}$/.test(value) ? { display: value } : {};
+}
 export const getServices = () => current().getServices();
 export const getLocations = () => current().getLocations();
 export const getFaqs = () => current().getFaqs();

@@ -1,7 +1,7 @@
 import { readdirSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadContent, normalizePath, type ContentModel } from './content.ts';
+import { loadContent, normalizePath, getContactPhone, type ContentModel } from './content.ts';
 import { sourcePath, localizedPath, basePages } from './i18n.ts';
 import { visualContentPaths, visualUpdatedAt } from './visual-routes.ts';
 import { getSocialChannels } from './social.ts';
@@ -49,7 +49,7 @@ export function getPageSeo(path: string, _title?: string, _description?: string)
 export function organizationFor(model: ContentModel): Record<string, unknown> {
   const brand = model.getFact<string>('brand');
   if (typeof brand !== 'string' || !brand) return {};
-  const phone = model.getFact<string>('contact.phone');
+  const { display: phone, tel } = getContactPhone(model);
   const email = model.getFact<string>('contact.email');
   const address = model.getLocations()[0]?.address;
   // sameAs identifies the account; access and attribution parameters stay in UI links only.
@@ -62,7 +62,7 @@ export function organizationFor(model: ContentModel): Record<string, unknown> {
     '@type': 'Organization',
     name: brand,
     ...(model.site.base_url ? { url: model.site.base_url } : {}),
-    ...(typeof phone === 'string' && phone ? { telephone: phone } : {}),
+    ...(tel ? { telephone: phone } : {}),
     ...(typeof address === 'string' && address ? { address } : {}),
     ...(typeof email === 'string' && email ? { email } : {}),
     ...(sameAs.length ? { sameAs } : {}),
