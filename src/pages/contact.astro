@@ -2,16 +2,16 @@
 import InnerPage from './_shared/InnerPage.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { getFact, getLocations, getContactPhone } from '../lib/content.ts';
-import { INQUIRY_INTERESTS, INQUIRY_LIMITS, INQUIRY_EMAIL_PATTERN } from '../lib/contact.ts';
-import { getSocialChannels } from '../lib/social.ts';
+import { INQUIRY_INTERESTS, INQUIRY_SOURCES, INQUIRY_LIMITS, INQUIRY_EMAIL_PATTERN } from '../lib/contact.ts';
 import { formatValue } from './_shared/values.ts';
 const campus = getLocations()[0];
 const emailFact = getFact('contact.email');
+const wechatFact = getFact('contact.wechat');
+const wechat = typeof wechatFact === 'string' ? wechatFact : undefined;
 const { display: phone, tel } = getContactPhone();
 const email = typeof emailFact === 'string' && INQUIRY_EMAIL_PATTERN.test(emailFact)
   && !/[\u0000-\u001f\u007f]/.test(emailFact) ? emailFact : undefined;
-const socialChannels = getSocialChannels().filter(channel => channel.url);
-const hasChannel = !!(phone || email || socialChannels.length);
+const hasChannel = !!(phone || email || wechat);
 ---
 <InnerPage title="把想了解的，说清楚。" eyebrow="Contact / 咨询需求整理" description="把想了解的方向和问题写下来，整理成一份可带走的需求摘要。" breadcrumbs={[{ label: '咨询需求整理' }]}>
   <section class="editorial-section contact-grid">
@@ -36,7 +36,12 @@ const hasChannel = !!(phone || email || socialChannels.length);
           <div class="form-field">
             <label for="contact-interest" class="field-label"><svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5h12M8 12h12M8 19h12M3 5h.01M3 12h.01M3 19h.01"/></svg><span>咨询意向 <span class="field-required" aria-hidden="true">*</span><span class="visually-hidden">必填</span></span></label>
             <select id="contact-interest" name="interest" required aria-describedby="interest-help interest-error"><option value="">请选择您想了解的方向</option>{INQUIRY_INTERESTS.map((interest) => <option value={interest}>{interest}</option>)}</select>
-            <p id="interest-help" class="field-help">这些是您希望了解的方向，不是已开设服务的清单。</p><p id="interest-error" class="field-error"></p>
+            <p id="interest-help" class="field-help">选择你想了解的课程。</p><p id="interest-error" class="field-error"></p>
+          </div>
+          <div class="form-field">
+            <label for="contact-source" class="field-label"><svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 12 8-5M8 12l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="5" r="3"/><circle cx="19" cy="19" r="3"/></svg><span>你最早是从哪里了解到贝缇的？ <span class="field-optional">选填</span></span></label>
+            <select id="contact-source" name="source" aria-describedby="source-help source-error"><option value="">请选择（可不填）</option>{INQUIRY_SOURCES.map((source) => <option value={source.value}>{source.label}</option>)}</select>
+            <p id="source-help" class="field-help">按第一次了解到我们的渠道选择即可。</p><p id="source-error" class="field-error"></p>
           </div>
           <div class="form-field">
             <label for="contact-message" class="field-label"><svg class="field-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H8l-5 3v-6a8 8 0 0 1 5-14h5a8 8 0 0 1 8 9Z"/><path d="M7 8h10M7 12h7"/></svg><span>您想了解的问题 <span class="field-required" aria-hidden="true">*</span><span class="visually-hidden">必填</span></span></label>
@@ -59,11 +64,11 @@ const hasChannel = !!(phone || email || socialChannels.length);
     </div>
     <aside class="contact-note" aria-labelledby="channel-heading">
       <p class="eyebrow">02 / BEFORE SHARING</p><h3 id="channel-heading">目前可以如何联系？</h3>
-      {hasChannel ? <><p>可通过抖音、小红书主页留言，确认到访或试听安排。</p><ul class="channel-list">
+      {hasChannel ? <><p>可通过微信沟通，或使用页脚的社媒入口留言，确认到访或试听安排。</p><ul class="channel-list">
         {phone && <li><span>咨询电话：{tel ? <a class="text-link" href={`tel:${tel}`}>{phone}</a> : <span>{phone}</span>}</span></li>}
+        {wechat && <li><span>{'微信：'}<span>{wechat}</span></span></li>}
         {campus && <li><span class="field-help">校区</span><a class="text-link" href="/locations/">{campus.name}</a><span class="field-help">{formatValue(campus.address)}</span><span class="field-help">{formatValue(campus.transport)}</span></li>}
         {email && <li><span class="field-help">邮箱</span><a class="text-link" href={`mailto:${email.split('@').map(encodeURIComponent).join('@')}`}>{email}</a></li>}
-        {socialChannels.map(channel => <li><span class="field-help">{channel.name}</span><a class="text-link" href={channel.url} target="_blank" rel="noopener noreferrer">访问主页 <span aria-hidden="true">↗</span><span class="visually-hidden">（新窗口打开）</span></a></li>)}
       </ul></> : <p>当前可以先整理问题，保存摘要后再联系。</p>}
       <div class="contact-note-rule"><h3>整理 → 核对 → 自行选择</h3><p>生成摘要后，您可以复制或下载，按需分享给校区。</p></div>
       <a class="text-link" href="/faq/">查看咨询操作问答 <span aria-hidden="true">→</span></a>
@@ -91,6 +96,7 @@ const hasChannel = !!(phone || email || socialChannels.length);
   const name = document.querySelector<HTMLInputElement>('#contact-name');
   const contact = document.querySelector<HTMLInputElement>('#contact-contact');
   const interest = document.querySelector<HTMLSelectElement>('#contact-interest');
+  const source = document.querySelector<HTMLSelectElement>('#contact-source');
   const message = document.querySelector<HTMLTextAreaElement>('#contact-message');
   const privacy = document.querySelector<HTMLInputElement>('#contact-consent');
   const website = document.querySelector<HTMLInputElement>('#contact-website');
@@ -105,14 +111,15 @@ const hasChannel = !!(phone || email || socialChannels.length);
   const fallback = document.querySelector<HTMLTextAreaElement>('#copy-fallback');
   const count = document.querySelector<HTMLElement>('#message-count');
 
-  if (form && fields && organize && name && contact && interest && message && privacy && website && errorSummary && errorList && result && output && copy && download && copyStatus && fallbackArea && fallback && count) {
+  if (form && fields && organize && name && contact && interest && source && message && privacy && website && errorSummary && errorList && result && output && copy && download && copyStatus && fallbackArea && fallback && count) {
     let summary = '';
     let revision = 0;
-    const inputs = { name, contact, interest, message, privacy, website };
+    const inputs = { name, contact, interest, source, message, privacy, website };
     const errors: Partial<Record<InquiryField, HTMLElement | null>> = {
       name: document.querySelector('#name-error'),
       contact: document.querySelector('#contact-error'),
       interest: document.querySelector('#interest-error'),
+      source: document.querySelector('#source-error'),
       message: document.querySelector('#message-error'),
       privacy: document.querySelector('#privacy-error'),
     };
@@ -165,7 +172,7 @@ const hasChannel = !!(phone || email || socialChannels.length);
       clearErrors();
       invalidate();
       const validation = validateInquiry({
-        name: name.value, contact: contact.value, interest: interest.value, message: message.value,
+        name: name.value, contact: contact.value, interest: interest.value, source: source.value, message: message.value,
         privacy: privacy.checked, website: website.value,
       }, locale);
       if (!validation.ok) {
@@ -270,7 +277,6 @@ const hasChannel = !!(phone || email || socialChannels.length);
 <style>
   [hidden] { display: none !important; }
   .contact-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, .85fr); gap: clamp(2rem, 6vw, 7rem); align-items: start; }
-  .form-intro { line-height: 1.8; max-width: 42rem; margin-bottom: 1.5rem; }
   fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
   .field-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
@@ -279,6 +285,7 @@ const hasChannel = !!(phone || email || socialChannels.length);
   .field-label { display: flex; align-items: center; gap: .6rem; font-weight: 500; }
   .field-icon { flex-shrink: 0; color: var(--muted); }
   .field-required { margin-left: .15rem; font-size: 1em; color: var(--gold-dark); }
+  .field-optional { margin-left: .4rem; color: var(--muted); font-size: 13px; font-weight: 400; white-space: nowrap; }
   input:not([type=checkbox]), select, textarea { width: 100%; min-height: 3.3rem; padding: .8rem 1rem; color: inherit; font: inherit; line-height: 1.7; border: 1px solid var(--line, #b9ae9a); background: rgb(255 255 255 / 55%); border-radius: var(--field-radius); transition: border-color .2s, background .2s; }
   input::placeholder, textarea::placeholder { color: var(--muted); opacity: .85; }
   input:not([type=checkbox]):hover, select:hover, textarea:hover { border-color: #a5afa6; }
@@ -302,7 +309,6 @@ const hasChannel = !!(phone || email || socialChannels.length);
   .contact-note { padding-left: clamp(1.5rem, 3vw, 3rem); border-left: 1px solid var(--line, #d9d1c4); }
   .contact-note h3 { margin-top: .8rem; }
   .contact-note p { line-height: 1.9; }
-  .channel-status { font-size: 1.2rem; }
   .contact-note-rule { padding-block: 1.5rem; margin-top: 2rem; border-top: 1px solid var(--line, #d9d1c4); }
   .channel-list { list-style: none; padding: 0; }
   .channel-list li { display: grid; gap: .5rem; margin-block: 1.5rem; overflow-wrap: anywhere; }

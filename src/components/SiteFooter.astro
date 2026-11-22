@@ -1,5 +1,5 @@
 ---
-import { getReviews, getLocations, getContactPhone, site } from "../lib/content";
+import { getReviews, getLocations, getContactPhone, getFact, site } from "../lib/content";
 import { localeFromPath, localizedPath, translate } from '../lib/i18n.ts';
 import { getSocialChannels } from '../lib/social.ts';
 import SocialLogo from './SocialLogo.astro';
@@ -9,7 +9,16 @@ const href = (path: string) => localizedPath(path, locale);
 const year = new Date().getFullYear();
 const socialChannels = getSocialChannels();
 const campus = getLocations()[0];
+const campusMapUrl = campus?.address
+  ? `https://api.map.baidu.com/geocoder?${new URLSearchParams({ address: campus.address, output: 'html', src: 'webapp.beitimeiye' })}`
+  : undefined;
+const mapLabel = locale === 'en' ? 'View address in Baidu Maps (opens in a new tab)' : '在百度地图查看（新窗口打开）';
+const amapUrl = campus?.address
+  ? `https://uri.amap.com/search?${new URLSearchParams({ keyword: campus.address, city: '杭州市', view: 'map', src: 'beitimeiye', callnative: '0' })}`
+  : undefined;
 const { display: phone, tel } = getContactPhone();
+const wechatFact = getFact('contact.wechat');
+const wechat = typeof wechatFact === 'string' ? wechatFact : undefined;
 ---
 <footer class="site-footer">
   <div class="container footer-main">
@@ -19,16 +28,21 @@ const { display: phone, tel } = getContactPhone();
       <p class="footer-wordmark" aria-hidden="true">BEITI BEAUTY</p>
       {campus && <address class="footer-nap">
         <span>{tr(campus.name)}</span>
-        <span>{tr(campus.address)}</span>
+        {campusMapUrl ? <a href={campusMapUrl} target="_blank" rel="noopener noreferrer" title={mapLabel} aria-label={`${tr(campus.address)} · ${mapLabel}`}>{tr(campus.address)} <span aria-hidden="true">↗</span></a> : <span>{tr(campus.address)}</span>}
         {phone && <span>{tr('咨询电话：')}{tel ? <a href={`tel:${tel}`}>{phone}</a> : <span>{phone}</span>}</span>}
+        {wechat && <span>{tr('微信：')}{wechat}</span>}
       </address>}
       <nav id="social-profiles" class="footer-social" aria-label={tr('关注贝缇')}>
         <ul class="social-icon-list">
-          {socialChannels.map(channel => <li>
-            <a class:list={['social-icon-link', { 'is-external': !channel.url }]} href={channel.url ?? channel.officialUrl} target="_blank" rel="noopener noreferrer" aria-label={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网')}${tr('（新窗口打开）')}`} title={`${tr(channel.name)} · ${tr(channel.url ? '账号主页' : '平台官网')}`}>
+          {socialChannels.map(channel => {
+            const campusMap = channel.id === 'amap' ? amapUrl : undefined;
+            const label = channel.id === 'amap' && locale === 'en' ? 'Amap' : tr(channel.name);
+            const destination = campusMap ? (locale === 'en' ? 'Campus map' : '校区地图') : tr(channel.url ? '账号主页' : '平台官网');
+            return <li>
+            <a class:list={['social-icon-link', { 'is-external': !channel.url && !campusMap }]} href={campusMap ?? channel.url ?? channel.officialUrl} target="_blank" rel="noopener noreferrer" aria-label={`${label} · ${destination}${tr('（新窗口打开）')}`} title={`${label} · ${destination}`}>
               <SocialLogo platform={channel.id} />
             </a>
-          </li>)}
+          </li>; })}
         </ul>
       </nav>
     </div>

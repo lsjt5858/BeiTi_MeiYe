@@ -2,17 +2,18 @@
 import InnerPage from '../_shared/InnerPage.astro';
 import { getLocations, getContactPhone } from '../../lib/content.ts';
 import { safeSlug, formatValue } from '../_shared/values.ts';
+import { localeFromPath } from '../../lib/i18n.ts';
+const en = localeFromPath(Astro.url.pathname) === 'en';
 const locations = getLocations();
 const { display: phone, tel } = getContactPhone();
 const description = locations.length
-  ? '杭州校区的地址、地铁口和电话都写在这里。出发前先打个电话，确认当天有没有课、能不能试听。'
+  ? (en ? 'Hangzhou campus: Building 16, 29 Xingye Street, Gongshu District. Metro Line 4, Huazhong South Road Station, Exit E.' : '杭州拱墅校区，兴业街29号金通数字经济科创园16幢。地铁4号线华中南路站E口。')
   : '目前没有可公开的地点。请不要根据品牌影像推断校区地址。';
 ---
 <InnerPage title="到这里来。" eyebrow="Locations / 校区地址" description={description} breadcrumbs={[{ label: '地点信息' }]}>
   <section class="editorial-section">
     {locations.length ? <>
       <h2>杭州校区</h2>
-      <p class="intro-copy">上课、试听和到访都在这里。地址在拱墅区兴业街，地铁 4 号线华中南路站 E 口。</p>
       <ol class="editorial-list">
         {locations.map((location, index) => <li class="editorial-row">
           <div><span class="row-number">{String(index + 1).padStart(2, '0')}</span><h3><a class="text-link" href={`/locations/${safeSlug(location.slug)}/`}>{location.name}</a></h3></div>
@@ -26,25 +27,9 @@ const description = locations.length
       </ol>
     </> : <div class="empty-editorial empty-state"><p class="eyebrow">Before your visit</p><h2>一次安心到访，<br />从信息确认开始。</h2><p>地址、交通方式与到访规则将在确认后公开。现在您可以先写下希望到访的时间段，以及需要了解的事项。</p><a class="button" href="/contact/">整理到访相关问题</a></div>}
   </section>
-  <section class="editorial-section" aria-labelledby="campus-practice-heading">
-    <h2 id="campus-practice-heading">教室里会发生什么</h2>
-    <p class="intro-copy">练习从看懂边界开始：前置做到哪里、纸托卡在什么位置，都要先判断，再动手。</p>
-    <div class="technique-pair">
-      <figure>
-        <img src="/images/technique/russian-prep-safe-pocket.jpg" alt="俄式前置边界练习，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" />
-        <figcaption>俄式前置，边界先行 · 品牌视觉示意</figcaption>
-      </figure>
-      <figure>
-        <img src="/images/technique/paper-form-alignment.jpg" alt="纸托定位练习，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" />
-        <figcaption>纸托定位，先看支撑 · 品牌视觉示意</figcaption>
-      </figure>
-    </div>
-  </section>
   <section class="editorial-section">
-    <h2>出发前，先打个电话</h2>
-    <div class="editorial-row"><h3>当天有没有课</h3><p>哪天有课、几点到合适，电话里问一句最准，免得白跑。</p></div>
-    <div class="editorial-row"><h3>试听怎么约</h3><p>想先看看课堂，就在电话里说明想了解的方向和方便的时间，再确认能不能安排。</p></div>
-    <div class="editorial-row"><h3>到了怎么找</h3><p>园区在兴业街 29 号，上课在 16 幢。到了不确定入口，拨同一个号码。</p></div>
+    <h2>{en ? 'Arrange a visit' : '来校区看看'}</h2>
+    <p class="intro-copy">{en ? 'Message us on WeChat at hzbeiti with the course you are interested in and a convenient visiting time.' : '微信 hzbeiti，告诉我们想了解的课程和方便到访的时间。'}</p>
     <div class="page-actions">{tel ? <a class="button" href={`tel:${tel}`}>打电话 {phone}</a> : <a class="button" href="/contact/">整理到访问题</a>}<a class="text-link" href="/contact/">先把问题写下来</a></div>
   </section>
 </InnerPage>

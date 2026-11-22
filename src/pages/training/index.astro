@@ -1,11 +1,12 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import SectionHeader from '../../components/SectionHeader.astro';
-import Callout from '../../components/Callout.astro';
 import VisualIntro from '../../components/VisualIntro.astro';
 import VisualPhoto from '../../components/VisualPhoto.astro';
-import { copy, imageById, trainingNotice, visualSeries } from '../../lib/visual-catalog.ts';
-import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
+import RetrainingNote from '../../components/RetrainingNote.astro';
+import { copy, imageById, visualSeries } from '../../lib/visual-catalog.ts';
+import { localeFromPath, localizedPath, translate } from '../../lib/i18n.ts';
+import { getCourseOutline, type TrainingDirection } from '../../lib/training.ts';
 import { getContactPhone, getLocations } from '../../lib/content.ts';
 const locale = localeFromPath(Astro.url.pathname);
 const en = locale === 'en';
@@ -16,24 +17,22 @@ const campusAddress = en ? 'Building 16, Jintong Digital Economy Science and Inn
 const campusTransport = en ? 'Metro Line 4, Huazhong South Road Station, Exit E' : campus?.transport;
 const { display: phone, tel } = getContactPhone();
 const title = en ? 'Beauty training' : '美业培训';
-const description = en ? 'Explore nail training, lash training and salon management as learning directions. Dates and fees follow the actual schedule.' : '了解美甲培训、美睫培训与店务运营管理的学习方向；课期与费用以实际安排为准。';
+const description = en ? 'Nail preparation, colour and extensions; lash techniques and design; photography, marketing and salon operations.' : '美甲的前置、单色与延长，美睫的手法与款式，再到作品拍摄和店务运营。';
 ---
 <SiteLayout title={title} description={description} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: title }]}>
   <VisualIntro title={title} subtitle={en ? 'Turn inspiration into a considered craft.' : '把热爱，练成技艺。'} description={description} eyebrow="BEITI / BEAUTY LEARNING" image="01-08" />
   <div class="container visual-page-body">
-    <Callout tone="note" title={en ? 'Learning direction notice' : '学习方向说明'}>
-      <p>{copy(trainingNotice, locale)}</p>
-    </Callout>
     <section class="visual-training-list" aria-label={en ? 'Learning directions' : '学习方向'}>
-      <SectionHeader number="01" eyebrow="LEARNING DIRECTIONS" title={en ? 'Three directions to consider' : '三条学习方向'} />
+      <SectionHeader number="01" eyebrow="COURSES" title={en ? 'Course content' : '课程内容'} />
       {series.map((item, index) => <article class="visual-training-row">
         <a class="visual-training-photo" href={href(item.path)} aria-label={copy(item.title, locale)}><VisualPhoto image={imageById(item.cover)} /></a>
         <div class="visual-training-copy"><p class="eyebrow">0{index + 1} / {en ? 'LEARNING DIRECTION' : '学习方向'}</p><h2><a href={href(item.path)}>{copy(item.title, locale)}</a></h2>
-          <p class="visual-subtitle">{copy(item.subtitle, locale)}</p><p>{copy(item.description, locale)}</p>
-          <a class="text-link" href={href(item.path)}>{en ? 'Explore this direction' : '了解学习方向'} <span aria-hidden="true">↗</span></a>
+          <p>{translate(getCourseOutline(item.path.split('/')[2] as TrainingDirection)?.intro ?? copy(item.description, locale), locale)}</p>
+          <a class="text-link" href={href(item.path)}>{en ? 'View course content' : '查看课程内容'} <span aria-hidden="true">↗</span></a>
         </div>
       </article>)}
     </section>
+    <RetrainingNote />
     {campus && <section class="visual-campus" aria-labelledby="campus-title">
       <div><p class="eyebrow">CAMPUS</p><h2 id="campus-title">{en ? 'Where classes take place' : '在哪里上课'}</h2></div>
       <div>
@@ -43,14 +42,6 @@ const description = en ? 'Explore nail training, lash training and salon managem
         <a class="text-link" href={href('/locations/')}>{en ? 'Campus address and visiting notes' : '校区地址与到访说明'} ↗</a>
       </div>
     </section>}
-    <section class="visual-technique-strip" aria-labelledby="training-technique-title">
-      <div class="visual-section-heading"><p class="eyebrow">TECHNIQUE NOTES</p><h2 id="training-technique-title">{en ? 'What practice looks like' : '练习时，先看什么'}</h2><p>{en ? 'A few details worth noticing before you choose a direction.' : '选方向之前，先看看手上要练的细节。'}</p></div>
-      <div class="technique-grid">
-        <figure><img src="/images/technique/nail-shape-three-views.jpg" alt="美甲修形练习，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Nail shape: read it from three angles' : '甲型，换个角度看'}</figcaption></figure>
-        <figure><img src="/images/technique/lash-curl-jbcd.jpg" alt="美睫翘度练习，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Lash curl: look at the actual arc' : '翘度，先看实际弧线'}</figcaption></figure>
-        <figure><img src="/images/technique/nail-tool-maintenance.jpg" alt="美甲工具养护与店务练习，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Tools: separate the tasks first' : '工具，先分清任务'}</figcaption></figure>
-      </div>
-    </section>
     <div class="visual-bottom-link"><p>{en ? 'Discover the textures and details that inspire your learning.' : '先看看细节，找到自己的审美方向。'}</p><a class="text-link" href={href('/gallery/')}>{en ? 'Explore the visual collection' : '浏览美学图鉴'} ↗</a></div>
   </div>
 </SiteLayout>

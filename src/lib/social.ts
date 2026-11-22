@@ -13,7 +13,7 @@ const platforms = [
   { id: 'youtube', region: 'international', name: 'YouTube', description: '教学长视频与 Shorts', officialUrl: 'https://www.youtube.com/' },
   { id: 'facebook', region: 'international', name: 'Facebook', description: '品牌主页与社群交流', officialUrl: 'https://www.facebook.com/' },
   { id: 'x', region: 'international', name: 'X', description: '品牌动态与海外交流', officialUrl: 'https://x.com/' },
-  { id: 'google-business', region: 'international', name: 'Google Maps', description: '海外门店位置与商家资料', officialUrl: 'https://www.google.com/maps', needsLocation: true },
+  { id: 'amap', region: 'china', name: '高德地图', description: '校区位置与路线查询', officialUrl: 'https://www.amap.com/', needsLocation: true },
 ] as const;
 
 export function getSocialChannels(model: Pick<ContentModel, 'getFact'> = { getFact }) {

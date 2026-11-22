@@ -29,10 +29,6 @@ export const conceptNotice: Copy = {
   zh: '影像仅供审美与学习方向参考，不代表真实课堂、人员或客户成果。',
   en: 'Imagery is for visual and learning inspiration, not actual classes, people or customer results.',
 };
-export const trainingNotice: Copy = {
-  zh: '以下为学习方向参考；课期与费用以实际安排为准。实操影像不作为教学操作标准。',
-  en: 'These are learning directions; dates and fees follow the actual schedule. Practice imagery is not an operating guide.',
-};
 export const visualSeries: VisualSeries[] = [
   {
     slug: 'nail-training', section: 'training', path: '/training/nails/',

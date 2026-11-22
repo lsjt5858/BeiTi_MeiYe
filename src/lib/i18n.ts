@@ -29,6 +29,8 @@ export function translate(text: string, locale: Locale): string {
   const trimmed = text.trim();
   if (Object.hasOwn(english, trimmed)) return text.replace(trimmed, () => english[trimmed]);
   const special = trimmed
+    .replace(/^·\s*约\s*(\d+)\s*分钟阅读\s*·\s*(\d+)\s*个章节$/, '· About $1 minutes · $2 sections')
+    .replace(/^(\d+)\s*节$/, '$1 sections')
     .replace(/^(\d+) 个已确认问题$/, '$1 confirmed questions')
     .replace(/^找到 (\d+) 个问题$/, '$1 questions found')
     .replace(/^请检查以下 (\d+) 处填写。$/, 'Please check $1 fields.')

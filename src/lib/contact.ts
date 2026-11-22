@@ -4,6 +4,7 @@ export interface InquiryInput {
   name: string;
   contact: string;
   interest: string;
+  source?: string;
   message: string;
   privacy: boolean;
   website: string;
@@ -21,6 +22,15 @@ export type InquiryResult =
 
 // These are visitor intentions, not a catalogue of confirmed services.
 export const INQUIRY_INTERESTS = ['美甲培训', '美睫培训', '店务运营管理', '视频美学', '课程了解', '其他咨询'] as const;
+export const INQUIRY_SOURCES = [
+  { value: 'douyin', label: '抖音' },
+  { value: 'xiaohongshu', label: '小红书' },
+  { value: 'doubao', label: '豆包' },
+  { value: 'other-ai', label: '其他 AI 平台' },
+  { value: 'search', label: '搜索引擎' },
+  { value: 'friend', label: '朋友介绍' },
+  { value: 'other', label: '其他' },
+] as const;
 const INQUIRY_INTEREST_CODES = [
   ['nails', '美甲培训'],
   ['lashes', '美睫培训'],
@@ -47,6 +57,7 @@ export function validateInquiry(input: InquiryInput, locale: Locale = 'zh-CN'): 
   const contact = input.contact;
   const message = input.message.replace(/\r\n?/g, '\n').trim();
   const interest = getInquiryInterest(input.interest);
+  const source = input.source === undefined ? '' : input.source;
   const errors: InquiryErrors = {};
   const singleLineControls = /[\u0000-\u001f\u007f]/;
 
@@ -58,6 +69,9 @@ export function validateInquiry(input: InquiryInput, locale: Locale = 'zh-CN'): 
   else if (!INQUIRY_PHONE_PATTERN.test(contact)) errors.contact = '手机号码必须为 11 位数字，不含空格、符号或其他文字。';
 
   if (!interest) errors.interest = '请选择一个咨询意向；它不代表服务已开设。';
+  if (typeof source !== 'string' || (source !== '' && !INQUIRY_SOURCES.some((item) => item.value === source))) {
+    errors.source = '请选择列表中的了解来源，或留空。';
+  }
   if (!message) errors.message = '请简要描述您想了解的问题。';
   else if (input.message.length > INQUIRY_LIMITS.message) errors.message = '留言请控制在 1200 个字符以内。';
   else if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(message)) {
@@ -67,11 +81,12 @@ export function validateInquiry(input: InquiryInput, locale: Locale = 'zh-CN'): 
   if (input.website.trim()) errors.website = '无法整理这次填写，请清空表单后重新填写。';
 
   if (Object.keys(errors).length) return { ok: false, errors: Object.fromEntries(Object.entries(errors).map(([field, message]) => [field, translate(message, locale)])) };
-  return { ok: true, value: { name, contact, interest, message, privacy: true } };
+  return { ok: true, value: { name, contact, interest, ...(source ? { source } : {}), message, privacy: true } };
 }
 
 export function buildInquirySummary(inquiry: InquiryData, locale: Locale = 'zh-CN'): string {
   const tr = (text: string) => translate(text, locale);
+  const source = INQUIRY_SOURCES.find((item) => item.value === inquiry.source);
   return [
     tr('咨询需求'),
     tr('状态：需求摘要已生成'),
@@ -79,6 +94,7 @@ export function buildInquirySummary(inquiry: InquiryData, locale: Locale = 'zh-C
     `${tr('称呼：')}${inquiry.name}`,
     `${tr('联系方式：')}${inquiry.contact}`,
     `${tr('咨询意向：')}${tr(inquiry.interest)}`,
+    ...(source ? [`${tr('了解来源：')}${tr(source.label)}`] : []),
     '',
     tr('想了解的问题：'),
     inquiry.message,

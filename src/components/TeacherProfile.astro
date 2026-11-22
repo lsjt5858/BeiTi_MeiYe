@@ -1,0 +1,39 @@
+---
+import type { AboutTeamMember } from '../pages/_shared/about.ts';
+import { localeFromPath, translate } from '../lib/i18n.ts';
+
+interface Props { member: AboutTeamMember }
+const { member } = Astro.props;
+const locale = localeFromPath(Astro.url.pathname);
+const tr = (text: string) => translate(text, locale);
+---
+<li class:list={['teacher-profile', { 'teacher-profile-with-photo': !!member.photo }]}>
+  {member.photo && <figure class="teacher-portrait">
+    <img src={member.photo.src} alt={tr(member.photo.alt)} width={member.photo.width} height={member.photo.height} loading="lazy" decoding="async" />
+    {member.photo.caption && <figcaption>{tr(member.photo.caption)}</figcaption>}
+  </figure>}
+  <div class="teacher-copy">
+    <h3>{tr(member.name)}</h3>
+    {member.role && <p class="teacher-role">{tr(member.role)}</p>}
+    {member.bio && <p class="teacher-bio">{tr(member.bio)}</p>}
+  </div>
+</li>
+
+<style>
+  .teacher-profile { border-top: 1px solid var(--line); padding-block: 28px; min-width: 0; }
+  .teacher-profile-with-photo { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: start; gap: 28px; }
+  .teacher-portrait { margin: 0; }
+  .teacher-portrait img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 25%; }
+  .teacher-portrait figcaption { margin-top: 9px; font-size: 12px; line-height: 1.7; color: var(--muted); }
+  .teacher-copy h3 { font: 400 24px/1.5 var(--serif); overflow-wrap: anywhere; }
+  .teacher-role { margin-top: 6px; font-size: 13px; line-height: 1.8; color: var(--gold-dark); }
+  .teacher-bio { margin-top: 18px; font-size: 15px; line-height: 1.9; overflow-wrap: anywhere; }
+  @media (max-width: 600px) {
+    .teacher-profile-with-photo { grid-template-columns: 120px minmax(0, 1fr); gap: 20px; }
+    .teacher-copy h3 { font-size: 22px; }
+    .teacher-bio { margin-top: 12px; }
+  }
+  @media (max-width: 360px) {
+    .teacher-profile-with-photo { grid-template-columns: 100px minmax(0, 1fr); gap: 16px; }
+  }
+</style>

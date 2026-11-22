@@ -386,7 +386,11 @@ export function loadContent(root: string | URL = defaultRoot, options: ModelOpti
 
 export const site = validateSite(JSON.parse(readFileSync(join(defaultRoot, 'client.json'), 'utf8')));
 let defaultModel: ContentModel | undefined;
-function current() { return defaultModel ??= loadContent(defaultRoot); }
+function current() {
+  // 开发服务必须读取最新事实与草稿；静态构建仍复用同一份模型。
+  if (import.meta.env?.DEV) return loadContent(defaultRoot);
+  return defaultModel ??= loadContent(defaultRoot);
+}
 export const getFact = <T = FactValue>(id: string) => current().getFact<T>(id);
 /** 脱敏号码仅用于展示；完整且格式有效的号码才生成拨号链接。 */
 export function getContactPhone(model: Pick<ContentModel, 'getFact'> = { getFact }): { display?: string; tel?: string } {

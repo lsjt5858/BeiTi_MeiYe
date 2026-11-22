@@ -24,6 +24,200 @@ facts:
     value: 赠送课程内容
     updated_at: '2026-11-13'
 
+  # 品牌、教学模块：贝缇基础强化班2025.pdf/PPTX 第5、7—10、15—28页。
+  # 不将品牌署名当作公司登记名称；课件履历年份不滚动推算为现行年限。
+  - id: academy.profile
+    type: academy
+    status: confirmed
+    value:
+      name: 贝缇美学院
+      approach: 以人为本，致力于教。
+      description: 贝缇在杭州开展美甲、美睫与店务运营方向的教学。把基础判断、手上练习和作品复盘放在一起，让学习有具体的内容可对照。
+      specialties:
+        - name: 美甲教学与研发
+          detail: 美甲款式设计、综合提升与产品研发。
+        - name: 店务运营
+          detail: 门店经营、营销与人员管理。
+        - name: 美睫设计
+          detail: 多翘度与眼型分析，结合个人风格讨论款式。
+        - name: 美甲彩绘
+          detail: 水彩美甲、动漫主题彩绘与色彩搭配。
+    updated_at: '2026-11-22'
+
+  # 姓名及授课关联：2025美睫全科班.pptx 第2—4页；不发布相互矛盾的管理年限。
+  - id: team
+    type: team
+    status: confirmed
+    value:
+      - name: 媛媛
+        role: 美睫课程讲师
+        bio: 2025版课件记录了5年的美甲、美睫与纹绣门店经营经历，也提到跨行业创业与门店人员管理。课程从工具和材料认识进入，再讲取毛、贴合、款式、眼型分析与真人实操。
+        photo:
+          src: /images/team/yuanyuan-2025.webp
+          alt: 媛媛老师，取自美睫全科课件自我介绍页
+          width: 334
+          height: 502
+          caption: 媛媛 · 美睫课程讲师
+    updated_at: '2026-11-22'
+
+  # 用户明确：美甲相关事务均由安妮老师管理。课件未标出安妮姓名与照片的对应关系。
+  - id: academy.nails-manager
+    type: team
+    status: confirmed
+    value: 安妮老师
+    updated_at: '2026-11-22'
+
+  # 小班有课件依据（美甲第16页）；未找到每班双教师、班额的依据。
+  - id: academy.teaching-format
+    type: teaching
+    status: confirmed
+    value: 小班教学
+    updated_at: '2026-11-22'
+
+  # 课程信息来自2025课件，仅确认资料中的名称、大纲与标价，不认定现行班期/报价。
+  - id: courses.catalog
+    type: course
+    status: confirmed
+    value:
+      nails:
+        title: 美甲，从基础判断到完整作品
+        intro: 先认识指甲结构和工具，再练前置、单色、建构与延长。款式完成后，用不同角度的作品记录复盘。
+        reference:
+          name: 新中式美甲基础强化课程
+          duration: 4 天
+          fee: 1980
+          year: 2025
+          source: 贝缇基础强化班2025，第14—15页
+        modules:
+          - name: 基础强化
+            content: 甲型修形、俄式前置、单色与建构、纸托和光疗延长、浅贴甲片、作品创作与拍摄。
+            topics:
+              - 摸底测试：甲型修形、前置处理与单色
+              - 俄式前置理论与实操，干式与湿式前置
+              - 单色与建构，甲型弧度与光圈观察
+              - 纸托选择、梯形与尖形光疗延长
+              - 浅贴甲片的位置与塑形，杏仁形、椭圆形、方管形实操
+              - 作品创作，单色与前置拍摄
+            source: 贝缇基础强化班2025，第15页
+          - name: 新中式前置处理
+            content: 指甲结构、工具选择与养护、俄式前置的口袋区域、操作边界和常见问题。
+            topics:
+              - 指甲结构与前置处理的适用场景
+              - 打磨机选择，打磨头使用与工具养护
+              - 口袋区域认识与不推皮的处理技巧
+              - 俄式小剪刀使用及操作注意事项
+              - 藏起的死皮、倒刺与前置处理问题分析
+            source: 贝缇基础强化班2025，第18—20页
+          - name: 极致延长
+            content: 甲型辨别、纸托定位、甲片与光疗延长、C弧与打磨顺序、贴合和气泡排错。
+            topics:
+              - 不同甲型辨别，鹰钩甲与上翘甲分析
+              - 纸托定位与光疗胶选择
+              - 日式无痕甲片与甲片延长
+              - C弧打磨、打磨顺序与搓条使用
+              - 贴片不牢、延长胶气泡及残甲修补问题
+            source: 贝缇基础强化班2025，第21—23页
+          - name: 极致单色
+            content: 消毒流程、甲面观察、上色与包边、建构弧度、前后缘控制与拍摄。
+            topics:
+              - 消毒流程与指甲结构认识
+              - 钢推、打磨头与死皮剪使用
+              - 底胶涂抹、上色均匀与包边技巧
+              - 甲面凹凸处理与建构弧度
+              - 前后缘堆胶、持久度与光泽问题分析
+              - 单色作品拍摄
+            source: 贝缇基础强化班2025，第25—27页
+          - name: 极致喷绘
+            content: 喷枪使用、薄雾渐变、过渡观察与花卉表达。
+            topics:
+              - 喷枪使用
+              - 薄雾感渐变与无痕过渡
+              - 喷绘花卉表达
+            source: 贝缇基础强化班2025，第28页
+      lashes:
+        title: 美睫，先看眼型，再谈款式
+        intro: 认识毛型、翘度、工具与胶水，练持镊、取毛和贴合，再把轮廓、层次、眼型分析与真人实操接起来。
+        modules:
+          - name: 材料与工具
+            content: 圆毛与扁毛、睫毛规格与翘度、镊子和胶水的认识。
+            topics:
+              - 原生睫毛的生长阶段与条件观察
+              - 圆毛与扁毛，长度与粗度
+              - J、B、C、D及L系列翘度
+              - 镊子种类、产品功能与胶水认识
+            source: 2025美睫全科班，第13、16—19页；中式美睫，第2页
+          - name: 基础手法
+            content: 持镊与支撑、取毛、润胶、直线练习、贴合面和连接状态观察。
+            topics:
+              - 两指与三指持镊，发力与支撑
+              - 取毛、提毛与看毛角度
+              - 润胶与贴合面观察
+              - 直线与内扣直线练习
+              - 上下服帖，A、B点与毛根连接
+            source: 2025美睫全科班，第28—33页
+          - name: 款式与层次
+            content: 流苏、漫画、狐系与自然风格；分别观察框架、填充、毛向和色度。
+            topics:
+              - 外轮廓框架与内轮廓填充
+              - 长短错落、层次穿插与毛向
+              - 流苏、漫画柱体与狐系设计
+              - 婴儿弯与自然风格
+            source: 2025美睫全科班，第34—41页
+          - name: 眼型与实操
+            content: 眼型分析、个人风格讨论、真人实操和多角度作品记录。
+            topics:
+              - 睁眼平视观察，毛根翘度与毛尖高度
+              - 结合眼型、妆造与个人风格设计
+              - 真人实操流程与操作姿势
+              - 正面睁眼、闭眼与侧面作品记录
+            source: 2025美睫全科班，第22、42—44页；中式美睫，第2、28—30页
+          - name: 中式款式分析
+            content: 国风、漫画与多种定制款式的设计分析。
+            topics:
+              - 国风与漫画款式结构
+              - 狐系、兔系、猫系、蛇系、蝶系与龙女款式分析
+              - 款式复刻的观察要点
+              - 下睫毛款式审美
+            source: 中式美睫，第2、33—34、43—55页
+          - name: 补睫与常见问题
+            content: 补睫时机、嫁接后的连接与使用问题分析。
+            topics:
+              - 补睫时机与原生毛状态
+              - 翘根、空心、歪斜与粘连问题
+              - 根部发白与掉落问题分析
+              - 嫁接后护理与常见问题
+            source: 中式美睫，第2、56—67页；美睫教学PPT冷色调，第51—59页
+      salon-management:
+        title: 店务运营，把技术接到日常经营
+        intro: 学习作品创作与拍摄、开店指导和门店营销。
+        modules:
+          - name: 作品表达
+            content: 作品创作、毕业作品拍摄、单色与前置的拍照技巧。
+            topics:
+              - 毕业作品创作
+              - 单色与前置作品拍摄
+            source: 贝缇基础强化班2025，第15页
+          - name: 开店与营销
+            content: 开店指导课程，结合门店经营与营销背景讨论运营。
+            topics:
+              - 开店指导
+              - 门店营销
+            source: 贝缇基础强化班2025，第8、16页
+    updated_at: '2026-11-22'
+
+  # 用户于2026-11-22确认复训费用500元；课件第16页注明为场地费。
+  # 两年期限、适用课程与次数未由用户重新确认，不能写成所有课程的统一保障。
+  - id: policy.retraining
+    type: policy
+    status: confirmed
+    value:
+      fee: 500
+      feeLabel: 场地费
+      description: 复训场地费500元，需提前与校区预约。
+      booking: 适用课程、期限与次数以课程约定为准。
+      reference: 2025版美甲课件写“两年内免费复训（复训收500场地费）”，期限以适用课程的约定为准。
+    updated_at: '2026-11-22'
+
   # 来源：知识库《贝缇基础强化班2025》第30页（地址、地铁口）、第32页（电话）；
   # 30篇技术文章结尾使用同一地址与电话。课件未给出楼层、营业时间和微信。
   - id: location.hangzhou
@@ -76,9 +270,9 @@ facts:
     status: confirmed
     value:
       question: 价格怎么看？
-      answer: 价格页按项目列出已确认的价格与计费单位；没有列出的项目，以校区回复和书面报价为准。
+      answer: 复训场地费500元。基础强化课程资料价为4天、1980元（2025版），当期学费与包含项请向校区咨询。
       category: 价格与费用
-    updated_at: '2026-11-20'
+    updated_at: '2026-11-22'
   - id: faq-hours
     type: faq
     status: confirmed
@@ -86,6 +280,14 @@ facts:
       question: 上课时间怎么确认？
       answer: 咨询电话：159****8888。上课、试听和到访安排可通过抖音、小红书主页留言询问。
       category: 到店与联系
+    updated_at: '2026-11-22'
+  - id: faq-retraining
+    type: faq
+    status: confirmed
+    value:
+      question: 复训要收费吗？
+      answer: 复训场地费500元，需提前预约。适用课程、期限与次数以课程约定为准。
+      category: 价格与费用
     updated_at: '2026-11-22'
   - id: faq-privacy
     type: faq
@@ -96,38 +298,72 @@ facts:
       category: 隐私与使用
     updated_at: '2026-11-20'
 
-  # 显著哨兵便于审计验证；不得把这些值写入 HTML、JSON-LD 或 sitemap。
-  - id: service.pending
-    type: service
-    status: pending
-    value:
-      slug: pending-service
-      name: PENDING_ONLY_NOT_PUBLIC_SERVICE
-      summary: PENDING_ONLY_NOT_PUBLIC_SUMMARY
-      price: PENDING_ONLY_NOT_PUBLIC_PRICE
-    updated_at: '2026-11-11'
-  - id: location.pending
-    type: location
-    status: pending
-    value:
-      slug: pending-location
-      name: PENDING_ONLY_NOT_PUBLIC_LOCATION
-      address: PENDING_ONLY_NOT_PUBLIC_ADDRESS
-      hours: PENDING_ONLY_NOT_PUBLIC_HOURS
-    updated_at: '2026-11-11'
-  - id: review.pending
-    type: review
-    status: pending
-    value:
-      author: PENDING_ONLY_NOT_PUBLIC_AUTHOR
-      text: PENDING_ONLY_NOT_PUBLIC_REVIEW
-      authorized: false
-      source: PENDING_ONLY_NOT_PUBLIC_SOURCE
-      date: '2026-11-11'
-    updated_at: '2026-11-11'
   # 用户于 2026-11-22 指定全站展示此脱敏号码，不作为可拨打号码。
   - id: contact.phone
     type: contact
     status: confirmed
     value: '159****8888'
+    updated_at: '2026-11-22'
+
+  # 用户于2026-11-22提供微信号；未从手机号或名称推断邮箱。
+  - id: contact.wechat
+    type: contact
+    status: confirmed
+    value: hzbeiti
+    updated_at: '2026-11-22'
+
+  # 来源：《贝缇基础强化班2025.pdf》第7–10页；同名PPTX逐页一致。
+  # 原页没有姓名，因此按教学分工展示，不推断人员对应关系或当前团队人数。
+  - id: team.roles
+    type: note
+    status: confirmed
+    value:
+      - name: 美甲教学与产品研发
+        role: 主理人
+        bio: 课件记录了13年行业经历，专注美甲培训与产品研发，擅长美甲款式设计和综合提升。
+        photo:
+          src: /images/team/nail-teaching-2025.webp
+          alt: 美甲教学与产品研发师资介绍页的老师肖像
+          width: 540
+          height: 720
+          caption: 美甲教学与研发 · 课件师资照片
+      - name: 店务运营与美睫教学
+        role: 主理人 · 店务运营老师
+        bio: 课件介绍了跨行业创业、营销团队管理与店务运营教学经历，同时承担美睫讲授。
+        photo:
+          src: /images/team/salon-management-2025.webp
+          alt: 店务运营与美睫教学师资介绍页的老师肖像
+          width: 540
+          height: 720
+          caption: 店务运营与美睫 · 课件师资照片
+      - name: 美睫教学与眼型调整
+        role: 美睫部总监
+        bio: 课件记录了8年行业经历和3年创业经历，擅长多翘度调整眼型，结合不同学员的情况系统授课。
+        photo:
+          src: /images/team/lash-director-2025.webp
+          alt: 美睫部总监师资介绍页的老师肖像
+          width: 540
+          height: 720
+          caption: 美睫部总监 · 课件师资照片
+      - name: 美术基础与美甲彩绘
+        role: 美甲主讲老师
+        bio: 课件记录了10年美术学习和5年美术教师工作经历，专注水彩美甲创作，擅长动漫主题彩绘与色彩搭配。
+        photo:
+          src: /images/team/nail-art-instructor-2025.webp
+          alt: 美甲主讲老师的美术与彩绘师资介绍页肖像
+          width: 540
+          height: 720
+          caption: 美甲彩绘 · 课件师资照片
+    updated_at: '2026-11-22'
+
+  # 来源：《贝缇基础强化班2025.pdf》第7页。
+  # 已核对的是课件中的认证表述；未提供证书原件、编号、有效期或颁发方文件。
+  - id: qualifications
+    type: qualifications
+    status: confirmed
+    value:
+      - name: JNEC 一级美甲师
+        description: 列于美甲教学与产品研发的师资介绍中。
+      - name: CPMA 三级美甲师
+        description: 列于同一份美甲师资介绍中。
     updated_at: '2026-11-22'

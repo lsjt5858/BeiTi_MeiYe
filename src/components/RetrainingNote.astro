@@ -1,0 +1,25 @@
+---
+import { getRetrainingPolicy } from '../lib/training.ts';
+import { localeFromPath, localizedPath, translate } from '../lib/i18n.ts';
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const tr = (value: string) => translate(value, locale);
+const policy = getRetrainingPolicy();
+---
+{policy && <section class="retraining-note" aria-labelledby="retraining-heading">
+  <div><p class="eyebrow">RETRAINING</p><h2 id="retraining-heading">{en ? 'Retraining' : '复训安排'}</h2></div>
+  <div>
+    <p class="retraining-amount"><span>¥{policy.fee}</span> {tr(policy.feeLabel)}</p>
+    <p>{en ? 'Contact the campus in advance to book. ' : '请提前联系校区预约。'}{tr(policy.booking)}</p>
+    <a class="text-link" href={localizedPath('/contact/', locale)}>{en ? 'Ask about retraining arrangements' : '询问复训安排'} <span aria-hidden="true">→</span></a>
+  </div>
+</section>}
+
+<style>
+  .retraining-note { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(24px, 5vw, 80px); padding-block: clamp(32px, 5vw, 64px); border-block: 1px solid var(--line); margin-block: 48px; }
+  h2 { font: 400 clamp(28px, 3.3vw, 44px)/1.4 var(--serif); margin-top: 0; }
+  p { line-height: 1.85; }
+  .retraining-amount { margin-top: 0; color: var(--gold-dark); }
+  .retraining-amount span { font: 400 42px/1.2 var(--serif); }
+  @media (max-width: 700px) { .retraining-note { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
+</style>

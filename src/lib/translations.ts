@@ -1,4 +1,9 @@
 import { englishCopy } from './en-copy.ts';
+import { academyEnglish } from './academy-copy.ts';
+import nailEnglish from './english/nails.json' with { type: 'json' };
+import lashEnglish from './english/lashes.json' with { type: 'json' };
+import guideEnglish from './english/guides.json' with { type: 'json' };
+import teacherEnglish from './english/teachers.json' with { type: 'json' };
 // Interface copy. Business facts stay in fact-card.yaml; never translate visitor input.
 export const english: Record<string, string> = {
   '关注贝缇': 'Follow Beiti',
@@ -417,4 +422,21 @@ export const english: Record<string, string> = {
   '上课地点': 'Class location',
   '校区地址与到访说明': 'Campus address and visiting notes',
   '贝缇美学院 · 杭州拱墅校区在浙江省杭州市拱墅区兴业街29号 金通数字经济科创园16幢，地铁 4 号线华中南路站 E 口。出发前先打电话，确认当天安排。': 'Beiti Beauty Academy · Hangzhou Gongshu Campus is at Building 16, Jintong Digital Economy Science and Innovation Park, 29 Xingye Street, Gongshu District, Hangzhou, near Exit E of Huazhong South Road Station on Metro Line 4. Call before you set off to confirm the arrangement for that day.',
+  ...academyEnglish,
+  '你最早是从哪里了解到贝缇的？': 'Where did you first hear about Beiti?',
+  '选填': 'Optional',
+  '请选择（可不填）': 'Select a source (optional)',
+  '按第一次了解到我们的渠道选择即可。': 'Choose the channel where you first heard about us.',
+  '豆包': 'Doubao',
+  '其他 AI 平台': 'Other AI platforms',
+  '搜索引擎': 'Search engine',
+  '朋友介绍': 'Friend referral',
+  '其他': 'Other',
+  '了解来源：': 'How you heard about us: ',
+  '请选择列表中的了解来源，或留空。': 'Choose a source from the list or leave it blank.',
+  '可通过微信沟通，或使用页脚的社媒入口留言，确认到访或试听安排。': 'Contact us on WeChat or use the social links in the footer to arrange a visit or trial session.',
+  ...nailEnglish,
+  ...lashEnglish,
+  ...guideEnglish,
+  ...teacherEnglish,
 };

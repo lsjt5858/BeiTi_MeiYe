@@ -2,16 +2,35 @@
 import SiteLayout from "../layouts/SiteLayout.astro";
 import HomeVisuals from "../components/HomeVisuals.astro";
 import { brandMedia } from "../components/brand-media.mjs";
-import { site, getFact, getServices, getFaqs, getArticles } from "../lib/content";
-const services = getServices();
-const articles = getArticles().slice(0, 3);
-const faqs = getFaqs().slice(0, 4);
-const intents: { name: string; english: string; interest: string; href: string; note?: string }[] = [
-  { name: "美甲培训", english: "NAIL TRAINING", interest: "nails", href: "/training/nails/" },
-  { name: "美睫培训", english: "LASH TRAINING", interest: "lashes", href: "/training/lashes/" },
-  { name: "店务运营管理", english: "SALON MANAGEMENT", interest: "management", href: "/training/salon-management/" },
-  { name: "视频美学", english: "VIDEO AESTHETICS", interest: "video", href: "/training/", note: getFact<string>('course.video-aesthetics.gift') },
-];
+import { site, getArticles, getLatestUpdate } from "../lib/content";
+import { localeFromPath, translate } from "../lib/i18n.ts";
+const locale = localeFromPath(Astro.url.pathname);
+const en = locale === 'en';
+const tr = (text: string) => translate(text, locale);
+const publishedArticles = getArticles();
+const articles = [
+  {
+    slug: 'solid-color-even-coating',
+    topic: en ? 'NAILS / EVEN COATING' : '美甲 / 单色上色',
+    summary: en ? 'Separate uneven colour coverage from an uneven nail surface before deciding what to practise next.' : '涂不匀，先分清颜色覆盖和甲面起伏，再决定下一步怎么练。',
+    alt: en ? 'A nude nail tip showing colour coverage and surface reflections; illustrative brand imagery.' : '裸色甲片的颜色覆盖与表面反光，品牌视觉示意',
+  },
+  {
+    slug: 'nail-structure-light-reflection',
+    topic: en ? 'NAILS / STRUCTURE & LIGHT' : '美甲 / 建构观察',
+    summary: en ? 'One reflection line cannot reveal the whole structure. Change the light and viewing angle to check what is causing the difference.' : '一条光圈看不出全部结构。换灯位，也换角度，分清反光和甲面的问题。',
+    alt: en ? 'A curved nail tip viewed under directional light; illustrative brand imagery.' : '光线下建构甲片的弧度与反光，品牌视觉示意',
+  },
+  {
+    slug: 'lash-curl-jbcd',
+    topic: en ? 'LASHES / UNDERSTANDING CURL' : '美睫 / 翘度判断',
+    summary: en ? 'Look beyond J, B, C and D. Examine the root, shaft and tip, then assess the result with the eyes open.' : '不只看 J、B、C、D。把毛根、毛干和毛尖分开看，再回到睁眼后的观感。',
+    alt: en ? 'Lash samples with different curves arranged on a ceramic tray; illustrative brand imagery.' : '陶瓷托盘上不同弧线的睫毛样品，品牌视觉示意',
+  },
+].flatMap((selection) => {
+  const article = publishedArticles.find((item) => item.slug === selection.slug);
+  return article ? [{ ...article, ...selection }] : [];
+});
 const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.src : image.generationUrl;
 ---
 <SiteLayout title={`${site.brand} | 让美，成为日常。`} home>
@@ -53,32 +72,6 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
     <span class="visually-hidden" data-slide-status role="status" aria-live="polite" aria-atomic="true"></span>
   </section>
 
-  <section id="explore" class="section intent-section">
-    <div class="container">
-      <div class="intent-layout" data-reveal>
-        <div>
-          <p class="eyebrow">01 / EXPLORE YOUR BEAUTY</p>
-          <h2>把热爱，<br />练成专业。</h2>
-          <p class="intent-note">从美甲培训、美睫培训到店务运营管理，找到你想了解的方向。</p>
-        </div>
-        <ol class="intent-list">
-          {intents.map((intent, index) => <li>
-            <a class="intent-link" href={intent.href} data-analytics-category={intent.interest}>
-              <span class="intent-number" aria-hidden="true">0{index + 1}</span>
-              <span class="intent-title">{intent.name}<small lang="en">{intent.english}</small>{intent.note && <span class="intent-description">{intent.note}</span>}</span>
-              <span class="intent-arrow" aria-hidden="true">↗</span>
-            </a>
-          </li>)}
-        </ol>
-      </div>
-      {services.length > 0 && <div class="confirmed-services" data-reveal>
-        <p class="eyebrow">CONFIRMED INFORMATION</p>
-        <h3>已确认的服务信息</h3>
-        <ul>{services.map((service) => <li><a href={`/services/${service.slug}/`}>{service.name} <span aria-hidden="true">↗</span></a>{service.summary && <p>{service.summary}</p>}{service.updatedAt && <p class="meta">内容更新：<time datetime={service.updatedAt}>{service.updatedAt.slice(0, 10)}</time></p>}</li>)}</ul>
-      </div>}
-    </div>
-  </section>
-
   <HomeVisuals />
 
   <section class="philosophy-section">
@@ -88,7 +81,7 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
         <figcaption>自然感，留白也重要 · 品牌视觉示意</figcaption>
       </figure>
       <div class="philosophy-copy" data-reveal>
-        <p class="eyebrow">02 / OUR PHILOSOPHY</p>
+        <p class="eyebrow">01 / OUR PHILOSOPHY</p>
         <h2>美，不必被定义。<br />只需忠于自己。</h2>
         <p>我们向往的美，是光落在肌肤上的自然，是举手之间的细节，也是你自在表达自己的样子。</p>
         <p>贝缇美业，让关于美的每一个想法，都从倾听自己开始。不急于改变，先了解你真正想要的。</p>
@@ -101,7 +94,7 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
   <section class="section process-section">
     <div class="container">
       <div class="section-heading" data-reveal>
-        <div><p class="eyebrow">03 / START A CONVERSATION</p><h2>从了解，<br />到更清晰的选择。</h2></div>
+        <div><p class="eyebrow">02 / START A CONVERSATION</p><h2>从了解，<br />到更清晰的选择。</h2></div>
         <p>不必一次想清楚所有细节。<br />用三个简单步骤，把想法整理好。</p>
       </div>
       <ol class="process-steps">
@@ -116,34 +109,41 @@ const imageSrc = (image: (typeof brandMedia)[number]) => image.frozen ? image.sr
     </div>
   </section>
 
-  <section class="section">
+  <p class="visually-hidden"><time datetime={getLatestUpdate()}>{getLatestUpdate().slice(0, 10)}</time></p>
+  {articles.length > 0 && <section id="craft-notes" class="section home-articles" aria-labelledby="craft-notes-title">
     <div class="container">
-      <div class="home-faq">
-        <div class="home-faq-heading" data-reveal>
-          <p class="eyebrow">04 / GOOD TO KNOW</p>
-          <h2>在开始之前，<br />你可能想知道。</h2>
-          <a class="text-link" href="/faq/">咨询前须知 <span aria-hidden="true">↗</span></a>
+      <div class="section-heading" data-reveal>
+        <div>
+          <p class="eyebrow">03 / CRAFT NOTES</p>
+          <h2 id="craft-notes-title">{en ? <>Understand the detail.<br />Then practise.</> : <>看懂细节，<br />再练手法。</>}</h2>
         </div>
-        {faqs.length > 0 ? <div class="home-faq-list" data-reveal>
-          {faqs.map((faq, index) => <details id={`home-faq-${faq.id}`}>
-            <summary><span class="home-faq-number" aria-hidden="true">0{index + 1}</span>{faq.question}</summary>
-            <div class="home-faq-answer"><p>{faq.answer}</p>{"updatedAt" in faq && faq.updatedAt && <time class="meta visually-hidden" datetime={faq.updatedAt}>{faq.updatedAt.slice(0, 10)}</time>}</div>
-          </details>)}
-        </div> : <div data-reveal>
-          <p>把想了解的问题整理下来，从一个想法开始。</p>
-          <a class="text-link" href="/contact/">整理你的问题 <span aria-hidden="true">↗</span></a>
-        </div>}
+        <div class="home-articles-intro">
+          <p>{en ? 'From even colour to nail structure and lash curls, see how each decision is broken down.' : '从单色、建构到美睫翘度，看看判断是怎么一步步拆开的。'}</p>
+          <a class="text-link" href="/articles/?category=craft">{en ? 'More craft notes' : '更多技法笔记'} <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
-      {articles.length > 0 && <div class="home-articles" data-reveal>
-        <p class="eyebrow">BEAUTY JOURNAL</p><h2>美学手记</h2>
-        <ul>{articles.map((article) => {
+      <ul class="home-article-list">
+        {articles.map((article) => {
           const updatedAt = article.updatedAt || article.updated_at;
-          return <li><h3><a href={`/articles/${article.slug}/`}>{article.title} <span aria-hidden="true">↗</span></a></h3><p>{article.description}</p><time class="meta" datetime={updatedAt}>更新：{updatedAt.slice(0, 10)}</time></li>;
-        })}</ul>
-        <a class="text-link" href="/articles/">阅读更多 <span aria-hidden="true">↗</span></a>
-      </div>}
+          return <li data-reveal>
+            <a class="home-article-link" href={`/articles/${article.slug}/`} aria-labelledby={`home-article-${article.slug}`}>
+              <figure class="home-article-photo">
+                <img src={`/images/technique/${article.slug}.jpg`} alt={article.alt} width="1600" height="900" loading="lazy" decoding="async" />
+                <figcaption>{en ? 'Illustrative brand imagery, not student work.' : '品牌视觉示意，非学员作品'}</figcaption>
+              </figure>
+              <div class="home-article-copy">
+                <p class="home-article-topic">{article.topic}</p>
+                <h3 id={`home-article-${article.slug}`}>{tr(article.title)}</h3>
+                <p class="home-article-summary">{article.summary}</p>
+                <span class="home-article-read">{en ? 'Read note' : '阅读笔记'} <span aria-hidden="true">↗</span></span>
+                <time class="visually-hidden" datetime={updatedAt}>{updatedAt.slice(0, 10)}</time>
+              </div>
+            </a>
+          </li>;
+        })}
+      </ul>
     </div>
-  </section>
+  </section>}
 
   <section class="closing-section">
     <img class="closing-image" src={imageSrc(brandMedia[2])} alt={brandMedia[2].alt} width="2560" height="1440" loading="lazy" decoding="async" data-media-id="ritual" />

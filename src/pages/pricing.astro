@@ -1,44 +1,40 @@
 ---
 import InnerPage from './_shared/InnerPage.astro';
-import SectionHeader from '../components/SectionHeader.astro';
-import Callout from '../components/Callout.astro';
+import { getCourseOutline, getRetrainingPolicy } from '../lib/training.ts';
 import { getServices } from '../lib/content.ts';
-import { safeSlug, formatValue } from './_shared/values.ts';
-import { localeFromPath } from '../lib/i18n.ts';
+import { localeFromPath, localizedPath, translate } from '../lib/i18n.ts';
 const locale = localeFromPath(Astro.url.pathname);
 const en = locale === 'en';
-const pricedServices = getServices().filter((service) => formatValue(service.price));
-const description = pricedServices.length
-  ? '您可以在这里查看已确认的价格与计费单位。包含范围和限制请与对应服务详情一起阅读；更新时间不等于价格生效日期。'
-  : '目前还没有可公开的已确认价格。这里不提供估算报价；请先整理项目范围、包含内容与计费单位等需要确认的问题。';
+const tr = (value: string) => translate(value, locale);
+const href = (path: string) => localizedPath(path, locale);
+const reference = getCourseOutline('nails')?.reference;
+const retraining = getRetrainingPolicy();
+const services = getServices().filter(service => service.price !== undefined);
+const description = en
+  ? 'Retraining venue fee: RMB 500. Foundation intensive: four days, RMB 1,980 in the 2025 course materials.'
+  : '复训场地费500元。基础强化课程资料价：4天、1980元（2025版）。';
 ---
-<InnerPage title="让费用，清楚一点。" eyebrow="Pricing / 价格信息" description={description} breadcrumbs={[{ label: '价格信息' }]}>
-  <section class="editorial-section" aria-labelledby="pricing-heading">
-    <SectionHeader number="01" eyebrow="PRICING" title={pricedServices.length ? (en ? 'Confirmed prices' : '已确认价格') : (en ? 'Clarify the scope, then the cost.' : '先问清范围，再谈具体费用。')} headingId="pricing-heading" />
-    {pricedServices.length ? <>
-      <div class="table-scroll" role="region" aria-label="已确认价格对照表" tabindex="0">
-        <table class="fact-table"><caption class="small-note">金额按确认数据原样展示，不推断币种、优惠或额外费用。</caption><thead><tr><th scope="col">项目</th><th scope="col" class="num">价格</th><th scope="col" class="num">计费单位</th><th scope="col" class="num">价格生效日期</th><th scope="col" class="num">信息更新</th></tr></thead><tbody>
-          {pricedServices.map((service) => <tr><th scope="row"><a class="text-link" href={`/services/${safeSlug(service.slug)}/`}>{service.name}</a></th><td class="num">{formatValue(service.price)}</td><td class="num">{formatValue(service.unit) || '尚未公开确认'}</td><td class="num">{service.effectiveDate ? <time datetime={service.effectiveDate}>{service.effectiveDate}</time> : '尚未确认'}</td><td class="num">{service.updatedAt ? <time datetime={service.updatedAt}>{service.updatedAt.slice(0, 10)}</time> : '尚未公开确认'}</td></tr>)}
-        </tbody></table>
-      </div>
-      <Callout tone="note" title={en ? 'Pricing boundaries' : '价格边界'}>
-        <p>{en ? 'Items without an effective date, included scope or billing unit still need confirmation. The content update date is not the price effective date and does not constitute a quote.' : '未标明生效日期、包含范围或计费单位的项目仍需进一步确认；内容更新时间不等于价格生效日期，也不构成报价。'}</p>
-      </Callout>
-      <p class="small-note">每项费用的包含 / 不包含项目、适用条件，请在对应服务详情查看。</p>
-    </> : <>
-      <Callout tone="key" title={en ? 'No confirmed price does not mean free' : '没有确认价格，不代表免费'}>
-        <p>{en ? 'No confirmed price does not mean free, and does not mean a single package exists. You can share a budget as context, but do not infer a quote from it.' : '没有确认价格，不意味着免费，也不意味着存在统一套餐。您可以把预算作为沟通背景，但不要据此推断服务报价。'}</p>
-      </Callout>
-      <div class="page-actions"><a class="button" href="/contact/">整理费用相关问题</a></div>
-    </>}
+<InnerPage title={en ? 'Know what the fee covers.' : '费用，逐项说清。'} eyebrow="Pricing / 学费与复训" description={description} breadcrumbs={[{ label: '价格信息' }]}>
+  <section class="editorial-section" aria-labelledby="current-fees-heading">
+    <p class="eyebrow">CONFIRMED FEE</p>
+    <h2 id="current-fees-heading">{en ? 'Retraining: RMB 500 venue fee' : '复训：500元场地费'}</h2>
+    {retraining && <p class="intro-copy">{en ? 'Contact the campus in advance to book. ' : '请提前联系校区预约。'}{tr(retraining.booking)}</p>}
   </section>
-  <section class="editorial-section" aria-labelledby="pricing-questions-heading">
-    <SectionHeader number="02" eyebrow="WHAT TO ASK" title={en ? 'What makes a clear quote?' : '一份清楚的报价，需要回答什么？'} headingId="pricing-questions-heading" />
-    <ol class="editorial-list">
-      <li class="editorial-row"><div><span class="row-number">01</span><h3>按什么单位计费？</h3></div><p>请确认按次、时长或其他单位计费，避免把不同范围的数字直接比较。本站不替未公开项目设定计费方式。</p></li>
-      <li class="editorial-row"><div><span class="row-number">02</span><h3>哪些包含，哪些另计？</h3></div><p>询问项目范围、材料或其他可能影响费用的条件，以正式沟通确认的信息为准。</p></li>
-      <li class="editorial-row"><div><span class="row-number">03</span><h3>何时生效，如何变更？</h3></div><p>确认报价的适用时间与变更规则，并以书面约定为准。</p></li>
-    </ol>
-    <div class="page-actions"><a class="text-link" href="/services/">了解服务边界</a><a class="text-link" href="/faq/">查看咨询流程问答</a></div>
+
+  <section class="editorial-section" aria-labelledby="tuition-reference-heading">
+    <p class="eyebrow">COURSE REFERENCE</p>
+    <h2 id="tuition-reference-heading">{en ? 'Course reference price' : '课程资料价'}</h2>
+    <div class="table-scroll" role="region" aria-label={en ? 'Course tuition reference' : '课程学费参考表'} tabindex="0">
+      <table class="fact-table">
+        <caption class="small-note">{en ? '2025 course reference. Ask the campus for current tuition and included items.' : '2025版课程资料价，当期学费及包含项请向校区咨询。'}</caption>
+        <thead><tr><th scope="col">{en ? 'Course' : '课程'}</th><th scope="col">{en ? 'Duration' : '课期'}</th><th scope="col">{en ? 'Recorded fee' : '课件标价'}</th><th scope="col">{en ? 'Basis' : '价格口径'}</th></tr></thead>
+        <tbody>
+          {reference && <tr><th scope="row"><a class="text-link" href={href('/training/nails/')}>{tr(reference.name)}</a></th><td>{tr(reference.duration)}</td><td class="num">¥{reference.fee}</td><td>{en ? `${reference.year} deck reference` : `${reference.year}版课件参考`}</td></tr>}
+          {services.map(service => <tr><th scope="row"><a class="text-link" href={href(`/services/${service.slug}/`)}>{tr(service.name)}</a></th><td>{tr(service.duration) || '—'}</td><td>{service.price}</td><td>{tr(service.unit) || '—'}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+    <p class="small-note">{en ? 'For other classes, contact the campus for tuition and tool or materials arrangements.' : '其他课程的学费、工具与材料安排，请联系校区了解。'}</p>
+    <div class="page-actions"><a class="button" href={href('/contact/')}>{en ? 'Ask about tuition' : '咨询课程费用'}</a><a class="text-link" href={href('/training/')}>{en ? 'Course content' : '查看课程内容'}</a></div>
   </section>
 </InnerPage>
