@@ -10,12 +10,13 @@ const en = locale === 'en';
 const articles = getArticles();
 const bySlug = new Map(articles.map((article) => [article.slug, article]));
 const latest = getLatestUpdate();
-const categoryIds = ['school', 'cost', 'career', 'technique'];
+const categoryIds = ['school', 'cost', 'career', 'technique', 'craft'];
 const categoryEnglish: Record<string, { title: string; description: string }> = {
   school: { title: 'School & learning', description: 'Comparing schools, apprenticeships, study timelines, weekend classes and online versus offline courses.' },
   cost: { title: 'Cost & contract', description: 'Tuition structure, tool costs, contract terms and how to check a “learn until you can” promise.' },
   career: { title: 'Career & business', description: 'Income structure, client acquisition, opening costs, licensing and career-change paths.' },
   technique: { title: 'Technique', description: 'Japanese versus Russian nails, and whether to learn nails and lashes together.' },
+  craft: { title: 'Craft notes', description: 'Nail and lash observation, practice order and common deviations, one technical point per article.' },
 };
 
 const categories = articleGroups.map((group, index) => {
@@ -65,6 +66,8 @@ const topicDefinitions = [
   { id: 'salon', title: '开店与证照', titleEn: 'Opening a salon', slugs: ['how-much-to-open-nail-salon', 'open-nail-salon-license'] },
   { id: 'flexible', title: '周末与线上', titleEn: 'Weekends & online', slugs: ['hangzhou-weekend-nail-class', 'online-vs-offline-nail-course'] },
   { id: 'technique', title: '日式与俄式', titleEn: 'Japanese & Russian', slugs: ['japanese-vs-russian-nail', 'nail-and-lash-together'] },
+  { id: 'nail-craft', title: '美甲技法', titleEn: 'Nail craft', slugs: ['nail-shape-three-views', 'nail-structure-before-prep', 'dry-wet-nail-prep', 'russian-prep-safe-pocket', 'nail-tool-maintenance', 'solid-color-even-coating', 'nail-color-clean-margins', 'nail-structure-light-reflection', 'tips-vs-gel-extension', 'paper-form-alignment', 'shallow-tips-position', 'almond-oval-tips', 'square-tube-c-curve', 'extension-gel-bubbles', 'airbrush-soft-gradient'] },
+  { id: 'lash-craft', title: '美睫技法', titleEn: 'Lash craft', slugs: ['round-flat-lash-selection', 'lash-curl-jbcd', 'lash-root-tip-curl', 'lash-tweezer-support', 'lash-straight-line-view', 'lash-adhesion-ab-points', 'lash-glue-working-time', 'lash-root-gaps-shape', 'lash-contour-framework-fill', 'lash-length-point-map', 'tassel-lash-layer-spacing', 'manga-lash-column-three-lines', 'fox-lash-tail-flow', 'natural-lashes-space-color', 'lash-design-open-eye-review'] },
 ];
 const topics = topicDefinitions
   .map((topic) => ({ ...topic, count: topic.slugs.filter((slug) => bySlug.has(slug)).length }))

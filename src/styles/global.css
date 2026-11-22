@@ -253,6 +253,17 @@ html:lang(en) .header-contact { gap: 18px; }
 .footer-brand-name { font: 32px/1.5 var(--serif); letter-spacing: .14em; }
 .footer-tagline { color: #bec7bd; font-size: 14px; letter-spacing: .1em; margin-top: 14px; }
 .footer-wordmark { font: 11px Georgia, serif; letter-spacing: .3em; margin-top: 33px; color: var(--gold); }
+.technique-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(16px, 3vw, 28px); margin-top: 2rem; }
+.technique-pair figure, .technique-grid figure { margin: 0; min-width: 0; }
+.technique-pair img, .technique-grid img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 3px; background: #e9e4d6; }
+.technique-pair figcaption, .technique-grid figcaption { margin-top: 9px; color: var(--muted, #686258); font-size: calc(.82rem + 2px); line-height: 1.7; }
+.technique-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 20px; margin-top: 1.5rem; }
+.visual-technique-strip { margin-block: clamp(44px, 6vw, 80px) 0; padding-top: 32px; border-top: 1px solid var(--line); }
+.visual-technique-link { margin-top: 24px; }
+@media (max-width: 760px) { .technique-pair, .technique-grid { grid-template-columns: minmax(0, 1fr); } }
+.footer-nap { display: grid; gap: 2px; margin-top: 22px; max-width: 28em; font-style: normal; font-size: 13px; line-height: 1.9; color: #b7c2b4; }
+.footer-nap a { color: var(--gold); width: fit-content; }
+.footer-nap a:hover { text-decoration: underline; }
 .footer-social { margin-top: 24px; font-size: 14px; --social-logo-cutout: var(--ink-deep); }
 .social-icon-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; max-width: 616px; }
 .social-icon-link { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 8px; }

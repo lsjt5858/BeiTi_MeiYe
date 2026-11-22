@@ -51,6 +51,7 @@ export function organizationFor(model: ContentModel): Record<string, unknown> {
   if (typeof brand !== 'string' || !brand) return {};
   const phone = model.getFact<string>('contact.phone');
   const email = model.getFact<string>('contact.email');
+  const address = model.getLocations()[0]?.address;
   // sameAs identifies the account; access and attribution parameters stay in UI links only.
   const sameAs = getSocialChannels(model).filter(channel => channel.url).map(channel => {
     const url = new URL(channel.url!);
@@ -62,6 +63,7 @@ export function organizationFor(model: ContentModel): Record<string, unknown> {
     name: brand,
     ...(model.site.base_url ? { url: model.site.base_url } : {}),
     ...(typeof phone === 'string' && phone ? { telephone: phone } : {}),
+    ...(typeof address === 'string' && address ? { address } : {}),
     ...(typeof email === 'string' && email ? { email } : {}),
     ...(sameAs.length ? { sameAs } : {}),
   };

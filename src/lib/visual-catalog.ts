@@ -30,8 +30,8 @@ export const conceptNotice: Copy = {
   en: 'Imagery is for visual and learning inspiration, not actual classes, people or customer results.',
 };
 export const trainingNotice: Copy = {
-  zh: '以下为学习方向参考；课期、费用与地点以实际安排为准。实操影像不作为教学操作标准。',
-  en: 'These are learning directions; dates, fees and locations follow the actual schedule. Practice imagery is not an operating guide.',
+  zh: '以下为学习方向参考；课期与费用以实际安排为准。实操影像不作为教学操作标准。',
+  en: 'These are learning directions; dates and fees follow the actual schedule. Practice imagery is not an operating guide.',
 };
 export const visualSeries: VisualSeries[] = [
   {

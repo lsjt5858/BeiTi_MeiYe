@@ -24,6 +24,20 @@ facts:
     value: 赠送课程内容
     updated_at: '2026-11-13'
 
+  # 来源：知识库《贝缇基础强化班2025》第30页（地址、地铁口）、第32页（电话）；
+  # 30篇技术文章结尾使用同一地址与电话。课件未给出楼层、营业时间和微信。
+  - id: location.hangzhou
+    type: location
+    status: confirmed
+    value:
+      slug: hangzhou-gongshu
+      name: 贝缇美学院 · 杭州拱墅校区
+      address: 浙江省杭州市拱墅区兴业街29号 金通数字经济科创园16幢
+      hours: ''
+      transport: 地铁 4 号线华中南路站 E 口
+      booking: 出发前先拨 18258162683，确认当天能不能到校、是否可以试听。
+    updated_at: '2026-11-20'
+
   # 仅确认当前网站功能，不确认企业已经开展的业务。
   - id: faq-consult
     type: faq
@@ -38,7 +52,7 @@ facts:
     status: confirmed
     value:
       question: 校区在哪里，怎么过去？
-      answer: 具体校区地址与路线以校区回复为准。确定到店前，建议先在咨询页写下出发地和方便的时间。
+      answer: 杭州校区在拱墅区兴业街29号 金通数字经济科创园16幢，地铁 4 号线华中南路站 E 口。出发前先拨 18258162683，确认当天能不能到校。
       category: 到店与联系
     updated_at: '2026-11-20'
   - id: faq-contact
@@ -46,7 +60,7 @@ facts:
     status: confirmed
     value:
       question: 怎么联系你们？
-      answer: 目前可以通过抖音、小红书主页留言；电话与邮箱以校区回复为准。
+      answer: 电话 18258162683。也可以先在抖音、小红书主页留言。
       category: 到店与联系
     updated_at: '2026-11-20'
   - id: faq-directions
@@ -69,8 +83,8 @@ facts:
     type: faq
     status: confirmed
     value:
-      question: 营业和上课时间怎么安排？
-      answer: 营业、试听与上课时间以校区回复为准。可以先在咨询页写下方便的时间段。
+      question: 上课时间怎么确认？
+      answer: 上课、试听和到访都先电话约，号码是 18258162683。当天几点到、能不能试听，以电话里的回复为准。
       category: 到店与联系
     updated_at: '2026-11-20'
   - id: faq-privacy
@@ -111,11 +125,12 @@ facts:
       source: PENDING_ONLY_NOT_PUBLIC_SOURCE
       date: '2026-11-11'
     updated_at: '2026-11-11'
+  # 来源：知识库《贝缇基础强化班2025》第32页；30篇技术文章结尾同一号码。
   - id: contact.phone
     type: contact
-    status: pending
-    value: PENDING_ONLY_NOT_PUBLIC_PHONE
-    updated_at: '2026-11-11'
+    status: confirmed
+    value: '18258162683'
+    updated_at: '2026-11-20'
   - id: contact.email
     type: contact
     status: pending

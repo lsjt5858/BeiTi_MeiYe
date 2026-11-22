@@ -5,6 +5,7 @@ import VisualPhoto from '../../components/VisualPhoto.astro';
 import VisualGallery from '../../components/VisualGallery.astro';
 import { copy, imageById, imagesFor, trainingNotice, visualSeries, type VisualSeries } from '../../lib/visual-catalog.ts';
 import { localeFromPath, localizedPath } from '../../lib/i18n.ts';
+import { getFact, getLocations } from '../../lib/content.ts';
 export function getStaticPaths() {
   return visualSeries.filter(item => item.section === 'training').map(series => ({ params: { slug: series.path.split('/')[2] }, props: { series } }));
 }
@@ -14,6 +15,13 @@ const locale = localeFromPath(Astro.url.pathname);
 const en = locale === 'en';
 const href = (path: string) => localizedPath(path, locale);
 const title = copy(series.title, locale);
+const campus = getLocations()[0];
+const campusAddress = en ? 'Building 16, Jintong Digital Economy Science and Innovation Park, 29 Xingye Street, Gongshu District, Hangzhou' : campus?.address;
+const campusTransport = en ? 'Metro Line 4, Huazhong South Road Station, Exit E' : campus?.transport;
+const phoneFact = getFact('contact.phone');
+const phone = typeof phoneFact === 'string' && /^\+?[\d ()-]+$/.test(phoneFact)
+  && phoneFact.replace(/\D/g, '').length >= 7 && phoneFact.replace(/\D/g, '').length <= 15 ? phoneFact : undefined;
+const tel = phone?.replace(/[ ()-]/g, '');
 ---
 <SiteLayout title={title} description={copy(series.description, locale)} breadcrumbs={[{ label: en ? 'Explore beauty' : '探索美业', href: '/services/' }, { label: en ? 'Beauty training' : '美业培训', href: '/training/' }, { label: title }]}>
   <VisualIntro title={title} subtitle={copy(series.subtitle, locale)} description={copy(series.description, locale)} eyebrow="BEITI / LEARNING DIRECTIONS" image={series.cover} />
@@ -31,10 +39,19 @@ const title = copy(series.title, locale);
       <div>
         <h3>{en ? 'Who may find this useful' : '适合谁了解'}</h3><p>{en ? 'Adults exploring this field, comparing learning directions or gathering questions before choosing a course.' : '希望了解这个领域、比较学习方向，或在选择课程前整理问题的成年人。'}</p>
         <h3>{en ? 'What this page cannot provide' : '不适用与边界'}</h3><p>{en ? 'This page cannot replace supervised practical instruction and does not promise certification, employment or earnings.' : '此页面不能替代专业指导下的实操，不承诺证书、就业或收益。'}</p>
-        <h3>{en ? 'What needs confirmation' : '需要进一步确认'}</h3><p>{en ? 'Ask about prior experience, instruction, materials, available dates, costs and the learning location through a confirmed contact channel.' : '请通过已确认的联系渠道，进一步了解基础要求、教学安排、材料工具、课期、费用与地点。'}</p>
+        <h3>{en ? 'What needs confirmation' : '需要进一步确认'}</h3><p>{en ? 'Ask about prior experience, instruction, materials, available dates and costs through a confirmed contact channel.' : '请通过已确认的联系渠道，进一步了解基础要求、教学安排、材料工具、课期与费用。'}</p>
         <a class="text-link" href={href(`/contact/?interest=learning`)}>{en ? 'Prepare your learning questions' : '整理学习咨询需求'} ↗</a>
       </div>
     </section>
+    {campus && <section class="visual-campus" aria-labelledby="campus-title">
+      <div><p class="eyebrow">CAMPUS</p><h2 id="campus-title">{en ? 'Where this class takes place' : '上课地点'}</h2></div>
+      <div>
+        <p>{campusAddress}</p>
+        <p>{campusTransport}</p>
+        {phone && <p>{en ? 'Call ' : '到校前先拨 '}<a class="text-link" href={`tel:${tel}`}>{phone}</a>{en ? ' before you come, and confirm the arrangement for that day.' : ' 确认当天安排。'}</p>}
+        <a class="text-link" href={href('/locations/')}>{en ? 'Campus address and visiting notes' : '校区地址与到访说明'} ↗</a>
+      </div>
+    </section>}
     <section aria-labelledby="learning-visuals-title"><div class="visual-section-heading"><p class="eyebrow">VISUAL NOTES</p><h2 id="learning-visuals-title">{en ? 'Learning, in pictures' : '学习方向影像'}</h2><p>{en ? 'Ten images to explore the atmosphere and details.' : '十张影像，观察氛围与细节。'}</p></div>
       <VisualGallery images={imagesFor(series)} />
     </section>

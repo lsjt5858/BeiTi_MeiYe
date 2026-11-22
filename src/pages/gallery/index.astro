@@ -18,6 +18,18 @@ const description = en ? 'Explore nail details, lash details and Japanese nail a
       {groups.map(group => <a href={localizedPath(group.path, locale)}><span>{copy(group.title, locale)}</span><span aria-hidden="true">↗</span></a>)}
     </nav>
     <VisualGallery images={images} filters />
+    <section class="visual-technique-strip" aria-labelledby="gallery-technique-title">
+      <div class="visual-section-heading"><p class="eyebrow">TECHNIQUE NOTES</p><h2 id="gallery-technique-title">{en ? 'Technique, up close' : '技法观察'}</h2><p>{en ? 'Six details from the practice notes: observe first, then compare.' : '从六张练习细节开始，先观察，再比较。'}</p></div>
+      <div class="technique-grid">
+        <figure><img src="/images/technique/solid-color-even-coating.jpg" alt="单色涂抹观察，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Solid colour: check the nail surface' : '单色，先看甲面'}</figcaption></figure>
+        <figure><img src="/images/technique/nail-structure-light-reflection.jpg" alt="建构光圈观察，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Structure: light is a clue' : '光圈，是观察的线索'}</figcaption></figure>
+        <figure><img src="/images/technique/almond-oval-tips.jpg" alt="杏仁形与椭圆形收口观察，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Almond and oval: read the tip' : '杏仁与椭圆，看收口'}</figcaption></figure>
+        <figure><img src="/images/technique/airbrush-soft-gradient.jpg" alt="喷绘渐变过渡观察，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Gradient: read the transition' : '渐变，看过渡带'}</figcaption></figure>
+        <figure><img src="/images/technique/tassel-lash-layer-spacing.jpg" alt="流苏款美睫层次观察，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Tassel lashes: spacing has a rhythm' : '流苏，疏密也有节奏'}</figcaption></figure>
+        <figure><img src="/images/technique/natural-lashes-space-color.jpg" alt="自然感睫毛留白观察，品牌视觉示意，不是学员或客户成果" width="1600" height="900" loading="lazy" decoding="async" /><figcaption>{en ? 'Natural lashes: space matters' : '自然感，留白也重要'}</figcaption></figure>
+      </div>
+      <p class="visual-technique-link"><a class="text-link" href={localizedPath('/articles/?category=craft', locale)}>{en ? 'Read the technique notes' : '读技法笔记'} ↗</a></p>
+    </section>
     <div class="visual-bottom-link"><p>{en ? 'Explore the learning behind these details.' : '从欣赏细节，到了解学习方向。'}</p><a class="text-link" href={localizedPath('/training/', locale)}>{en ? 'Beauty training' : '美业培训'} ↗</a></div>
   </div>
 </SiteLayout>
