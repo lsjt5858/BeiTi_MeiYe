@@ -51,3 +51,5 @@ updated_at: 2026-11-19
 答案最好出现在费用明细或协议里。暂时说不清就先不买，尤其不要因为报名优惠被要求连带购入一整套产品。
 
 其他费用看[《美甲培训费用，先核对哪几项？》](/articles/nail-training-cost-framework/)，签约前看[《报美甲培训班，合同里必须写清哪几条？》](/articles/nail-training-contract-checklist/)。贝缇的工具包配置和收费按当期课程说明，这里的清单不是赠送清单。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

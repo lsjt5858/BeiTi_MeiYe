@@ -51,4 +51,6 @@ updated_at: 2026-11-19
 
 单项班和合并班的内容、课时和包含项可能不同，不能用两个价格区间的端点相减，就断言多学美睫只增加固定金额。拿到同一机构的课程明细后，再看新增内容是否符合需要。
 
-贝缇有没有合并班，看当期招生安排；[美甲](/training/nails/)与[美睫](/training/lashes/)两个方向页只说明学习方向，不是班型表。费用核对看[《美甲培训费用，先核对哪几项？》](/articles/nail-training-cost-framework/)。
+贝缇有没有合并班，看当期招生安排；[杭州美甲培训课程](/training/nails/)与[杭州美睫培训课程](/training/lashes/)两个方向页只说明学习方向，不是班型表。费用核对看[《美甲培训费用，先核对哪几项？》](/articles/nail-training-cost-framework/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

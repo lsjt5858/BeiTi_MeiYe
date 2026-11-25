@@ -74,10 +74,11 @@ const figureHtml = htmlAfterCover.replace(/<p>\s*<img([^>]*)>\s*<\/p>/gi, (_matc
   return `<figure class="article-figure"><img${attrs}>${alt ? `<figcaption>${alt}</figcaption>` : ''}</figure>`;
 });
 const figureMatch = /<figure class="article-figure">[\s\S]*?<\/figure>/i.exec(figureHtml);
-const heroFigure = figureMatch?.[0] ?? '';
+const heroFigure = (figureMatch?.[0] ?? '').replace('loading="lazy"', 'loading="eager" fetchpriority="high"');
 const articleHtml = figureMatch ? figureHtml.replace(figureMatch[0], '') : figureHtml;
 const fallbackHero = brandMedia.find((item) => item.frozen) ?? brandMedia[0];
-const heroMarkup = heroFigure || (fallbackHero ? `<figure class="article-figure article-figure--fallback"><img src="${fallbackHero.src}" alt="${fallbackHero.alt}" loading="lazy"><figcaption>${fallbackHero.alt}</figcaption></figure>` : '');
+// 冻结的品牌原图均为 2560x1440（见 public/images/SOURCES.md），宽高写死以免输出 undefined。
+const heroMarkup = heroFigure || (fallbackHero ? `<figure class="article-figure article-figure--fallback"><img src="${fallbackHero.src}" alt="${fallbackHero.alt}" width="2560" height="1440" loading="eager" decoding="async" fetchpriority="high"><figcaption>${fallbackHero.alt}</figcaption></figure>` : '');
 const readingMinutes = Math.max(2, Math.ceil(article.body.replace(/[#>*_`~\-\[\]()|]/g, '').replace(/\s+/g, '').length / 450));
 const jsonLd = {
   '@context': 'https://schema.org', '@type': 'Article',

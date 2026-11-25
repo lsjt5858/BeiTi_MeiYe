@@ -56,3 +56,5 @@ updated_at: 2026-11-19
 拿到明确答复，再和协议对照。不肯说明最终收费时，先别为优惠付款。
 
 贝缇的具体报价以[价格页](/pricing/)中的已确认信息为准。工具采购看[《学美甲要自己买工具吗？新手工具大概多少钱？》](/articles/nail-starter-tool-kit-cost/)，其他约定看[《报美甲培训班，合同里必须写清哪几条？》](/articles/nail-training-contract-checklist/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

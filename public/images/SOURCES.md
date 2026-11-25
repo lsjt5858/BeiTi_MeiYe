@@ -94,3 +94,24 @@ node --input-type=module -e 'import {brandMedia} from "./src/components/brand-me
 | `team/nail-art-instructor-2025.webp` | 同上第10页，`IM48.jpg` | 540×720 | `fe2446997877dd1d5405f0075cc0943c10437cffd10aa9fa1c1af656296c2454` |
 
 完整图文对应及裁剪坐标见 `docs/teacher-source-notes.md`。用户确认安妮老师管理美甲方向，但没有指明课件中哪张照片是安妮，未据此为任何照片猜配姓名。
+
+## 课程介绍影像（2026-11-26）
+
+经用户指定，从贝缇官方小红书账号「A贝缇杭州美甲培训」的课程介绍笔记
+（`https://www.xiaohongshu.com/explore/67790b35000000001300ef25`，2025-07-17 发布）
+下载课堂与课程海报原图，转为本地冻结 WebP，放在 `course/`。原图共 13 张，
+10 张下载成功，其中 1 张含与现行班型口径不一致的旧宣传文字（30-day course）未采用，
+实际采用 5 张。图片为机构自有发布内容，无平台水印。
+
+| 网站图片 | 内容 | 尺寸 | SHA-256 |
+| --- | --- | --- | --- |
+| `course/beiti-nail-fundamental-12day-poster.webp` | 美甲小全科 12 天课程海报（DAY1-12 大纲，含底部横幅原图） | 1080x1439 | `7d4fb77313b40c1889b931bd6c60f100b2ef1aefcc2d34569d35738fe2dbb6b3` |
+| `course/beiti-nail-master-25day-poster.webp` | 美甲大师班 25 天课程海报（DAY1-25 大纲，含底部横幅原图） | 1080x1439 | `bb0aca47f43a2a0fd918655564e5ae6050836886e3dbd9bbb5b0e27cd599676d` |
+| `course/beiti-graduation-group-photo.webp` | 结业合影与结业证书 | 1620x1080 | `ff4d0c5f4e7a283e7d00fbe00d882781bf30323f962e4488a9429b760d1cc786` |
+| `course/beiti-lash-styles-grid.webp` | 美睫款式九宫格（狐系、漫画、婴儿弯等） | 1080x1080 | `08d4808a1509072d251ff4a6cc262de628c517458dcc8aaab9f2cfee002897cd` |
+| `course/beiti-nail-works-grid.webp` | 长款延长甲作品六宫格 | 1080x1440 | `5424306330561e9468201356a19808f6d2ed60b6a87bc14d0482a5eb5eda2199` |
+
+两张课程海报按官方笔记原图完整使用（1080x1439，未经裁剪），底部横幅包含
+「免费送所有材料」「免费复学」「两年内免费复训（复训收500场地费）」「无任何隐形消费」
+「小班制教学模式」等官方课程表述。海报内的价格信息不作为网站报价依据；
+带价格水印的作品图未采用。

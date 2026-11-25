@@ -60,3 +60,5 @@ updated_at: 2026-11-22
 | 到课安排 | 复训前先与校区核对预约和开课安排 |
 
 费用可在[价格页](/pricing/)继续核对。签约细节看[《报美甲培训班，合同里必须写清哪几条？》](/articles/nail-training-contract-checklist/)，学习达标看[《零基础学美甲多久能学会？三个月能接单吗》](/articles/how-long-to-learn-nail/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

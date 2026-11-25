@@ -9,8 +9,9 @@ export const articleGroups: ArticleGroup[] = [
   {
     title: '选校与学习路径',
     eyebrow: 'SCHOOL & LEARNING',
-    description: '选校、学徒、学习周期、周末班和线上线下课程的比较。',
+    description: '贝缇课程介绍汇总，以及选校、学徒、学习周期、周末班和线上线下课程的比较。',
     slugs: [
+      'beiti-course-guide',
       'how-to-choose-nail-school',
       'hangzhou-nail-training-where-good',
       'career-change-nail-hangzhou',

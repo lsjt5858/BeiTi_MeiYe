@@ -90,3 +90,5 @@ updated_at: 2026-11-22
 贝缇的课程参考与复训费用放在[价格页](/pricing/)。现行学费、工具材料与住宿是否包含，按当期书面报价逐项核对。
 
 有了报价单，可以对照[《美甲培训费用，先核对哪几项？》](/articles/nail-training-cost-framework/)逐项核算。工具是否需要自购，看[《学美甲要自己买工具吗？新手工具大概多少钱？》](/articles/nail-starter-tool-kit-cost/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

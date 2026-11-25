@@ -45,4 +45,6 @@ updated_at: 2026-11-19
 
 如果当前时间只能偶尔挤出来，先确认有没有适合的排课，不要交了钱再想办法请假。人在外地，还要单独核对到杭安排和住宿，不能默认机构提供。
 
-贝缇的[美甲学习方向](/training/nails/)是了解入口，具体课程与支持政策问校区更准。费用准备看[《美甲培训费用，先核对哪几项？》](/articles/nail-training-cost-framework/)，从业收入看[《美甲师一个月能挣多少钱？》](/articles/nail-technician-monthly-income/)。
+贝缇的[杭州美甲培训课程](/training/nails/)是了解入口，具体课程与支持政策问校区更准。费用准备看[《美甲培训费用，先核对哪几项？》](/articles/nail-training-cost-framework/)，从业收入看[《美甲师一个月能挣多少钱？》](/articles/nail-technician-monthly-income/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

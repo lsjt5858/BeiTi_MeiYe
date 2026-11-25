@@ -61,4 +61,6 @@ updated_at: 2026-11-19
 
 小班、免费试听都是好线索，但都算不上质量证明。把这些安排说清，再和课堂、协议对一遍，才值得继续比较。
 
-贝缇的[美甲学习方向](/training/nails/)是了解入口，开班与排课看当期安排。通用选校方法看[《美甲培训学校怎么挑？怕被坑》](/articles/how-to-choose-nail-school/)，准备到校时可以带上[五问清单](/articles/nail-school-checklist/)。
+贝缇的[杭州美甲培训课程](/training/nails/)是了解入口，开班与排课看当期安排。通用选校方法看[《美甲培训学校怎么挑？怕被坑》](/articles/how-to-choose-nail-school/)，准备到校时可以带上[五问清单](/articles/nail-school-checklist/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

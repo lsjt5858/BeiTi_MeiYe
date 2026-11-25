@@ -61,4 +61,6 @@ updated_at: 2026-11-19
 
 兴趣学习可以同时查当地社区夜校或体验课程，但是否开美甲课、如何收费，以当期招生信息为准。
 
-贝缇的周末排课看当期安排，[美甲学习方向](/training/nails/)只是方向介绍，不是开班通知。报名条件可以对照[《报美甲培训班，合同里必须写清哪几条？》](/articles/nail-training-contract-checklist/)。
+贝缇的周末排课看当期安排，[杭州美甲培训课程](/training/nails/)只是方向介绍，不是开班通知。报名条件可以对照[《报美甲培训班，合同里必须写清哪几条？》](/articles/nail-training-contract-checklist/)。
+
+贝缇的零基础班型、上课方式与费用口径，汇总在[《贝缇美业课程介绍：零基础 12/25 天班型与三个学习方向》](/articles/beiti-course-guide/)。

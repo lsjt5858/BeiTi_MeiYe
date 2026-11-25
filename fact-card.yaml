@@ -205,8 +205,58 @@ facts:
             source: 贝缇基础强化班2025，第8、16页
     updated_at: '2026-11-22'
 
+  # 用户于2026-11-26指示采用品牌官方小红书账号「A贝缇杭州美甲培训」的课程介绍笔记
+  # （https://www.xiaohongshu.com/explore/67790b35000000001300ef25，2025-07-17发布）。
+  # 班型口径以笔记正文「零基础课程为12天和25天两种」为准；课程海报（course/ 目录）
+  # 分别标注「美甲小全科12天」「美甲大师班25天」。海报另有"30-day"英文旧字样，不采用。
+  - id: course.zero-based
+    type: course
+    status: confirmed
+    value:
+      formats:
+        - name: 美甲小全科
+          duration: 12 天
+        - name: 美甲大师班
+          duration: 25 天
+      teaching: 讲师授课结合助教巡场，理论与实操双轨教学，一对一辅导。
+      promise: 官方课程介绍写明：课程学会为止，提供就业指导。
+      source: 贝缇官方小红书课程介绍笔记，2025-07-17
+    updated_at: '2026-11-26'
+
+  # 同上来源。学习期间的包含项与外地学员安排；"没有隐形消费"为官方笔记原话，
+  # 网站文案以"官方介绍写明"口径转述，不作为对全部收费事项的独立核实结论。
+  - id: course.inclusions
+    type: course
+    status: confirmed
+    value:
+      practice: 真人实操练习提供模特与实操场地。
+      toolkit: 学习期间提供日式实操学习包与耗材工具。
+      accommodation: 外地学员可提前联系老师预定宿舍或青旅。
+    updated_at: '2026-11-26'
+
+  # 同上来源。报名年龄要求。
+  - id: course.audience
+    type: course
+    status: confirmed
+    value: 课程面向18岁以上。
+    updated_at: '2026-11-26'
+
+  # 同上来源。特色课程主题；与 courses.catalog 的方向大纲互补，不重复展开。
+  - id: course.featured-topics
+    type: course
+    status: confirmed
+    value:
+      - 氛围感水彩
+      - 短甲设计
+      - 门店店务运营管理
+      - 美甲视频拍摄及后期制作
+      - 美甲客片拍摄及修图
+    updated_at: '2026-11-26'
+
   # 用户于2026-11-22确认复训费用500元；课件第16页注明为场地费。
   # 两年期限、适用课程与次数未由用户重新确认，不能写成所有课程的统一保障。
+  # 2026-11-26：曾按另一处指示短暂改为「永久免费」，用户同日要求恢复本口径，
+  # 以课件与官方课程海报的「两年内免费复训（复训收500场地费）」原文为准。
   - id: policy.retraining
     type: policy
     status: confirmed

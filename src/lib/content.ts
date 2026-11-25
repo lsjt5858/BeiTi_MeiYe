@@ -218,9 +218,12 @@ export function safeMarkdown(body: string): string {
         if (!/^(https?:\/\/|\/(?!\/)|#|mailto:|tel:)/i.test(href) || /[\u0000-\u0020\\]/.test(href)) return label;
         return `<a href="${escapeHtml(href)}"${title ? ` title="${escapeHtml(title)}"` : ''}>${label}</a>`;
       },
-      image({ href, text: alt }) {
+      image({ href, text: alt, title }) {
         if (!/^(https?:\/\/|\/(?!\/))/i.test(href) || /[\u0000-\u0020\\]/.test(href)) return escapeHtml(alt);
-        return `<img src="${escapeHtml(href)}" alt="${escapeHtml(alt)}" loading="lazy">`;
+        // 可选尺寸标注：![说明](/images/x.webp "1080x1316")，用于预留宽高、避免加载时布局偏移。
+        const size = /^(\d{2,5})\s*x\s*(\d{2,5})$/.exec((title ?? '').trim());
+        const dims = size ? ` width="${size[1]}" height="${size[2]}" decoding="async"` : '';
+        return `<img src="${escapeHtml(href)}" alt="${escapeHtml(alt)}"${dims} loading="lazy">`;
       },
     },
   });
